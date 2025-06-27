@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formation IA pour débutants</title>
+    <style>
+        body {
+            background-color: #1a0a53;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+            padding: 20px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        .logo {
+            max-height: 120px;
+        }
+        .main-image, .video {
+            max-width: 600px;
+            margin: 20px 0;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+        input[type="email"] {
+            padding: 10px;
+            font-size: 16px;
+            width: 300px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #ffffff;
+            color: #1a0a53;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #cccccc;
+        }
+        video {
+            max-width: 600px;
+            width: 100%;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <img class="logo" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FR7vPQBXA1dYCZDkp6lxMKfs120v1%2Fundefined%2Flogo.png?alt=media&token=da911b52-f856-4ede-8b3f-ecaa09c9ee76" alt="Logo">
+    <h1>Formation IA pour débutants</h1>
+    <p>Découvrez comment maîtriser les bases de l’IA en seulement 7 jours, sans aucune connaissance technique. Formation 100% en ligne, accessible à vie.</p>
+    <img class="main-image" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FR7vPQBXA1dYCZDkp6lxMKfs120v1%2Fundefined%2Fcover.jpg?alt=media&token=f944996b-6957-4579-91bc-c7f60e2fe34d" alt="Image principale">
+    <video class="video" controls>
+        <source src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FR7vPQBXA1dYCZDkp6lxMKfs120v1%2Fundefined%2Fvideo.mp4?alt=media&token=00655fc4-e773-45fe-a070-020c06e0c654" type="video/mp4">
+        Votre navigateur ne supporte pas la lecture de vidéos.
+    </video>
+    <form onsubmit="event.preventDefault(); window.location.href='https://sellyo.fr/payer/formation-ai';">
+        <input type="email" required placeholder="Votre email">
+        <button type="submit">Accéder à la formation</button>
+    </form>
+</body>
+</html>
