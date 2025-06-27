@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ragera Landing Page</title>
+    <style>
+        body {
+            background-color: #00ccff;
+            color: #ffffff;
+            font-family: sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        header, main, footer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        img, video {
+            max-width: 100%;
+            height: auto;
+        }
+        img.logo {
+            max-height: 120px;
+        }
+        .form-container {
+            margin-top: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        input[type="email"] {
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            max-width: 300px;
+            width: 100%;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #00ccff;
+            background-color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <!-- Logo (si dispo) -->
+        <!-- <img src="logo.png" alt="Logo" class="logo"> -->
+    </header>
+    <main>
+        <!-- Titre principal (objectif) -->
+        <h1>gréa</h1>
+        <!-- Description de l’offre -->
+        <p>grège</p>
+        <!-- Image principale (si dispo) -->
+        <!-- <img src="image.png" alt="Image principale"> -->
+        <!-- Vidéo à intégrer (si dispo) -->
+        <!-- <video controls>
+            <source src="video.mp4" type="video/mp4">
+            Votre navigateur ne supporte pas la lecture de vidéos.
+        </video> -->
+    </main>
+    <div class="form-container">
+        <form onsubmit="event.preventDefault(); window.location.href='';">
+            <input type="email" required placeholder="Votre email" />
+            <button type="submit">ghrezhg</button>
+        </form>
+    </div>
+    <footer>
+        <!-- Footer content if needed -->
+    </footer>
+</body>
+</html>
