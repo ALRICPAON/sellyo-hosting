@@ -1,0 +1,66 @@
+Voici un exemple de page HTML sombre pour le tunnel "fezgr" :
+
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fezgr - Vente</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            padding: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #00ccff;
+            text-align: center;
+        }
+        .description {
+            margin: 20px 0;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+        .next-button {
+            background-color: #00ccff;
+            color: #000;
+            padding: 15px 30px;
+            text-decoration: none;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .next-button:hover {
+            background-color: #0099cc;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>fezgr</h1>
+        <p class="description">hegraqb</p>
+
+        <div class="button-container">
+            <a href="page2.html" class="next-button">Suivant &rarr;</a>
+        </div>
+    </div>
+    
+</body>
+</html>
+```
+
+Assurez-vous de personnaliser davantage cette page en ajoutant les éléments tels que les images ou le logo si vous les avez. Vous pouvez également ajuster le texte de la description selon vos besoins.
