@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page Tunnel</title>
+    <style>
+        body {
+            background-color: #2e073e;
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        img, video {
+            max-width: 100%;
+            height: auto;
+        }
+        img.logo {
+            max-height: 120px;
+        }
+        form {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        input[type="email"] {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 300px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #ffffff;
+            color: #2e073e;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <img src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FR7vPQBXA1dYCZDkp6lxMKfs120v1%2Fundefined%2Flogo.png?alt=media&token=701da093-8f5c-4d7f-a890-cc6bae4dcdf7" alt="Logo" class="logo">
+    <h1>Lance ton tunnel en 1 minute</h1>
+    <p>Grâce à l’IA, sans aucune compétence</p>
+    <img src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FR7vPQBXA1dYCZDkp6lxMKfs120v1%2Fundefined%2Fcover.jpg?alt=media&token=c961b694-470b-4ff0-a96f-4a8cd98bc2d7" alt="Image principale">
+    <video controls>
+        <source src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FR7vPQBXA1dYCZDkp6lxMKfs120v1%2Fundefined%2Fvideo.mp4?alt=media&token=4e99c939-5fc4-40b6-ab28-680c46837fd9" type="video/mp4">
+        Votre navigateur ne supporte pas la vidéo.
+    </video>
+    <form onsubmit="event.preventDefault(); window.location.href='';">
+        <input type="email" required placeholder="Votre email" />
+        <button type="submit">Accède à ton tunnel gratuit prêt à l'emploi</button>
+    </form>
+</body>
+</html>
