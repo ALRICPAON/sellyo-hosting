@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test landing</title>
+    <style>
+        body {
+            background-color: #00ccff;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        img {
+            max-height: 120px;
+            margin-bottom: 20px;
+        }
+        .main-image {
+            max-width: 600px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        iframe {
+            max-width: 600px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        form {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        input[type="email"] {
+            padding: 10px;
+            width: calc(100% - 22px);
+            margin-bottom: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #444444;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #333333;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Je veux voir si l'URL est bonne</h1>
+    <img class="main-image" src="" alt="Image principale">
+    <iframe src="" frameborder="0"></iframe>
+    
+    <form onsubmit="event.preventDefault(); window.location.href='';">
+        <input type="email" required placeholder="Votre email" />
+        <button type="submit">go</button>
+    </form>
+
+</body>
+</html>
