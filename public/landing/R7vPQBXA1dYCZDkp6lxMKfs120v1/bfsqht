@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bfsqht - Seth</title>
+    <style>
+        body {
+            background-color: #00ccff;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        h1 {
+            font-size: 2em;
+            margin-top: 20px;
+        }
+        p {
+            font-size: 1.2em;
+            max-width: 600px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        form {
+            margin-top: 20px;
+        }
+        input[type="email"] {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin-right: 10px;
+            width: calc(100% - 120px);
+            max-width: 300px;
+        }
+        button {
+            background-color: #ffffff;
+            color: #00ccff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #eeeeee;
+        }
+        video {
+            max-width: 100%;
+            height: auto;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Logo -->
+    <!-- <img src="logo_url_here" alt="Logo" style="max-height: 120px;"> -->
+
+    <h1>Seth</h1>
+    <p>href</p>
+
+    <!-- Image principale -->
+    <!-- <img src="image_url_here" alt="Main Image" style="max-width: 100%; height: auto;"> -->
+
+    <!-- Vidéo -->
+    <!-- <video controls src="video_url_here" style="max-width: 100%; height: auto;"></video> -->
+
+    <!-- Formulaire -->
+    <form onsubmit="event.preventDefault(); window.location.href='';">
+        <input type="email" required placeholder="Votre email" />
+        <button type="submit">hrethj</button>
+    </form>
+
+</body>
+</html>
