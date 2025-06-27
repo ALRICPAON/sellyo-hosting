@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truc Malin</title>
+    <style>
+        body {
+            background-color: #004d65;
+            color: #ffffff;
+            font-family: sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        header img {
+            max-height: 120px;
+        }
+        main img {
+            max-width: 600px;
+        }
+        video {
+            max-width: 600px;
+            width: 100%;
+            height: auto;
+        }
+        form {
+            margin-top: 20px;
+        }
+        input[type="email"] {
+            padding: 10px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #ffffff;
+            color: #004d65;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FR7vPQBXA1dYCZDkp6lxMKfs120v1%2Fundefined%2Flogo.png?alt=media&token=dca71945-b0b7-47b6-8860-5654799ca4ce" alt="Logo Truc Malin">
+    </header>
+    <main>
+        <h1>Vendre produit truc malin</h1>
+        <p>Je vends un produit: une table de trucmalin.</p>
+        <img src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FR7vPQBXA1dYCZDkp6lxMKfs120v1%2Fundefined%2Fcover.jpg?alt=media&token=3c70a680-00e9-4b3c-bfa4-64b6a9b45828" alt="Image principale">
+        <form onsubmit="event.preventDefault(); window.location.href='';">
+            <input type="email" required placeholder="Votre email">
+            <button type="submit">achète </button>
+        </form>
+    </main>
+</body>
+</html>
