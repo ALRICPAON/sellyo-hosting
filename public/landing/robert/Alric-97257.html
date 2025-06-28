@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page Pro!!!!</title>
+<style>
+  body {
+    background-color: #874efe;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
+  }
+  .container {
+    max-width: 600px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+  }
+  img, video {
+    max-width: 100%;
+    max-height: 600px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+  }
+  .cta-button {
+    background-color: #006d8f;
+    color: #ffffff;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  .cta-button:hover {
+    background-color: #005570;
+  }
+  input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Découvrez comment on fait une page de capture</h1>
+<p>Inscrivez-vous pour découvrir comment avec Sellyo vous pouvez faire des tunnels de vente ou même des pages de capture en moins de 3 minutes.</p>
+<form onsubmit="event.preventDefault(); window.location.href='';">
+<input type="email" name="email" placeholder="Email" required>
+<input type="text" name="nom" placeholder="Nom" required>
+<input type="text" name="prenom" placeholder="Prénom" required>
+<input type="tel" name="telephone" placeholder="Téléphone" required>
+<button type="submit" class="cta-button">inscris toi</button>
+</form>
+</div>
+</body>
+</html>
