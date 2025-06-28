@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page Landing avec Logo</title>
+<style>
+body {
+  background-color: #666100;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+.container {
+  padding: 20px;
+}
+img.logo {
+  max-height: 120px;
+  margin: 20px 0;
+}
+img.main-image {
+  max-width: 100%;
+  height: auto;
+  max-height: 600px;
+}
+video {
+  max-width: 100%;
+  height: auto;
+  max-height: 600px;
+}
+button {
+  background-color: #2e073e;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+}
+form {
+  margin-top: 20px;
+}
+input {
+  width: calc(100% - 22px);
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 2px solid #2e073e;
+  border-radius: 5px;
+  background-color: transparent;
+  color: #fff;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<img src="https://alricpaon.github.io/sellyo-hosting/media/sandra/5077fdf7890a2c5aa673ea0932cd5344_tplv-tiktokx-cropcenter-1080-1080.jpg.avif" alt="Logo" class="logo">
+<h1>Test Logo</h1>
+<p>Test d'une page avec logo image et vidéo</p>
+<img src="https://alricpaon.github.io/sellyo-hosting/media/sandra/683ea744940d3_ChatGPTImage3juin2025a09_41_40.png" alt="Image principale" class="main-image">
+<video controls>
+<source src="https://alricpaon.github.io/sellyo-hosting/media/sandra/20250607_1016_AI%20Builds%20Sales%20Funnel_simple_compose_01jx4qcv5zew2s3ft8qystphx4.mp4" type="video/mp4">
+Votre navigateur ne supporte pas la vidéo intégrée.
+</video>
+<form onsubmit="event.preventDefault(); window.location.href='';">
+<input type="email" name="email" placeholder="Email" required>
+<input type="text" name="nom" placeholder="Nom" required>
+<input type="text" name="prénom" placeholder="Prénom" required>
+<input type="tel" name="telephone" placeholder="Téléphone" required>
+<input type="text" name="adresse" placeholder="Adresse" required>
+<button type="submit">go</button>
+</form>
+</div>
+</body>
+</html>
