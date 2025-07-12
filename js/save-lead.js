@@ -1,8 +1,21 @@
-import { app } from "./firebase-init.js"; // 🔗 Import propre
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+// 🔧 Configuration Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyC2yzKA3kESPjgcFk6pojJQK4rNToywqJI",
+  authDomain: "sellyo-3bbdb.firebaseapp.com",
+  projectId: "sellyo-3bbdb",
+  storageBucket: "sellyo-3bbdb.appspot.com",
+  messagingSenderId: "465249279278",
+  appId: "1:465249279278:web:319844f7477ab47930eebf"
+};
+
+// ✅ Initialisation sécurisée
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 const db = getFirestore(app);
 
+// 🎯 Formulaire
 const form = document.getElementById("lead-form");
 
 if (form) {
