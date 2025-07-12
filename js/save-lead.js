@@ -1,6 +1,6 @@
 // js/save-lead.js
 import { app } from "./firebase-init.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const db = getFirestore(app);
 const form = document.getElementById("lead-form");
@@ -19,6 +19,14 @@ if (form) {
     if (!data.email && !data.telephone) {
       alert("Merci de renseigner au moins un email ou un numéro de téléphone.");
       return;
+    }
+
+    // 🧩 Ajoute le timestamp
+    data.createdAt = serverTimestamp();
+
+    // 📦 Ajoute le type si pas déjà dans le formulaire HTML
+    if (!data.type) {
+      data.type = "landing"; // ou "tunnel", "email", selon la page
     }
 
     try {
