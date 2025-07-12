@@ -1,0 +1,115 @@
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formation Express</title>
+    <style>
+        body {
+            background-color: #111111;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .logo img {
+            max-height: 80px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin-top: 20px;
+            font-size: 2rem;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .content img {
+            max-width: 400px;
+            width: 100%;
+            height: auto;
+            margin: 10px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        input[type="text"],
+        button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 1rem;
+        }
+
+        input[type="text"] {
+            background-color: #ffffff;
+            color: #111111;
+        }
+
+        button {
+            background-color: #00ccff;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        .video {
+            margin-top: 20px;
+            max-width: 800px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/Allianz/" alt="Logo">
+        </div>
+        <h1>Accède à 10 modules gratuits pour booster tes ventes</h1>
+        <div class="content">
+            <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/Allianz/" alt="Image Principale">
+            <form action="" method="GET">
+                <input type="text" name="adresse" placeholder="Adresse">
+                <input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1">
+                <input type="hidden" name="name" value="formation express">
+                <button type="submit">Acceder</button>
+            </form>
+        </div>
+        <div class="video">
+            <video width="100%" max-width="800px" controls>
+                <source src="https://alricpaon.github.io/sellyo-hosting/media/landing/Allianz/" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
+    <script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+    <script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+</body>
+</html>
+```
