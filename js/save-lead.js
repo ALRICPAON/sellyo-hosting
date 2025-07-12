@@ -1,4 +1,4 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 // 🔧 Configuration Firebase
@@ -11,8 +11,8 @@ const firebaseConfig = {
   appId: "1:465249279278:web:319844f7477ab47930eebf"
 };
 
-// 🔌 Initialisation
-const app = initializeApp(firebaseConfig);
+// ✅ Vérifie si Firebase est déjà initialisé
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 const db = getFirestore(app);
 
 // 🧠 Soumission du formulaire
