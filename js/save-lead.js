@@ -30,13 +30,8 @@ if (form) {
 
     try {
       await addDoc(collection(db, "leads"), data);
-      const redirectURL = form.getAttribute("data-redirect");
-      if (redirectURL) {
-        window.location.href = redirectURL;
-      } else {
-        alert("Merci ! Votre demande a été envoyée.");
-        form.reset();
-      }
+      // 🔁 Redirection fixe vers la page de remerciement
+      window.location.href = "https://alricpaon.github.io/sellyo-hosting/merci.html";
     } catch (error) {
       console.error("Erreur lors de l'enregistrement du lead :", error);
       alert("Erreur lors de l'envoi. Veuillez réessayer.");
