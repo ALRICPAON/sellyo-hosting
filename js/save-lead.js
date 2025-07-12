@@ -11,11 +11,11 @@ const firebaseConfig = {
   appId: "1:465249279278:web:319844f7477ab47930eebf"
 };
 
-// ✅ Vérifie si Firebase est déjà initialisé
+// ✅ Initialisation Firebase
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 const db = getFirestore(app);
 
-// 🧠 Soumission du formulaire
+// 🎯 Cible le formulaire
 const form = document.getElementById("lead-form");
 
 if (form) {
@@ -30,8 +30,10 @@ if (form) {
 
     try {
       await addDoc(collection(db, "leads"), data);
-      // 🔁 Redirection fixe vers la page de remerciement
-      window.location.href = "https://alricpaon.github.io/sellyo-hosting/merci.html";
+      
+      // ✅ Redirection automatique (en dur)
+      window.location.href = "https://cdn.sellyo.fr/merci.html";
+
     } catch (error) {
       console.error("Erreur lors de l'enregistrement du lead :", error);
       alert("Erreur lors de l'envoi. Veuillez réessayer.");
