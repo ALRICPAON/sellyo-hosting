@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feuille</title>
+<style>
+    body {
+        background-color: #111111;
+        color: white;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        padding: 20px;
+        max-width: 1000px;
+        margin: auto;
+    }
+    header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    header img {
+        max-height: 80px;
+    }
+    h1 {
+        color: #00ccff;
+    }
+    .content {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 20px;
+    }
+    .main-image {
+        max-width: 400px;
+        width: 100%;
+    }
+    .form-container {
+        flex: 1;
+        min-width: 300px;
+    }
+    form input[type="text"], form input[type="email"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: none;
+        border-radius: 5px;
+    }
+    form button {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: #00ccff;
+        color: #111111;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    .video {
+        margin-top: 20px;
+        max-width: 800px;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/feuille/" alt="Logo">
+    </header>
+    <h1>Feuille</h1>
+    <p>Feuille</p>
+    <div class="content">
+        <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/feuille/" alt="Main" class="main-image">
+        <div class="form-container">
+            <form id="lead-form" method="POST" action="#" data-redirect="https://cdn.sellyo.fr/merci.html">
+                <label for="nom">Nom</label>
+                <input type="text" id="nom" name="nom" placeholder="Votre nom">
+                <label for="prenom">Prenom</label>
+                <input type="text" id="prenom" name="prenom" placeholder="Votre prenom">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Votre email">
+                <label for="telephone">Telephone</label>
+                <input type="text" id="telephone" name="telephone" placeholder="Votre telephone">
+                <label for="adresse">Adresse</label>
+                <input type="text" id="adresse" name="adresse" placeholder="Votre adresse">
+                <input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1">
+                <input type="hidden" name="name" value="feuille">
+                <button type="submit">Feuille</button>
+            </form>
+        </div>
+    </div>
+    <video controls class="video">
+        <source src="https://alricpaon.github.io/sellyo-hosting/media/landing/feuille/" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
+<script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+</body>
+</html>
