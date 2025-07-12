@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Landing Page</title>
+<style>
+  body {
+    background-color: #00a3d7;
+    color: #ffffff;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  header img {
+    max-height: 80px;
+    margin-top: 20px;
+  }
+  h1 {
+    margin-top: 20px;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 800px;
+  }
+  .responsive-columns {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 20px 0;
+    justify-content: center;
+  }
+  .left-column img {
+    max-width: 400px;
+    width: 100%;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  form div {
+    margin-bottom: 10px;
+  }
+  input[type="text"],
+  input[type="email"] {
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: none;
+  }
+  input[type="submit"] {
+    background-color: #0042aa;
+    color: #ffffff;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  video {
+    width: 100%;
+    max-width: 800px;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+<header>
+  <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/agrafe/5077fdf7890a2c5aa673ea0932cd5344_tplv-tiktokx-cropcenter-1080-1080.jpg.avif" alt="Logo" />
+</header>
+<h1>agrafe</h1>
+<p>agrafe</p>
+<div class="container">
+  <div class="responsive-columns">
+    <div class="left-column">
+      <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/agrafe/683ea8089e9ae_ChatGPTImage3juin2025a09_44_59.png" alt="Main Image" />
+    </div>
+    <div class="right-column">
+      <form id="lead-form" method="POST">
+        <div>
+          <label for="nom">Nom</label>
+          <input type="text" id="nom" name="nom" placeholder="Votre nom" required />
+        </div>
+        <div>
+          <label for="prenom">Prenom</label>
+          <input type="text" id="prenom" name="prenom" placeholder="Votre prenom" required />
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="Votre email" required />
+        </div>
+        <div>
+          <label for="telephone">Telephone</label>
+          <input type="text" id="telephone" name="telephone" placeholder="Votre telephone" required />
+        </div>
+        <div>
+          <label for="adresse">Adresse</label>
+          <input type="text" id="adresse" name="adresse" placeholder="Votre adresse" required />
+        </div>
+        <input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1" />
+        <input type="hidden" name="name" value="agrafe" />
+        <input type="hidden" name="type" value="landing" />
+        <input type="submit" value="agrafe" />
+      </form>
+    </div>
+  </div>
+  <video controls>
+    <source src="https://alricpaon.github.io/sellyo-hosting/media/landing/agrafe/20250607_1043_Entrepreneur's%20Exciting%20Success_simple_compose_01jx4rxdtxfvv9sbs3m6bk4030.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</div>
+<script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+</body>
+</html>
