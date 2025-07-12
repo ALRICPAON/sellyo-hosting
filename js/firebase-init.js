@@ -12,4 +12,7 @@ const firebaseConfig = {
   measurementId: "G-WWBQ4KPS5B"
 };
 
-export const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+// Initialisation sécurisée (évite les erreurs "already exists")
+export const app = getApps().length === 0
+  ? initializeApp(firebaseConfig)
+  : getApps()[0];
