@@ -1,6 +1,6 @@
 // js/firebase-init.js
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC2yzKA3kESPjgcFk6pojJQK4rNToywqJI",
@@ -12,4 +12,4 @@ const firebaseConfig = {
   measurementId: "G-WWBQ4KPS5B"
 };
 
-export const app = initializeApp(firebaseConfig);
+export const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
