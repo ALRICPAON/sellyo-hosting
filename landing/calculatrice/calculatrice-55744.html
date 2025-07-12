@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculatrice - Landing Page</title>
+<style>
+body {
+  background-color: #111111;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.container {
+  max-width: 1200px;
+  padding: 20px;
+  width: 100%;
+}
+.logo {
+  max-height: 80px;
+  display: block;
+  margin: 0 auto 20px;
+}
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+p {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 40px;
+}
+.responsive-columns {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+.left {
+  max-width: 400px;
+  flex: 1;
+}
+.right {
+  flex: 1;
+  max-width: 400px;
+}
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+form label {
+  display: block;
+  margin-bottom: 5px;
+}
+form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 5px;
+}
+.cta-button {
+  background-color: #00ccff;
+  color: #111111;
+  border: none;
+  padding: 15px;
+  width: 100%;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+}
+.cta-button:hover {
+  opacity: 0.9;
+}
+.video {
+  max-width: 800px;
+  width: 100%;
+  margin-bottom: 40px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/calculatrice/" alt="Logo" class="logo">
+  <h1>Calculatrice</h1>
+  <p>Calculatrice</p>
+  <div class="responsive-columns">
+    <div class="left">
+      <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/calculatrice/" alt="Image principale">
+    </div>
+    <div class="right">
+      <form id="lead-form" method="POST" action="#" data-redirect="https://cdn.sellyo.fr/landing/thank-you.html">
+        <label for="nom">Nom</label>
+        <input type="text" id="nom" name="nom" placeholder="Votre nom">
+        <label for="prenom">Prenom</label>
+        <input type="text" id="prenom" name="prenom" placeholder="Votre prenom">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="Votre email">
+        <label for="telephone">Telephone</label>
+        <input type="text" id="telephone" name="telephone" placeholder="Votre telephone">
+        <label for="adresse">Adresse</label>
+        <input type="text" id="adresse" name="adresse" placeholder="Votre adresse">
+        <input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1">
+        <input type="hidden" name="name" value="calculatrice">
+        <button type="submit" class="cta-button">Calculatrice</button>
+      </form>
+    </div>
+  </div>
+  <div class="video">
+    <video controls>
+      <source src="https://alricpaon.github.io/sellyo-hosting/media/landing/calculatrice/" type="video/mp4">
+    </video>
+  </div>
+</div>
+<script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+</body>
+</html>
