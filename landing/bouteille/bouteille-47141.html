@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bouteille</title>
+    <style>
+        body {
+            background-color: #111111;
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .logo {
+            margin: 20px 0;
+        }
+        .logo img {
+            max-height: 80px;
+        }
+        .content {
+            text-align: center;
+            padding: 20px;
+        }
+        .columns {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        @media(min-width: 768px) {
+            .columns {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+        }
+        .main-image img {
+            max-width: 400px;
+            width: 100%;
+        }
+        .form-container {
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        input[type="text"], input[type="email"] {
+            padding: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            width: 100%;
+        }
+        input[type="submit"] {
+            background-color: #00ccff;
+            border: none;
+            border-radius: 5px;
+            color: #ffffff;
+            padding: 15px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .video {
+            margin-top: 20px;
+            max-width: 800px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">
+        <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/bouteille/" alt="Logo">
+    </div>
+    <div class="content">
+        <h1>Bouteille</h1>
+        <p>Bouteille</p>
+    </div>
+    <div class="columns">
+        <div class="main-image">
+            <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/bouteille/" alt="Main Image">
+        </div>
+        <div class="form-container">
+            <form id="lead-form" method="POST" action="#" data-redirect="">
+                <input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1">
+                <input type="hidden" name="name" value="bouteille">
+                <label for="nom">Nom</label>
+                <input type="text" id="nom" name="nom" placeholder="Votre nom">
+                <label for="prenom">Prenom</label>
+                <input type="text" id="prenom" name="prenom" placeholder="Votre prenom">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Votre email">
+                <label for="telephone">Telephone</label>
+                <input type="text" id="telephone" name="telephone" placeholder="Votre telephone">
+                <label for="adresse">Adresse</label>
+                <input type="text" id="adresse" name="adresse" placeholder="Votre adresse">
+                <input type="submit" value="bouteille">
+            </form>
+        </div>
+    </div>
+    <div class="video">
+        <video src="https://alricpaon.github.io/sellyo-hosting/media/landing/bouteille/" controls></video>
+    </div>
+    <script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+    <script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+</body>
+</html>
