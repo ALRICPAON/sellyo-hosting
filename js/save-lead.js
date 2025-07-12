@@ -1,16 +1,21 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// 🔧 Configuration Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyC2yzKA3kESPjgcFk6pojJQK4rNToywqJI",
   authDomain: "sellyo-3bbdb.firebaseapp.com",
   projectId: "sellyo-3bbdb",
   storageBucket: "sellyo-3bbdb.appspot.com",
   messagingSenderId: "465249279278",
-  appId: "1:465249279278:web:319844f7477ab47930eebf",
-  measurementId: "G-WWBQ4KPS5B"
+  appId: "1:465249279278:web:319844f7477ab47930eebf"
 };
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+// 🔌 Initialisation
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
+// 🧠 Soumission du formulaire
 const form = document.getElementById("lead-form");
 
 if (form) {
@@ -22,15 +27,19 @@ if (form) {
     formData.forEach((value, key) => {
       data[key] = value;
     });
-    data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
 
     try {
-      await db.collection("leads").add(data);
-      const redirect = form.getAttribute("action") || form.dataset.redirect || "?success=true";
-      window.location.href = redirect;
+      await addDoc(collection(db, "leads"), data);
+      const redirectURL = form.getAttribute("data-redirect");
+      if (redirectURL) {
+        window.location.href = redirectURL;
+      } else {
+        alert("Merci ! Votre demande a été envoyée.");
+        form.reset();
+      }
     } catch (error) {
-      console.error("❌ Erreur enregistrement du lead :", error);
-      alert("Erreur lors de l'envoi du formulaire. Veuillez réessayer.");
+      console.error("Erreur lors de l'enregistrement du lead :", error);
+      alert("Erreur lors de l'envoi. Veuillez réessayer.");
     }
   });
 }
