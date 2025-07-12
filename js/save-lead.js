@@ -1,8 +1,8 @@
-import { app } from "./firebase-init.js"; // 🔗 Import propre
+// js/save-lead.js
+import { app } from "./firebase-init.js";
 import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const db = getFirestore(app);
-
 const form = document.getElementById("lead-form");
 
 if (form) {
@@ -12,8 +12,14 @@ if (form) {
     const formData = new FormData(form);
     const data = {};
     formData.forEach((value, key) => {
-      data[key] = value;
+      data[key] = value.trim();
     });
+
+    // 🧪 Sécurité : vérifie qu’au moins email ou téléphone est rempli
+    if (!data.email && !data.telephone) {
+      alert("Merci de renseigner au moins un email ou un numéro de téléphone.");
+      return;
+    }
 
     try {
       await addDoc(collection(db, "leads"), data);
