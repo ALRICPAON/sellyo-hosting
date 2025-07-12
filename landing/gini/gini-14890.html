@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>gini</title>
+<style>
+body {background-color: #111111; color: #ffffff; font-family: sans-serif; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh;}
+header {text-align: center;}
+.container {display: flex; flex-wrap: wrap; justify-content: center; align-items: center; max-width: 1200px; margin: 20px;}
+.container img {max-width: 400px; margin: 10px;}
+form {background-color: #ffffff; color: #000000; padding: 20px; border-radius: 8px; display: flex; flex-direction: column; max-width: 400px; margin: 10px;}
+form label {margin-bottom: 5px; color: #111111;}
+form input[type="text"], form input[type="email"] {padding: 10px; margin-bottom: 10px; border: none; border-radius: 4px; width: 100%;}
+form input[type="submit"] {background-color: #00ccff; color: #ffffff; border: none; padding: 15px; border-radius: 4px; cursor: pointer; text-align: center; width: 100%;}
+form input[type="submit"]:hover {background-color: #009bcc;}
+video {max-width: 800px; margin: 20px;}
+</style>
+</head>
+<body>
+<header>
+<img src="https://alricpaon.github.io/sellyo-hosting/media/landing/gini/logo.jpg" alt="Logo" style="max-height: 80px; margin-top: 20px;">
+</header>
+<h1>gini</h1>
+<p>gini</p>
+<div class="container">
+<img src="https://alricpaon.github.io/sellyo-hosting/media/landing/gini/Capture d’écran 2025-07-12 à 20.43.32.png" alt="Main Image">
+<form id="lead-form" method="POST">
+<label for="nom">Nom</label>
+<input type="text" name="nom" placeholder="Votre nom" required>
+<label for="prenom">Prenom</label>
+<input type="text" name="prenom" placeholder="Votre prenom" required>
+<label for="email">Email</label>
+<input type="email" name="email" placeholder="Votre email" required>
+<label for="telephone">Telephone</label>
+<input type="text" name="telephone" placeholder="Votre telephone" required>
+<label for="adresse">Adresse</label>
+<input type="text" name="adresse" placeholder="Votre adresse" required>
+<input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1">
+<input type="hidden" name="name" value="gini">
+<input type="hidden" name="type" value="landing">
+<input type="submit" value="gini">
+</form>
+</div>
+<video controls>
+<source src="https://alricpaon.github.io/sellyo-hosting/media/landing/gini/20250607_1016_AI%20Builds%20Sales%20Funnel_simple_compose_01jx4qcv5zew2s3ft8qystphx4.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+<script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+</body>
+</html>
