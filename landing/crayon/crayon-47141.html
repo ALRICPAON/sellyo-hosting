@@ -1,0 +1,110 @@
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crayon</title>
+    <style>
+        body {
+            background-color: #111111;
+            color: #ffffff;
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            max-width: 1000px;
+            padding: 20px;
+            text-align: center;
+        }
+        img.logo {
+            max-height: 80px;
+            margin-bottom: 20px;
+        }
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin: 20px 0;
+        }
+        p {
+            margin: 20px 0;
+        }
+        .columns {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .image-column {
+            max-width: 400px;
+            margin-bottom: 20px;
+        }
+        .form-column {
+            width: 100%;
+            max-width: 400px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #00ccff;
+            color: #111111;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .video {
+            max-width: 800px;
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/crayon/" alt="Logo" class="logo">
+        <div class="content">
+            <h1>Crayon</h1>
+            <p>Crayon</p>
+            <div class="columns">
+                <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/crayon/" alt="Image principale" class="image-column">
+                <div class="form-column">
+                    <form id="lead-form" method="POST" action="#" data-redirect="">
+                        <input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1">
+                        <input type="hidden" name="name" value="crayon">
+                        <input type="text" name="nom" placeholder="Votre nom">
+                        <input type="text" name="prenom" placeholder="Votre prenom">
+                        <input type="email" name="email" placeholder="Votre email">
+                        <input type="text" name="telephone" placeholder="Votre telephone">
+                        <input type="text" name="adresse" placeholder="Votre adresse">
+                        <button type="submit">Crayon</button>
+                    </form>
+                </div>
+            </div>
+            <video class="video" controls>
+                <source src="https://alricpaon.github.io/sellyo-hosting/media/landing/crayon/" type="video/mp4">
+                Votre navigateur ne supporte pas la lecture des vidéos.
+            </video>
+        </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://cdn.sellyo.fr/js/save-lead-classic.js"></script>
+</body>
+</html>
+```
