@@ -1,5 +1,4 @@
 // js/firebase-init.js
-
 import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 
 const firebaseConfig = {
@@ -12,7 +11,7 @@ const firebaseConfig = {
   measurementId: "G-WWBQ4KPS5B"
 };
 
-// Initialisation sécurisée (évite les erreurs "already exists")
+// ✅ Initialisation sécurisée
 export const app = getApps().length === 0
   ? initializeApp(firebaseConfig)
   : getApps()[0];
