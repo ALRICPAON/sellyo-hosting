@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLES Landing Page</title>
+<style>
+body {
+    background-color: #111111;
+    color: #ffffff;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+.container {
+    width: 90%;
+    max-width: 1200px;
+}
+header {
+    text-align: center;
+    padding: 20px 0;
+}
+header img {
+    max-height: 80px;
+}
+h1 {
+    color: #00ccff;
+    text-align: center;
+}
+p {
+    text-align: center;
+    font-size: 1.2em;
+    margin-bottom: 40px;
+}
+.flex-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.flex-container > div {
+    margin: 20px;
+}
+.flex-container img {
+    max-width: 400px;
+    width: 100%;
+}
+form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 400px;
+}
+form input[type="text"], 
+form input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+}
+form input[type="submit"] {
+    background-color: #00ccff;
+    color: #ffffff;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+form input[type="submit"]:hover {
+    background-color: #0099cc;
+}
+.video-container {
+    margin-top: 50px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+video {
+    max-width: 800px;
+    width: 100%;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/cles/" alt="Logo CLES">
+    </header>
+    <h1>cles</h1>
+    <p>cles</p>
+    <div class="flex-container">
+        <div>
+            <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/cles/" alt="Image Principale">
+        </div>
+        <div>
+            <form id="lead-form" method="POST">
+                <input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1">
+                <input type="hidden" name="name" value="cles">
+                <label for="nom">Nom</label>
+                <input type="text" name="nom" placeholder="Votre nom" required>
+                <label for="prenom">Prenom</label>
+                <input type="text" name="prenom" placeholder="Votre prenom" required>
+                <label for="email">Email</label>
+                <input type="email" name="email" placeholder="Votre email" required>
+                <label for="telephone">Telephone</label>
+                <input type="text" name="telephone" placeholder="Votre telephone" required>
+                <label for="adresse">Adresse</label>
+                <input type="text" name="adresse" placeholder="Votre adresse" required>
+                <input type="submit" value="cles">
+            </form>
+        </div>
+    </div>
+    <div class="video-container">
+        <video controls>
+            <source src="https://alricpaon.github.io/sellyo-hosting/media/landing/cles/" type="video/mp4">
+        </video>
+    </div>
+</div>
+<script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+</body>
+</html>
