@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Souris - Landing Page</title>
+<style>
+    body {
+        background-color: #111111;
+        color: white;
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    header {
+        text-align: center;
+        padding: 20px;
+    }
+    header img {
+        max-height: 80px;
+    }
+    main {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    h1 {
+        text-align: center;
+        color: #00ccff;
+        margin-bottom: 20px;
+    }
+    p {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    .content {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+    }
+    .content img {
+        max-width: 400px;
+        flex: 1 1 400px;
+    }
+    form {
+        flex: 1 1 400px;
+        max-width: 400px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        background-color: #222222;
+        padding: 20px;
+        border-radius: 8px;
+    }
+    label {
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    input[type="text"], input[type="email"] {
+        padding: 10px;
+        border-radius: 5px;
+        border: none;
+        width: 100%;
+    }
+    input[type="submit"] {
+        background-color: #00ccff;
+        color: #111111;
+        border: none;
+        padding: 15px;
+        border-radius: 25px;
+        cursor: pointer;
+        width: 100%;
+    }
+    input[type="submit"]:hover {
+        background-color: #0099cc;
+    }
+    .video-container {
+        text-align: center;
+        margin-top: 40px;
+    }
+    .video-container video {
+        max-width: 800px;
+        width: 100%;
+    }
+</style>
+</head>
+<body>
+<header>
+    <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/souris/" alt="Logo">
+</header>
+<main>
+    <h1>Souris</h1>
+    <p>Souris</p>
+    <div class="content">
+        <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/souris/" alt="Image Principale">
+        <form id="lead-form" method="POST" action="#" data-redirect="https://cdn.sellyo.fr/merci.html">
+            <label for="nom">Nom</label>
+            <input type="text" id="nom" name="nom" placeholder="Votre nom">
+            <label for="prenom">Prénom</label>
+            <input type="text" id="prenom" name="prenom" placeholder="Votre prenom">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Votre email">
+            <label for="telephone">Téléphone</label>
+            <input type="text" id="telephone" name="telephone" placeholder="Votre telephone">
+            <label for="adresse">Adresse</label>
+            <input type="text" id="adresse" name="adresse" placeholder="Votre adresse">
+            <input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1">
+            <input type="hidden" name="name" value="souris">
+            <input type="submit" value="Souris">
+        </form>
+    </div>
+    <div class="video-container">
+        <video controls>
+            <source src="https://alricpaon.github.io/sellyo-hosting/media/landing/souris/" type="video/mp4">
+        </video>
+    </div>
+</main>
+<script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+</body>
+</html>
