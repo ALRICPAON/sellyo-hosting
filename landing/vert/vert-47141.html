@@ -1,0 +1,142 @@
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page de Destination</title>
+    <style>
+        body {
+            background-color: #111111;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        header {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+        header img {
+            max-height: 80px;
+        }
+        h1 {
+            color: #00ccff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .description {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            width: 100%;
+        }
+        .content img {
+            max-width: 400px;
+            width: 100%;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 400px;
+            background-color: #222222;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        label {
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #333333;
+            color: white;
+        }
+        .cta-button {
+            background-color: #00ccff;
+            color: white;
+            padding: 15px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .video-container {
+            margin-top: 40px;
+            max-width: 800px;
+            width: 100%;
+        }
+        @media (min-width: 768px) {
+            .content {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/vert/" alt="Logo">
+    </header>
+    
+    <h1>htejhzzterjzt</h1>
+    <p class="description">hzethjjje§tj§e</p>
+
+    <div class="content">
+        <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/vert/" alt="Main Image">
+        
+        <form id="lead-form" method="POST" action="#">
+            <input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1">
+            <input type="hidden" name="name" value="vert">
+            
+            <label for="nom">Nom</label>
+            <input type="text" id="nom" name="nom" placeholder="Votre nom" required>
+            
+            <label for="prenom">Prenom</label>
+            <input type="text" id="prenom" name="prenom" placeholder="Votre prenom" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Votre email" required>
+
+            <label for="telephone">Telephone</label>
+            <input type="text" id="telephone" name="telephone" placeholder="Votre telephone" required>
+
+            <label for="adresse">Adresse</label>
+            <input type="text" id="adresse" name="adresse" placeholder="Votre adresse" required>
+
+            <button type="submit" class="cta-button">htejht</button>
+        </form>
+    </div>
+
+    <div class="video-container">
+        <video src="https://alricpaon.github.io/sellyo-hosting/media/landing/vert/" controls style="width: 100%; height: auto;"></video>
+    </div>
+</div>
+
+<script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+</body>
+</html>
+```
