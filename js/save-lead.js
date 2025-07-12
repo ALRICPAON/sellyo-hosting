@@ -1,4 +1,4 @@
-// js/save-lead.js
+// save-lead.js – corrige détection du formulaire et enregistrement Firestore
 
 import { app } from './firebase-init.js';
 import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -21,11 +21,11 @@ if (form) {
 
     try {
       await addDoc(collection(db, "leads"), data);
-      const redirect = form.getAttribute("action") || form.dataset.redirect || "/";
-      window.location.href = redirect + "?success=true";
+      const redirect = form.getAttribute("action") || form.dataset.redirect || "?success=true";
+      window.location.href = redirect;
     } catch (error) {
-      console.error("Erreur lors de l'enregistrement du lead :", error);
-      alert("Une erreur est survenue. Veuillez réessayer.");
+      console.error("❌ Erreur enregistrement du lead :", error);
+      alert("Erreur lors de l'envoi du formulaire. Veuillez réessayer.");
     }
   });
 }
