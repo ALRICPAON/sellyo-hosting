@@ -9,32 +9,32 @@ if (form) {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const formData = new FormData(form);
-    const data = {};
-    formData.forEach((value, key) => {
-      data[key] = value.trim();
-    });
+    const nom = form.querySelector('input[name="nom"]')?.value.trim();
+    const email = form.querySelector('input[name="email"]')?.value.trim();
+    const telephone = form.querySelector('input[name="telephone"]')?.value.trim();
+    const message = form.querySelector('textarea[name="message"]')?.value.trim();
+    const type = form.querySelector('input[name="type"]')?.value || "landing";
 
-    // 🧪 Sécurité : email ou téléphone obligatoire
-    if (!data.email && !data.telephone) {
+    if (!email && !telephone) {
       alert("Merci de renseigner au moins un email ou un numéro de téléphone.");
       return;
     }
 
-    // ✅ Timestamp correct pour Firestore
-    data.createdAt = serverTimestamp();
-
-    // 📦 Défaut : type "landing" si rien précisé
-    if (!data.type) {
-      data.type = "landing";
-    }
+    const lead = {
+      nom: nom || "",
+      email: email || "",
+      telephone: telephone || "",
+      message: message || "",
+      type,
+      createdAt: serverTimestamp()
+    };
 
     try {
-      await addDoc(collection(db, "leads"), data);
+      await addDoc(collection(db, "leads"), lead);
       window.location.href = "https://cdn.sellyo.fr/merci.html";
-    } catch (error) {
-      console.error("Erreur lors de l'enregistrement du lead :", error);
-      alert("Erreur lors de l'envoi. Veuillez réessayer.");
+    } catch (err) {
+      console.error("Erreur lors de l'enregistrement :", err);
+      alert("Erreur lors de l'envoi du formulaire.");
     }
   });
 }
