@@ -1,3 +1,4 @@
+// js/save-lead.js
 import { app } from "./firebase-init.js";
 import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
@@ -12,8 +13,10 @@ if (form) {
     const prenom = form.querySelector('input[name="prenom"]')?.value.trim();
     const email = form.querySelector('input[name="email"]')?.value.trim();
     const telephone = form.querySelector('input[name="telephone"]')?.value.trim();
-    const type = form.querySelector('input[name="type"]')?.value || "landing";
+    const adresse = form.querySelector('input[name="adresse"]')?.value.trim();
     const userId = form.querySelector('input[name="userId"]')?.value.trim();
+    const name = form.querySelector('input[name="name"]')?.value.trim();
+    const type = form.querySelector('input[name="type"]')?.value.trim();
 
     if (!email && !telephone) {
       alert("Merci de renseigner au moins un email ou un numéro de téléphone.");
@@ -26,7 +29,9 @@ if (form) {
       prenom: prenom || "",
       email: email || "",
       telephone: telephone || "",
-      type,
+      adresse: adresse || "",
+      type: type || "landing",
+      name: name || "",
       createdAt: serverTimestamp()
     };
 
