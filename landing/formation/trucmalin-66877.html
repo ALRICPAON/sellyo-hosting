@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formation Truc Malin</title>
+<style>
+  body {
+    background-color: #006d8f;
+    color: white;
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  header {
+    text-align: center;
+    margin: 20px 0;
+  }
+  h1, p {
+    text-align: center;
+    margin: 15px;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .responsive {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  .responsive img {
+    max-width: 400px;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  form {
+    background-color: #74a7fe;
+    padding: 20px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 400px;
+  }
+  form label, form input {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  form input[type="text"], form input[type="email"] {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  .cta-button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: #74a7fe;
+    color: #006d8f;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+  }
+  video {
+    max-width: 800px;
+    width: 100%;
+    margin: 20px 0;
+  }
+  @media (min-width: 768px) {
+    .responsive {
+      flex-direction: row;
+      justify-content: space-around;
+    }
+    .responsive img, form {
+      max-width: 45%;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+<img src="https://alricpaon.github.io/sellyo-hosting/media/landing/formation/5077fdf7890a2c5aa673ea0932cd5344_tplv-tiktokx-cropcenter-1080-1080.jpg.avif" alt="Logo" style="max-height: 80px; margin-top: 20px;">
+</header>
+<div class="container">
+<h1>Récolter des leads</h1>
+<p>Accede a une formation pour apprendre a faire du e-commerce ou meme a vendre via un tunnel de vente tout ca je te l'offre mais attention c'est exclusif et c'est maintenant</p>
+<div class="responsive">
+<img src="https://alricpaon.github.io/sellyo-hosting/media/landing/formation/ChatGPT%20Image%209%20juin%202025%20à%2014_13_04.png" alt="Formation">
+<form id="lead-form" method="POST">
+<label for="prenom">Prenom</label>
+<input type="text" id="prenom" name="prenom" placeholder="Votre prenom" required>
+<label for="email">Email</label>
+<input type="email" id="email" name="email" placeholder="Votre email" required>
+<label for="telephone">Telephone</label>
+<input type="text" id="telephone" name="telephone" placeholder="Votre telephone" required>
+<input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1">
+<input type="hidden" name="name" value="formation truc malin">
+<input type="hidden" name="type" value="landing">
+<a href="#" class="cta-button">Go pour la formation</a>
+</form>
+</div>
+<video controls>
+<source src="https://alricpaon.github.io/sellyo-hosting/media/landing/formation/20250606_2249_Surprising%20Income%20Alert_simple_compose_01jx3g2d0sexssxfw8cszgqzct.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+</div>
+<script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+</body>
+</html>
