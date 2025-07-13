@@ -15,18 +15,18 @@ if (form) {
       data[key] = value.trim();
     });
 
-    // 🧪 Sécurité : vérifie qu’au moins email ou téléphone est rempli
+    // 🧪 Sécurité : email ou téléphone obligatoire
     if (!data.email && !data.telephone) {
       alert("Merci de renseigner au moins un email ou un numéro de téléphone.");
       return;
     }
 
-    // 🧩 Ajoute le timestamp
-    data.createdAt = new Date().toISOString();
+    // ✅ Timestamp correct pour Firestore
+    data.createdAt = serverTimestamp();
 
-    // 📦 Ajoute le type si pas déjà dans le formulaire HTML
+    // 📦 Défaut : type "landing" si rien précisé
     if (!data.type) {
-      data.type = "landing"; // ou "tunnel", "email", selon la page
+      data.type = "landing";
     }
 
     try {
