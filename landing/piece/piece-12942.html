@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Piece - Landing Page</title>
+<style>
+  body {
+    background-color: #111111;
+    color: white;
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  header {
+    text-align: center;
+    padding-top: 20px;
+  }
+  h1, p {
+    text-align: center;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  .responsive-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 800px;
+    margin: 20px auto;
+  }
+  .responsive-block > div {
+    flex: 1;
+    margin: 10px;
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 400px;
+  }
+  label {
+    margin-bottom: 5px;
+  }
+  input[type="text"], input[type="email"] {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  button {
+    background-color: #00ccff;
+    color: #111111;
+    border: none;
+    padding: 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+  }
+  video {
+    max-width: 800px;
+    width: 100%;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+<header>
+  <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/piece/logo.jpg" alt="Logo">
+</header>
+<div class="container">
+  <h1>piece</h1>
+  <p>piece</p>
+  <div class="responsive-block">
+    <div>
+      <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/piece/landing.png" alt="Main Image">
+    </div>
+    <div>
+      <form id="lead-form" method="POST">
+        <label for="nom">Nom</label>
+        <input type="text" id="nom" name="nom" placeholder="Votre nom" required>
+        <label for="prenom">Prenom</label>
+        <input type="text" id="prenom" name="prenom" placeholder="Votre prenom" required>
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="Votre email" required>
+        <label for="telephone">Telephone</label>
+        <input type="text" id="telephone" name="telephone" placeholder="Votre telephone" required>
+        <label for="adresse">Adresse</label>
+        <input type="text" id="adresse" name="adresse" placeholder="Votre adresse" required>
+        <input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1">
+        <input type="hidden" name="name" value="piece">
+        <input type="hidden" name="type" value="landing">
+        <button type="submit">piece</button>
+      </form>
+    </div>
+  </div>
+  <video controls>
+    <source src="https://alricpaon.github.io/sellyo-hosting/media/landing/piece/20250607_1027_AI-Generated%20Inspiration_simple_compose_01jx4r1qwzf2gbd67dqnhrsgha.mp4" type="video/mp4">
+    Votre navigateur ne supporte pas la lecture vidéo.
+  </video>
+</div>
+<script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+</body>
+</html>
