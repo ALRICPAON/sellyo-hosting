@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agence IA Creator</title>
+<style>
+  body {
+    background-color: #371a94;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
+  header img {
+    max-height: 80px;
+    margin-top: 20px;
+  }
+  h1 {
+    color: #ffffff;
+  }
+  p {
+    color: #ffffff;
+    margin: 20px;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 800px;
+  }
+  .content img {
+    max-width: 400px;
+    height: auto;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    max-width: 400px;
+    margin-top: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+  }
+  form label {
+    text-align: left;
+    margin-top: 10px;
+  }
+  form input[type="text"], 
+  form input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: none;
+    border-radius: 5px;
+    color: #000;
+  }
+  form input[type="submit"] {
+    background-color: #b51a00;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  form input[type="submit"]:hover {
+    background-color: #a01700;
+  }
+  video {
+    margin-top: 20px;
+    width: 100%;
+    max-width: 800px;
+  }
+</style>
+</head>
+<body>
+<header>
+  <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/iacreator/logo.jpg" alt="Logo">
+</header>
+<div class="container">
+  <h1>Récolter des mails</h1>
+  <p>Cette agence est la pour te faire tes contenues video ou meme preparer tes postes sur les reseaux nous t'accompagnons pour augmenter ton nombre d'abonné</p>
+  <div class="content">
+    <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/iacreator/683ea8089e9ae_ChatGPTImage3juin2025a09_44_59.png" alt="Image Principale">
+    <form id="lead-form" method="POST">
+      <label for="nom">Nom :</label>
+      <input type="text" id="nom" name="nom" placeholder="Votre nom" required>
+      <label for="prenom">Prénom :</label>
+      <input type="text" id="prenom" name="prenom" placeholder="Votre prenom" required>
+      <label for="email">Email :</label>
+      <input type="email" id="email" name="email" placeholder="Votre email" required>
+      <label for="telephone">Téléphone :</label>
+      <input type="text" id="telephone" name="telephone" placeholder="Votre telephone" required>
+      <label for="adresse">Adresse :</label>
+      <input type="text" id="adresse" name="adresse" placeholder="Votre adresse" required>
+      <input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1">
+      <input type="hidden" name="name" value="agence ia creator">
+      <input type="hidden" name="type" value="landing">
+      <input type="submit" value="ia creator">
+    </form>
+  </div>
+  <video controls>
+    <source src="https://alricpaon.github.io/sellyo-hosting/media/landing/iacreator/20250606_2339_Futuristic AI Workspace_simple_compose_01jx3jyvd1e3hvf4k7sjy0b0gz.mp4" type="video/mp4">
+    Votre navigateur ne supporte pas la lecture de vidéo.
+  </video>
+</div>
+<script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+</body>
+</html>
