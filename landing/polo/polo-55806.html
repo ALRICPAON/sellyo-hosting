@@ -1,0 +1,114 @@
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Polo Landing</title>
+<style>
+    body {
+        background-color: #111111;
+        color: #ffffff;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+    }
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    header img {
+        display: block;
+        margin: 0 auto;
+        max-height: 80px;
+    }
+    h1 {
+        color: #00ccff;
+    }
+    .content {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        margin-top: 40px;
+    }
+    .left, .right {
+        flex: 1;
+        min-width: 300px;
+        padding: 20px;
+    }
+    .left img {
+        max-width: 400px;
+        width: 100%;
+    }
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    input[type="text"],
+    input[type="email"] {
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+    }
+    input[type="text"]:focus,
+    input[type="email"]:focus {
+        outline: none;
+        border: 1px solid #00ccff;
+    }
+    .cta-button {
+        background-color: #00ccff;
+        color: #111111;
+        padding: 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+        font-size: 16px;
+    }
+    video {
+        max-width: 800px;
+        width: 100%;
+        margin-top: 40px;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/polo/5077fdf7890a2c5aa673ea0932cd5344_tplv-tiktokx-cropcenter-1080-1080.jpg.avif" alt="Logo">
+    </header>
+    <h1>polo</h1>
+    <p>polo</p>
+    <div class="content">
+        <div class="left">
+            <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/polo/payment.png" alt="Image Principale">
+        </div>
+        <div class="right">
+            <form id="lead-form" method="POST">
+                <label for="prenom">Prenom</label>
+                <input type="text" id="prenom" name="prenom" placeholder="Votre prenom" required>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Votre email" required>
+                <label for="telephone">Telephone</label>
+                <input type="text" id="telephone" name="telephone" placeholder="Votre telephone" required>
+                <input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1">
+                <input type="hidden" name="name" value="polo">
+                <input type="hidden" name="type" value="landing">
+                <button type="submit" class="cta-button">polo</button>
+            </form>
+        </div>
+    </div>
+    <video controls>
+        <source src="https://alricpaon.github.io/sellyo-hosting/media/landing/polo/20250606_2305_Surprise Income Delight_simple_compose_01jx3h05jxe8gs3bj6t4a5kgxb.mp4" type="video/mp4">
+        Votre navigateur ne supporte pas la lecture de vidéo.
+    </video>
+</div>
+<script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+</body>
+</html>
+```
