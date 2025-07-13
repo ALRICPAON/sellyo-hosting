@@ -22,7 +22,7 @@ if (form) {
     }
 
     // 🧩 Ajoute le timestamp
-    data.createdAt = serverTimestamp();
+    data.createdAt = new Date().toISOString();
 
     // 📦 Ajoute le type si pas déjà dans le formulaire HTML
     if (!data.type) {
