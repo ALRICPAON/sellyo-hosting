@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chaud</title>
+    <style>
+        body {
+            background-color: #111111;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header {
+            margin-top: 20px;
+            text-align: center;
+        }
+        img {
+            max-height: 80px;
+        }
+        h1, p {
+            text-align: center;
+            margin: 10px 0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+        }
+        .row {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        .row img {
+            max-width: 400px;
+            width: 100%;
+        }
+        @media(min-width: 768px) {
+            .row {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+        }
+        form {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        label {
+            margin: 10px 0 5px;
+        }
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #00ccff;
+            border-radius: 5px;
+            background-color: #222222;
+            color: #ffffff;
+        }
+        input[type="submit"] {
+            background-color: #00ccff;
+            color: #111111;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 16px;
+        }
+        video {
+            margin-top: 30px;
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/chaud/logo.jpg" alt="Logo">
+    </header>
+    <div class="container">
+        <h1>chaud</h1>
+        <p>chaud</p>
+        <div class="row">
+            <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/chaud/ChatGPT_Image_12_mai_2025_12_58_25.png" alt="Image Principale">
+            <form id="lead-form" method="POST">
+                <label for="nom">Nom</label>
+                <input type="text" id="nom" name="nom" placeholder="Votre nom" required>
+                <label for="prenom">Prenom</label>
+                <input type="text" id="prenom" name="prenom" placeholder="Votre prenom" required>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Votre email" required>
+                <label for="telephone">Telephone</label>
+                <input type="text" id="telephone" name="telephone" placeholder="Votre telephone" required>
+                <label for="adresse">Adresse</label>
+                <input type="text" id="adresse" name="adresse" placeholder="Votre adresse" required>
+                <input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1">
+                <input type="hidden" name="name" value="chaud">
+                <input type="hidden" name="type" value="landing">
+                <input type="submit" value="chaud">
+            </form>
+        </div>
+        <video controls>
+            <source src="https://alricpaon.github.io/sellyo-hosting/media/landing/chaud/20250606_2305_Surprise Income Delight_simple_compose_01jx3h05jxe8gs3bj6t4a5kgxb.mp4" type="video/mp4">
+            Votre navigateur ne supporte pas la balise vidéo.
+        </video>
+    </div>
+    <script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+    <script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+</body>
+</html>
