@@ -9,12 +9,11 @@ if (form) {
     e.preventDefault();
 
     const nom = form.querySelector('input[name="nom"]')?.value.trim();
+    const prenom = form.querySelector('input[name="prenom"]')?.value.trim();
     const email = form.querySelector('input[name="email"]')?.value.trim();
     const telephone = form.querySelector('input[name="telephone"]')?.value.trim();
-    const message = form.querySelector('textarea[name="message"]')?.value.trim();
     const type = form.querySelector('input[name="type"]')?.value || "landing";
     const userId = form.querySelector('input[name="userId"]')?.value.trim();
-    const name = form.querySelector('input[name="name"]')?.value.trim();
 
     if (!email && !telephone) {
       alert("Merci de renseigner au moins un email ou un numéro de téléphone.");
@@ -22,13 +21,12 @@ if (form) {
     }
 
     const lead = {
+      userId: userId || "",
       nom: nom || "",
+      prenom: prenom || "",
       email: email || "",
       telephone: telephone || "",
-      message: message || "",
       type,
-      userId: userId || "",
-      name: name || "",
       createdAt: serverTimestamp()
     };
 
