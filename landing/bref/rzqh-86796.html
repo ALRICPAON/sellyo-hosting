@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>beh</title>
+<style>
+body {
+    background-color: #111111;
+    color: #ffffff;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+h1, p {
+    text-align: center;
+}
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+form {
+    max-width: 400px;
+    width: 100%;
+}
+label {
+    display: block;
+    margin-top: 10px;
+}
+input[type="text"], input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+button {
+    width: 100%;
+    padding: 15px;
+    background-color: #00ccff;
+    color: #111111;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+}
+button:hover {
+    opacity: 0.9;
+}
+@media (min-width: 769px) {
+    .content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .form-container {
+        width: 50%;
+    }
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>href</h1>
+<p>href</p>
+<div class="content">
+<div class="form-container">
+<form id="lead-form" method="POST">
+<label for="nom">Nom</label>
+<input type="text" id="nom" name="nom" placeholder="Votre nom" required>
+<label for="prenom">Prenom</label>
+<input type="text" id="prenom" name="prenom" placeholder="Votre prenom" required>
+<label for="email">Email</label>
+<input type="email" id="email" name="email" placeholder="Votre email" required>
+<input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1">
+<input type="hidden" name="name" value="beh">
+<input type="hidden" name="type" value="landing">
+<button type="submit">hreh</button>
+</form>
+</div>
+</div>
+</div>
+<script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+</body>
+</html>
