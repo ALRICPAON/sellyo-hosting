@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monnaie</title>
+<style>
+body {background-color: #ff8c82; color: white; font-family: sans-serif; margin: 0; padding: 20px;}
+.container {max-width: 1200px; margin: 0 auto;}
+h1, p {text-align: center;}
+form {display: flex; flex-direction: column; gap: 15px; background-color: #831100; padding: 20px; border-radius: 8px;}
+input[type="text"], input[type="email"] {padding: 10px; border: none; border-radius: 4px; font-size: 1em;}
+button {background-color: #831100; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 1em; cursor: pointer;}
+button:hover {background-color: #a42a10;}
+.row {display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-top: 20px;}
+.column {flex: 1 1 45%; max-width: 500px;}
+img {max-width: 100%; height: auto; display: block; margin: 0 auto;}
+video {width: 100%; height: auto; display: block; margin: 20px auto; max-width: 800px;}
+</style>
+</head>
+<body>
+<header>
+<img src="https://alricpaon.github.io/sellyo-hosting/media/landing/monnaie/logo.jpg" alt="Logo" style="max-height: 80px; margin-top: 20px;">
+</header>
+<div class="container">
+<h1>Monnaie</h1>
+<p>Monnaie</p>
+<div class="row">
+<div class="column">
+<img src="https://alricpaon.github.io/sellyo-hosting/media/landing/monnaie/landing.png" alt="Image Principale">
+</div>
+<div class="column">
+<form id="lead-form" method="POST">
+<input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1">
+<input type="hidden" name="name" value="monnaie">
+<input type="hidden" name="type" value="landing">
+<label for="prenom">Prenom</label>
+<input type="text" id="prenom" name="prenom" placeholder="Votre prenom" required>
+<label for="email">Email</label>
+<input type="email" id="email" name="email" placeholder="Votre email" required>
+<button type="submit">Monnaie</button>
+</form>
+</div>
+</div>
+<video controls>
+<source src="https://alricpaon.github.io/sellyo-hosting/media/landing/monnaie/20250606_2328_From%20Frustration%20to%20Focus_simple_compose_01jx3j9nh3fy3tws7vgpawd0z4.mp4" type="video/mp4">
+Votre navigateur ne supporte pas cette vidéo.
+</video>
+</div>
+<script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+</body>
+</html>
