@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ordi22</title>
+<style>
+  body {background-color: #00364a; color: #ffffff; font-family: Arial, sans-serif; margin: 0; padding: 0;}
+  .container {max-width: 1000px; margin: 0 auto; padding: 20px;}
+  h1 {color: #ffffff; text-align: center;}
+  p {font-size: 1.2em; text-align: center;}
+  .columns {display: flex; flex-wrap: wrap; justify-content: space-between;}
+  .form-column, .image-column {flex: 1 1 45%;}
+  .form-column {align-self: center;}
+  form {background-color: #ffffff; padding: 20px; border-radius: 8px;}
+  label {display: block; margin-bottom: 5px;}
+  input[type=text], input[type=email] {width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px;}
+  input[type=submit] {background-color: #929292; color: #ffffff; border: none; padding: 15px; border-radius: 4px; width: 100%; font-size: 1em; cursor: pointer;}
+  .video-container {text-align: center; margin: 20px 0;}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>ordi22</h1>
+<p>ordi22</p>
+<div class="columns">
+<div class="image-column">
+<img src="https://alricpaon.github.io/sellyo-hosting/media/landing/ordi22/payment.png" alt="Image Principale" style="max-width: 400px; width: 100%;">
+</div>
+<div class="form-column">
+<form id="lead-form" method="POST">
+<input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1">
+<input type="hidden" name="name" value="ordi22">
+<input type="hidden" name="type" value="landing">
+<label for="nom">Nom</label>
+<input type="text" id="nom" name="nom" placeholder="Votre nom" required>
+<label for="prenom">Prenom</label>
+<input type="text" id="prenom" name="prenom" placeholder="Votre prenom" required>
+<label for="email">Email</label>
+<input type="email" id="email" name="email" placeholder="Votre email" required>
+<label for="telephone">Telephone</label>
+<input type="text" id="telephone" name="telephone" placeholder="Votre telephone" required>
+<label for="adresse">Adresse</label>
+<input type="text" id="adresse" name="adresse" placeholder="Votre adresse" required>
+<input type="submit" value="ordi22">
+</form>
+</div>
+</div>
+<div class="video-container">
+<video controls style="max-width: 800px; width: 100%;">
+<source src="https://alricpaon.github.io/sellyo-hosting/media/landing/ordi22/56fbea94-b06b-4896-9150-80a496d8f7db-h265-hd.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+</div>
+</div>
+<script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+</body>
+</html>
