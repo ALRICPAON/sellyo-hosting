@@ -1,8 +1,10 @@
 // js/save-lead.js
 import { app } from "./firebase-init.js";
 import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const db = getFirestore(app);
+const auth = getAuth(app);
 const form = document.getElementById("lead-form");
 
 if (form) {
@@ -14,7 +16,6 @@ if (form) {
     const email = form.querySelector('input[name="email"]')?.value.trim();
     const telephone = form.querySelector('input[name="telephone"]')?.value.trim();
     const adresse = form.querySelector('input[name="adresse"]')?.value.trim();
-    const userId = form.querySelector('input[name="userId"]')?.value.trim();
     const name = form.querySelector('input[name="name"]')?.value.trim();
     const type = form.querySelector('input[name="type"]')?.value.trim();
 
@@ -23,8 +24,11 @@ if (form) {
       return;
     }
 
+    const currentUser = auth.currentUser;
+    const userId = currentUser?.uid || "";
+
     const lead = {
-      userId: userId || "",
+      userId,
       nom: nom || "",
       prenom: prenom || "",
       email: email || "",
