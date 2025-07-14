@@ -1,3 +1,4 @@
+alert("✅ Script save-lead.js bien chargé");
 // js/save-lead.js
 import { app } from "./firebase-init.js";
 import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
