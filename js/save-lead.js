@@ -7,11 +7,10 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const form = document.getElementById("lead-form");
 
-// Fonction universelle pour obtenir user.uid même si ça prend du temps
 async function getCurrentUser() {
   return new Promise((resolve) => {
     const unsub = onAuthStateChanged(auth, (user) => {
-      unsub(); // on se désabonne dès qu'on a une réponse
+      unsub();
       resolve(user);
     });
   });
@@ -21,9 +20,9 @@ if (form) {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // Attendre Firebase Auth
     const firebaseUser = await getCurrentUser();
 
+    // Récupération des champs
     const nom = form.querySelector('input[name="nom"]')?.value.trim();
     const prenom = form.querySelector('input[name="prenom"]')?.value.trim();
     const email = form.querySelector('input[name="email"]')?.value.trim();
@@ -34,6 +33,11 @@ if (form) {
     const userIdFromHTML = form.querySelector('input[name="userId"]')?.value.trim();
 
     const userId = firebaseUser?.uid || userIdFromHTML || "";
+
+    // DEBUG : afficher dans la console
+    console.log("Firebase UID:", firebaseUser?.uid);
+    console.log("userId from HTML:", userIdFromHTML);
+    console.log("Final userId used:", userId);
 
     if (!userId) {
       alert("Erreur : utilisateur introuvable. Merci de réessayer.");
