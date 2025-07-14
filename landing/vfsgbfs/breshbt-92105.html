@@ -1,0 +1,46 @@
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Landing Page - bref</title>
+<style>
+  body {background-color: #111111; color: white; font-family: Arial, sans-serif; margin: 0; padding: 0;}
+  h1, p {text-align: center; margin: 20px;}
+  .container {display: flex; flex-direction: column; align-items: center; padding: 20px;}
+  form {max-width: 500px; display: flex; flex-direction: column; width: 100%;}
+  label {margin: 10px 0 5px;}
+  input[type="text"], input[type="email"] {padding: 10px; margin-bottom: 10px; border: none; border-radius: 5px; width: 100%;}
+  input[type="submit"] {background-color: #00ccff; color: white; padding: 15px; border: none; border-radius: 5px; width: 100%; cursor: pointer; font-size: 16px;}
+  @media(min-width: 768px) {.container {flex-direction: row; justify-content: center;}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div>
+    <h1>brehzg</h1>
+    <p>hgreh</p>
+  </div>
+  <form id="lead-form" method="POST">
+    <label for="nom">Nom</label>
+    <input type="text" id="nom" name="nom" placeholder="Votre nom" required>
+    <label for="prenom">Prenom</label>
+    <input type="text" id="prenom" name="prenom" placeholder="Votre prenom" required>
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" placeholder="Votre email" required>
+    <label for="telephone">Telephone</label>
+    <input type="text" id="telephone" name="telephone" placeholder="Votre telephone" required>
+    <label for="adresse">Adresse</label>
+    <input type="text" id="adresse" name="adresse" placeholder="Votre adresse" required>
+    <input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1">
+    <input type="hidden" name="name" value="bref">
+    <input type="hidden" name="type" value="landing">
+    <input type="submit" value="href">
+  </form>
+</div>
+<script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+</body>
+</html>
+```
