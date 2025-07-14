@@ -22,7 +22,6 @@ if (form) {
 
     const firebaseUser = await getCurrentUser();
 
-    // Récupération des champs
     const nom = form.querySelector('input[name="nom"]')?.value.trim();
     const prenom = form.querySelector('input[name="prenom"]')?.value.trim();
     const email = form.querySelector('input[name="email"]')?.value.trim();
@@ -34,13 +33,11 @@ if (form) {
 
     const userId = firebaseUser?.uid || userIdFromHTML || "";
 
-    // DEBUG : afficher dans la console
-    console.log("Firebase UID:", firebaseUser?.uid);
-    console.log("userId from HTML:", userIdFromHTML);
-    console.log("Final userId used:", userId);
+    // 🛑 STOP : alerte visible avant envoi
+    alert("userId utilisé pour Firestore : " + userId);
 
     if (!userId) {
-      alert("Erreur : utilisateur introuvable. Merci de réessayer.");
+      alert("Erreur : utilisateur introuvable.");
       return;
     }
 
