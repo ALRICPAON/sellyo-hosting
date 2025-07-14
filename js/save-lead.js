@@ -1,16 +1,32 @@
 // js/save-lead.js
 import { app } from "./firebase-init.js";
 import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const db = getFirestore(app);
 const auth = getAuth(app);
 const form = document.getElementById("lead-form");
 
 if (form) {
+  let firebaseUserId = null;
+
+  // Écoute l'état de connexion dès le début
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      firebaseUserId = user.uid;
+    }
+  });
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    // Si l'userId n’est toujours pas dispo, on bloque proprement
+    if (!firebaseUserId) {
+      alert("Erreur : utilisateur non connecté. Merci de réessayer.");
+      return;
+    }
+
+    // Récupération des champs du formulaire
     const nom = form.querySelector('input[name="nom"]')?.value.trim();
     const prenom = form.querySelector('input[name="prenom"]')?.value.trim();
     const email = form.querySelector('input[name="email"]')?.value.trim();
@@ -24,11 +40,8 @@ if (form) {
       return;
     }
 
-    const currentUser = auth.currentUser;
-    const userId = currentUser?.uid || "";
-
     const lead = {
-      userId,
+      userId: firebaseUserId,
       nom: nom || "",
       prenom: prenom || "",
       email: email || "",
