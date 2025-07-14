@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Landing Page - Ange</title>
+  <style>
+    body { background-color: #004d65; color: white; font-family: sans-serif; margin: 0; padding: 0; }
+    header { text-align: center; margin: 20px 0; }
+    h1, p { text-align: center; }
+    .container { display: flex; flex-wrap: wrap; justify-content: center; padding: 20px; }
+    .column { flex: 1; max-width: 400px; padding: 20px; }
+    form { display: flex; flex-direction: column; }
+    form label { margin-bottom: 5px; }
+    form input { margin-bottom: 15px; padding: 10px; border-radius: 5px; border: none; }
+    form input[type="text"], form input[type="email"] { width: 100%; }
+    button { background-color: #2c1376; color: white; padding: 15px; border: none; border-radius: 5px; cursor: pointer; width: 100%; }
+    .video-container { text-align: center; margin: 20px 0; }
+    .video-container video { max-width: 800px; }
+  </style>
+</head>
+<body>
+<header>
+  <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/ange/5077fdf7890a2c5aa673ea0932cd5344_tplv-tiktokx-cropcenter-1080-1080.jpg.avif" alt="Logo" style="max-height: 80px;">
+</header>
+<h1>ange</h1>
+<p>ange</p>
+<div class="container">
+  <div class="column">
+    <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/ange/ChatGPT_Image_12_mai_2025_12_58_25.png" alt="Main Image" style="max-width: 100%;">
+  </div>
+  <div class="column">
+    <form id="lead-form" method="POST">
+      <label for="prenom">Prenom</label>
+      <input type="text" id="prenom" name="prenom" placeholder="Votre prenom" required>
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="Votre email" required>
+      <label for="telephone">Telephone</label>
+      <input type="text" id="telephone" name="telephone" placeholder="Votre telephone" required>
+      <input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1">
+      <input type="hidden" name="name" value="ange">
+      <input type="hidden" name="type" value="landing">
+      <button type="submit">ange</button>
+    </form>
+  </div>
+</div>
+<div class="video-container">
+  <video controls>
+    <source src="https://alricpaon.github.io/sellyo-hosting/media/landing/ange/20250606_2242_Annoyed Microwave Struggle_simple_compose_01jx3fntt2fyhsdmbqxwe6c6x9.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</div>
+<script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+</body>
+</html>
