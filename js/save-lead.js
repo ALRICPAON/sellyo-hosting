@@ -10,7 +10,7 @@ const form = document.getElementById("lead-form");
 if (form) {
   let firebaseUserId = null;
 
-  // Écoute l'état de connexion dès le début
+  // Écoute l’état de connexion dès le chargement
   onAuthStateChanged(auth, (user) => {
     if (user) {
       firebaseUserId = user.uid;
@@ -19,12 +19,6 @@ if (form) {
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-
-    // Si l'userId n’est toujours pas dispo, on bloque proprement
-    if (!firebaseUserId) {
-      alert("Erreur : utilisateur non connecté. Merci de réessayer.");
-      return;
-    }
 
     // Récupération des champs du formulaire
     const nom = form.querySelector('input[name="nom"]')?.value.trim();
@@ -35,13 +29,23 @@ if (form) {
     const name = form.querySelector('input[name="name"]')?.value.trim();
     const type = form.querySelector('input[name="type"]')?.value.trim();
 
+    // Fallback : userId caché dans le HTML
+    const userIdFromHTML = form.querySelector('input[name="userId"]')?.value.trim();
+
+    const finalUserId = firebaseUserId || userIdFromHTML || "";
+
+    if (!finalUserId) {
+      alert("Erreur : impossible de récupérer l'utilisateur. Veuillez réessayer.");
+      return;
+    }
+
     if (!email && !telephone) {
       alert("Merci de renseigner au moins un email ou un numéro de téléphone.");
       return;
     }
 
     const lead = {
-      userId: firebaseUserId,
+      userId: finalUserId,
       nom: nom || "",
       prenom: prenom || "",
       email: email || "",
