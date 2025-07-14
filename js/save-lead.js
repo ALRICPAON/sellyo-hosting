@@ -7,20 +7,23 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const form = document.getElementById("lead-form");
 
-if (form) {
-  let firebaseUserId = null;
-
-  // Écoute l’état de connexion dès le chargement
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      firebaseUserId = user.uid;
-    }
+// Fonction universelle pour obtenir user.uid même si ça prend du temps
+async function getCurrentUser() {
+  return new Promise((resolve) => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      unsub(); // on se désabonne dès qu'on a une réponse
+      resolve(user);
+    });
   });
+}
 
+if (form) {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // Récupération des champs du formulaire
+    // Attendre Firebase Auth
+    const firebaseUser = await getCurrentUser();
+
     const nom = form.querySelector('input[name="nom"]')?.value.trim();
     const prenom = form.querySelector('input[name="prenom"]')?.value.trim();
     const email = form.querySelector('input[name="email"]')?.value.trim();
@@ -28,14 +31,12 @@ if (form) {
     const adresse = form.querySelector('input[name="adresse"]')?.value.trim();
     const name = form.querySelector('input[name="name"]')?.value.trim();
     const type = form.querySelector('input[name="type"]')?.value.trim();
-
-    // Fallback : userId caché dans le HTML
     const userIdFromHTML = form.querySelector('input[name="userId"]')?.value.trim();
 
-    const finalUserId = firebaseUserId || userIdFromHTML || "";
+    const userId = firebaseUser?.uid || userIdFromHTML || "";
 
-    if (!finalUserId) {
-      alert("Erreur : impossible de récupérer l'utilisateur. Veuillez réessayer.");
+    if (!userId) {
+      alert("Erreur : utilisateur introuvable. Merci de réessayer.");
       return;
     }
 
@@ -45,7 +46,7 @@ if (form) {
     }
 
     const lead = {
-      userId: finalUserId,
+      userId,
       nom: nom || "",
       prenom: prenom || "",
       email: email || "",
