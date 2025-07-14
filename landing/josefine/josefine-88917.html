@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>josefine</title>
+<style>
+  body {
+    background-color: #785700;
+    color: #ffffff;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  header img {
+    max-height: 80px;
+    margin-top: 20px;
+  }
+  h1, p {
+    text-align: center;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 1000px;
+    width: 100%;
+    padding: 20px;
+  }
+  .responsive-columns {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  .image-column img {
+    max-width: 400px;
+    width: 100%;
+  }
+  .form-column {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    background-color: #fffbb9;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  label {
+    margin-top: 10px;
+  }
+  input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: none;
+  }
+  #cta-button {
+    width: 100%;
+    padding: 15px;
+    background-color: #785700;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+  }
+  #cta-button:hover {
+    background-color: #654f00;
+  }
+  video {
+    max-width: 800px;
+    width: 100%;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+<header>
+  <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/josefine/" alt="Logo">
+</header>
+<div class="container">
+  <h1>josefine</h1>
+  <p>faire une page de teste pour confirmer que tout fonctionne</p>
+  <div class="responsive-columns">
+    <div class="image-column">
+      <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/josefine/" alt="Image principale">
+    </div>
+    <div class="form-column">
+      <form id="lead-form" method="POST">
+        <label for="nom">Nom</label>
+        <input id="nom" name="nom" type="text" placeholder="Votre nom" required>
+        <label for="prenom">Prenom</label>
+        <input id="prenom" name="prenom" type="text" placeholder="Votre prenom" required>
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="Votre email" required>
+        <label for="telephone">Telephone</label>
+        <input id="telephone" name="telephone" type="text" placeholder="Votre telephone" required>
+        <label for="adresse">Adresse</label>
+        <input id="adresse" name="adresse" type="text" placeholder="Votre adresse" required>
+        <input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1">
+        <input type="hidden" name="name" value="josefine">
+        <input type="hidden" name="type" value="landing">
+        <button id="cta-button" type="submit">josefine</button>
+      </form>
+    </div>
+  </div>
+  <video controls>
+    <source src="https://alricpaon.github.io/sellyo-hosting/media/landing/josefine/" type="video/mp4">
+  </video>
+</div>
+<script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+</body>
+</html>
