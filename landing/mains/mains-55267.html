@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mains</title>
+<style>
+body {
+  background-color: #111111;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  box-sizing: border-box;
+}
+h1 {
+  color: #00ccff;
+  text-align: center;
+}
+p {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.form-container {
+  width: 100%;
+  max-width: 400px;
+}
+form {
+  display: flex;
+  flex-direction: column;
+}
+label {
+  margin-bottom: 5px;
+}
+input[type="text"],
+input[type="email"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+input[type="submit"] {
+  background-color: #00ccff;
+  color: #ffffff;
+  border: none;
+  padding: 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>vmains</h1>
+<p>mains</p>
+<div class="form-container">
+<form id="lead-form" method="POST">
+<label for="nom">Nom</label>
+<input type="text" id="nom" name="nom" placeholder="Votre nom" required>
+<label for="prenom">Prenom</label>
+<input type="text" id="prenom" name="prenom" placeholder="Votre prenom" required>
+<label for="email">Email</label>
+<input type="email" id="email" name="email" placeholder="Votre email" required>
+<label for="telephone">Telephone</label>
+<input type="text" id="telephone" name="telephone" placeholder="Votre telephone" required>
+<label for="adresse">Adresse</label>
+<input type="text" id="adresse" name="adresse" placeholder="Votre adresse" required>
+<input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1">
+<input type="hidden" name="name" value="mains">
+<input type="hidden" name="type" value="landing">
+<input type="submit" value="mains">
+</form>
+</div>
+</div>
+<script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+</body>
+</html>
