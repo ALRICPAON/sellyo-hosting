@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page</title>
+    <style>
+        body {
+            background-color: #111111;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 1000px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .form-container, .image-container {
+            box-sizing: border-box;
+            padding: 20px;
+            max-width: 600px;
+            flex: 1;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            color: #111111;
+            border-radius: 8px;
+            margin: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-container label {
+            margin: 5px 0;
+        }
+
+        .form-container input {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-container button {
+            background-color: #00ccff;
+            border: none;
+            color: #ffffff;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .form-container button:hover {
+            background-color: #0099cc;
+        }
+
+        .image-container img, .image-container video {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+
+        .text-center {
+            text-align: center;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #111111;
+            color: #ffffff;
+        }
+
+        footer a {
+            color: #00ccff;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="image-container">
+        <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/grqzheh/logo.jpg" alt="Logo" hidden>
+        <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/grqzheh/ChatGPT_Image_12_mai_2025_12_58_25.png" alt="Cover Image">
+        <video controls hidden>
+            <source src="https://alricpaon.github.io/sellyo-hosting/media/landing/grqzheh/20250607_1112_Rainy%20Day%20Reflections_simple_compose_01jx4tjtw3fztrqx0ts77zww4e.mp4" type="video/mp4">
+            Votre navigateur ne supporte pas la balise vidéo.
+        </video>
+    </div>
+
+    <div class="form-container">
+        <div class="text-center">
+            <h1>Hertht</h1>
+            <p>Hesthjt</p>
+        </div>
+        <form id="lead-form" action="#" method="POST">
+            <label for="nom">Nom</label>
+            <input type="text" id="nom" name="nom" placeholder="Votre nom" required>
+
+            <label for="prenom">Prénom</label>
+            <input type="text" id="prenom" name="prenom" placeholder="Votre prénom" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Votre email" required>
+
+            <label for="telephone">Téléphone</label>
+            <input type="text" id="telephone" name="telephone" placeholder="Votre téléphone" required>
+
+            <label for="adresse">Adresse</label>
+            <input type="text" id="adresse" name="adresse" placeholder="Votre adresse" required>
+
+            <button type="submit">Ejtjh</button>
+        </form>
+    </div>
+</div>
+
+<footer>
+    <p><a href="#">Mentions légales</a></p>
+</footer>
+
+<script src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+</body>
+</html>
