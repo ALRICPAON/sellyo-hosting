@@ -1,0 +1,90 @@
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat</title>
+<style>
+body {
+    background-color: #00a3d7;
+    color: white;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+h1, p {
+    text-align: center;
+}
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: auto;
+}
+form {
+    width: 100%;
+    max-width: 400px;
+    margin: 20px auto;
+}
+input, button {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+}
+button {
+    background-color: #1a0a53;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+video {
+    max-width: 100%;
+    display: block;
+    margin: 30px auto;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h1>chat</h1>
+<p>chat</p>
+
+<div style="display: flex; flex-direction: column; align-items: center;">
+<img src="https://alricpaon.github.io/sellyo-hosting/media/landing/chat/landing.png" alt="Image">
+<form id="lead-form" method="POST">
+<input type="text" name="nom" placeholder="Votre nom" required>
+<input type="text" name="prenom" placeholder="Votre prenom" required>
+<input type="email" name="email" placeholder="Votre email" required>
+<input type="text" name="telephone" placeholder="Votre telephone" required>
+<input type="text" name="adresse" placeholder="Votre adresse" required>
+<input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1">
+<input type="hidden" name="name" value="chat">
+<input type="hidden" name="type" value="landing">
+<button type="submit">chat</button>
+</form>
+</div>
+
+<video controls>
+<source src="https://alricpaon.github.io/sellyo-hosting/media/landing/chat/20250607_1016_AI Builds Sales Funnel_simple_compose_01jx4qcv5zew2s3ft8qystphx4.mp4" type="video/mp4">
+</video>
+
+</div>
+
+<script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+</body>
+</html>
+```
