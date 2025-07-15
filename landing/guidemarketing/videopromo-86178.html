@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing d'inscription</title>
+    <style>
+        body {
+            background-color: #111111;
+            color: #FFFFFF;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .content {
+            text-align: center;
+            max-width: 600px;
+            padding: 20px;
+        }
+        
+        .form-container {
+            background-color: #FFFFFF;
+            color: #111111;
+            padding: 20px;
+            border-radius: 5px;
+            margin-left: 20px;
+        }
+        
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-container input,
+        .form-container button {
+            margin-bottom: 15px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        
+        .form-container button {
+            background-color: #00ccff;
+            color: #FFFFFF;
+            cursor: pointer;
+        }
+        
+        .logo,
+        .cover,
+        .video {
+            max-width: 100%;
+            border-radius: 5px;
+        }
+        
+        .video {
+            margin-top: 20px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        .footer a {
+            color: #00ccff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="content">
+            <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/guidemarketing/logo.jpg" alt="Logo" class="logo">
+            <h1>Automatisez vos ventes avec l'IA</h1>
+            <p>Cette formation gratuite vous montre comment automatiser vos ventes avec l’IA.</p>
+            <p>Valable jusqu'au 30 juillet</p>
+            <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/guidemarketing/email.png" alt="Formation" class="cover">
+            <video controls class="video">
+                <source src="https://alricpaon.github.io/sellyo-hosting/media/landing/guidemarketing/20250607_1112_Rainy%20Day%20Reflections_simple_compose_01jx4tjtw3fztrqx0ts77zww4e.mp4" type="video/mp4">
+                Votre navigateur ne supporte pas la lecture vidéo.
+            </video>
+        </div>
+        <div class="form-container">
+            <form id="signupForm">
+                <input type="text" name="nom" placeholder="Votre nom" required>
+                <input type="text" name="prenom" placeholder="Votre prénom" required>
+                <input type="email" name="email" placeholder="Votre email" required>
+                <input type="text" name="telephone" placeholder="Votre téléphone" required>
+                <input type="text" name="adresse" placeholder="Votre adresse" required>
+                <button type="submit">Accéder à la formation</button>
+            </form>
+        </div>
+    </div>
+    <div class="footer">
+        <a href="#">Mentions légales</a>
+    </div>
+    <script src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+    <script src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+</body>
+
+</html>
