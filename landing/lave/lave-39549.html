@@ -1,0 +1,118 @@
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lave Landing Page</title>
+  <style>
+    body {
+      background-color: #ff8647;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    h1, p {
+      text-align: center;
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 20px;
+    }
+    .left-column, .right-column {
+      flex: 1;
+      min-width: 300px;
+      padding: 10px;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+    form {
+      background-color: #ffffff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      color: #000000;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input[type="text"], input[type="email"] {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #5a1c00;
+      color: #ffffff;
+      padding: 15px;
+      border: none;
+      width: 100%;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #4a1600;
+    }
+    video {
+      width: 100%;
+      max-width: 800px;
+      display: block;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/lave/logo.jpg" alt="Logo" style="max-height: 80px; margin-top: 20px;">
+</header>
+
+<h1>lave</h1>
+<p>lave</p>
+
+<div class="container">
+  <div class="left-column">
+    <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/lave/ChatGPT_Image_12_mai_2025_12_58_25.png" alt="Main Image">
+  </div>
+  <div class="right-column">
+    <form id="lead-form" method="POST">
+      <input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1">
+      <input type="hidden" name="name" value="lave">
+      <input type="hidden" name="type" value="landing">
+      <label for="nom">Nom</label>
+      <input type="text" id="nom" name="nom" placeholder="Votre nom" required>
+      <label for="prenom">Prenom</label>
+      <input type="text" id="prenom" name="prenom" placeholder="Votre prenom" required>
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="Votre email" required>
+      <label for="telephone">Telephone</label>
+      <input type="text" id="telephone" name="telephone" placeholder="Votre telephone" required>
+      <label for="adresse">Adresse</label>
+      <input type="text" id="adresse" name="adresse" placeholder="Votre adresse" required>
+      <button type="submit">lave</button>
+    </form>
+  </div>
+</div>
+
+<video controls>
+  <source src="https://alricpaon.github.io/sellyo-hosting/media/landing/lave/20250607_1027_AI-Generated%20Inspiration_simple_compose_01jx4r1qwzf2gbd67dqnhrsgha.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+<script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+
+</body>
+</html>
+```
