@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tunnel IA - Génération de Leads</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #111111;
+            color: #ffffff;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .content {
+            max-width: 600px;
+            margin: auto;
+            text-align: center;
+        }
+
+        .form-container {
+            background-color: #222222;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #00ccff;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .content img, .content video {
+            max-width: 100%;
+            border-radius: 5px;
+        }
+
+        footer {
+            margin-top: 20px;
+        }
+
+        a {
+            color: #00ccff;
+            text-decoration: none;
+        }
+
+        .flex-layout {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .flex-left {
+            flex: 1;
+        }
+
+        .flex-right {
+            flex: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="flex-layout">
+                <div class="flex-left">
+                    <?php if (!empty($logo)) { ?>
+                    <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/formation-auto/logo.jpg" alt="Logo">
+                    <?php } ?>
+                    <?php if (!empty($cover)) { ?>
+                    <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/formation-auto/video.png" alt="Cover">
+                    <?php } ?>
+                    <?php if (!empty($video)) { ?>
+                    <video controls>
+                        <source src="https://alricpaon.github.io/sellyo-hosting/media/landing/formation-auto/20250607_1016_AI%20Builds%20Sales%20Funnel_simple_compose_01jx4qcv5zew2s3ft8qystphx4.mp4" type="video/mp4">
+                        Votre navigateur ne supporte pas la vidéo.
+                    </video>
+                    <?php } ?>
+                </div>
+                <div class="flex-right form-container">
+                    <h1>Tunnel IA</h1>
+                    <p>Cette formation gratuite vous montre comment automatiser vos ventes avec l'IA.</p>
+                    <form id="lead-form" action="" method="post">
+                        <input type="text" name="nom" placeholder="Votre nom" required>
+                        <input type="text" name="prenom" placeholder="Votre prénom" required>
+                        <input type="email" name="email" placeholder="Votre email" required>
+                        <input type="text" name="telephone" placeholder="Votre téléphone" required>
+                        <input type="text" name="adresse" placeholder="Votre adresse" required>
+                        <button type="submit">Télécharger le guide</button>
+                    </form>
+                    <p>Cette offre est valable jusqu'au 31 juillet.</p>
+                    <footer>
+                        <a href="#" target="_blank">Mentions légales</a>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+    <script src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+</body>
+
+</html>
