@@ -1,0 +1,147 @@
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>herheh</title>
+    <style>
+        body {
+            background-color: #111111;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 80%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            margin-bottom: 20px;
+        }
+        header img {
+            max-width: 150px;
+        }
+        .content {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .main {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .image {
+            flex: 1;
+            margin-right: 10px;
+            max-width: 45%;
+        }
+        .form {
+            flex: 1;
+            max-width: 45%;
+            background: #333333;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .form label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        .form input {
+            width: calc(100% - 20px);
+            padding: 8px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+        }
+        .form button {
+            background-color: #00ccff;
+            color: #111111;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        footer {
+            margin-top: 20px;
+            color: #777777;
+        }
+        @media (max-width: 768px) {
+            .image, .form {
+                max-width: 100%;
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/grqhres/logo.jpg" alt="Logo">
+            <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/grqhres/logo.jpg" alt="Logo" style="max-height: 100px; display: block; margin: auto;">
+        </header>
+        <div class="content">
+            <h1>heqsrert</h1>
+            <p>Herbert</p>
+        </div>
+        <div class="main">
+            <div class="image">
+                <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/grqhres/ChatGPT_Image_12_mai_2025_12_58_25.png" alt="Image" style="width:100%; border-radius: 10px;">
+                <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/grqhres/ChatGPT_Image_12_mai_2025_12_58_25.png" alt="Image" style="max-width: 350px; height: auto; display: block; margin: auto;">
+            </div>
+            <div class="form">
+                <form>
+                    <label>Nom</label>
+                    <input type="text" name="nom" required>
+                    
+                    <label>Email</label>
+                    <input type="email" name="email" required>
+                    
+                    <label>Prénom</label>
+                    <input type="text" name="prenom" required>
+
+                    <label>hethre</label>
+                    <input type="text" name="customField" required>
+
+                    <button type="submit">hercher</button>
+                </form>
+                <p>hetrheth</p>
+            </div>
+        </div>
+        <div class="video">
+            <video controls style="width: 100%; margin-top: 20px; border-radius: 10px;">
+                <source src="https://alricpaon.github.io/sellyo-hosting/media/landing/grqhres/20250607_1212_Contemplation to Confidence_simple_compose_01jx4y1q94etst8jjd5n6n45qy.mp4" type="video/mp4">
+                Votre navigateur ne supporte pas la lecture de vidéo.
+            </video>
+        </div>
+        <footer>
+            <p><a href="#">Mentions légales</a></p>
+        </footer>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
+    <script>
+        var firebaseConfig = {
+            // Votre configuration Firebase ici
+        };
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
+    </script>
+
+    <video controls style="max-width: 600px; display: block; margin: 30px auto;">
+      <source src="https://alricpaon.github.io/sellyo-hosting/media/landing/grqhres/20250607_1212_Contemplation to Confidence_simple_compose_01jx4y1q94etst8jjd5n6n45qy.mp4" type="video/mp4">
+    </video>
+</body>
+</html>
+```
