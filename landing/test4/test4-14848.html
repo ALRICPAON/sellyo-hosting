@@ -1,0 +1,147 @@
+Pour injecter les médias dans le fichier HTML fourni, nous devons procéder comme suit :
+
+1. **Logo** : Le logo doit être inséré dans l’élément `<header>`, mais le fichier HTML donné n’a pas de balise `<header>`. Ainsi, nous pouvons l'insérer dans la `<div class="header">`, qui est la plus logique pour un logo.
+
+2. **Image principale** : Cette image doit être insérée dans un `<div class="column">`, mais le fichier HTML ne semble pas contenir d'élément `<div class="column">`. L'endroit le plus proche où insérer l'image, selon la structure existante, sera dans le premier `<img>` de la `<div class="content">` à gauche, car c'est probablement là qu’elle était prévue.
+
+3. **Vidéo** : La vidéo doit être ajoutée juste avant la balise `</body>`.
+
+Voici comment le code HTML modifié devrait apparaître :
+
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test4 - Landing Page</title>
+    <style>
+        body {
+            background-color: #00364a;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .logo {
+            display: block;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+        }
+        .content img {
+            max-width: 45%;
+            border-radius: 10px;
+        }
+        .form-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            color: #000000;
+            width: 45%;
+        }
+        .form-container label, .form-container input {
+            display: block;
+            width: 100%;
+        }
+        .form-container input {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .cta-button {
+            background-color: #2c1376;
+            color: #ffffff;
+            padding: 10px 20px;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .extra-text {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+        }
+        .footer a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/test4/logo.jpg" alt="Logo" style="max-height: 100px; display: block; margin: auto;">
+            <h1>Faire une page</h1>
+            <p>Faire une belle page</p>
+        </div>
+
+        <div class="content">
+            <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/test4/payment.png" alt="Image" style="max-width: 350px; height: auto; display: block; margin: auto;">
+            
+            <div class="form-container">
+                <form>
+                    <label>Nom</label><input type="text" name="nom" required>
+                    <label>Email</label><input type="email" name="email" required>
+                    <label>Prénom</label><input type="text" name="prenom" required>
+
+                    <!-- Champ personnalisé -->
+                    <label>sellyo</label><input type="text" name="customField" required>
+
+                    <button type="submit" class="cta-button">Go</button>
+                </form>
+                <div class="extra-text">
+                    avant le 30 juillet
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><a href="#">Mentions légales</a></p>
+        </div>
+
+    </div>
+    
+    <!-- Scripts Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-firestore.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
+
+    <video controls style="max-width: 600px; display: block; margin: 30px auto;">
+        <source src="https://alricpaon.github.io/sellyo-hosting/media/landing/test4/20250607_1140_Café Freelancing Success_simple_compose_01jx4w73gdf4j8tvxdfeytvjfq.mp4" type="video/mp4">
+    </video>
+
+</body>
+</html>
+```
