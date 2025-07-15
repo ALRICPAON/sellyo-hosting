@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>landing d'inscription a la masterclass</title>
+  <style>
+    body {
+      background-color: #004d65;
+      color: white;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+      margin: 20px;
+    }
+    .column {
+      flex: 1;
+      min-width: 300px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 400px;
+      margin: auto;
+    }
+    input, select {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    button {
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #61177c;
+      color: white;
+      font-size: 16px;
+    }
+    video {
+      max-width: 100%;
+      display: block;
+      margin: 30px auto;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/formation-auto/logo.jpg" alt="Logo" style="max-height: 80px;">
+</header>
+
+<h1 style="text-align: center;">generer des leads pour une offre de formation</h1>
+<p style="text-align: center; max-width: 600px; margin: auto;">cette formation gratuite vous montre comment automatiser vos ventes avec l'IA</p>
+
+<div class="row">
+  <div class="column">
+    <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/formation-auto/email.png" alt="Image" style="max-width: 100%; height: auto;">
+  </div>
+  <div class="column">
+    <form id="lead-form" method="POST">
+      <label for="nom">Nom</label>
+      <input type="text" id="nom" name="nom" placeholder="Votre nom" required>
+
+      <label for="prenom">Prenom</label>
+      <input type="text" id="prenom" name="prenom" placeholder="Votre prenom" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="Votre email" required>
+
+      <label for="telephone">Telephone</label>
+      <input type="text" id="telephone" name="telephone" placeholder="Votre telephone" required>
+
+      <label for="adresse">Adresse</label>
+      <input type="text" id="adresse" name="adresse" placeholder="Votre adresse" required>
+
+      <input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1">
+      <input type="hidden" name="name" value="landing d'inscription a la masterclass">
+      <input type="hidden" name="type" value="landing">
+      <button type="submit">acceder a la formation</button>
+    </form>
+  </div>
+</div>
+
+<video controls>
+  <source src="https://alricpaon.github.io/sellyo-hosting/media/landing/formation-auto/20250607_1055_From Frustration to Success_simple_compose_01jx4skh6pfsfvd8ng6k0p5hab.mp4" type="video/mp4">
+</video>
+
+<script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+
+</body>
+</html>
