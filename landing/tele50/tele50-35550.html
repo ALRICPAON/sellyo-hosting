@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tele50</title>
+<style>
+  body {background-color: #111111; color: #FFFFFF; font-family: 'Arial', sans-serif; margin: 0; padding: 0;}
+  .container {max-width: 1200px; margin: 0 auto; padding: 20px;}
+  h1, p {text-align: center;}
+  .content {display: flex; flex-wrap: wrap; justify-content: center; align-items: center;}
+  .image-container {flex: 1; max-width: 400px; padding: 20px; text-align: center;}
+  .form-container {flex: 1; padding: 20px;}
+  form {display: flex; flex-direction: column; gap: 15px;}
+  label {font-size: 16px;}
+  input[type="text"], input[type="email"] {padding: 10px; border: none; border-radius: 5px; width: 100%;}
+  input[type="submit"] {background-color: #00ccff; color: #111111; padding: 15px; border: none; border-radius: 5px; cursor: pointer; width: 100%;}
+  video {width: 100%; max-width: 800px; margin: 20px auto; display: block;}
+</style>
+</head>
+<body>
+<header>
+  <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/tele50/5077fdf7890a2c5aa673ea0932cd5344_tplv-tiktokx-cropcenter-1080-1080.jpg.avif" alt="Logo" style="max-height: 80px; margin-top: 20px;">
+</header>
+<div class="container">
+  <h1>tele50</h1>
+  <p>tele50</p>
+  <div class="content">
+    <div class="image-container">
+      <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/tele50/Sb34d56f59641472cbcfc66f0e9c62521V.jpg_220x220q75.jpg_.avif" alt="Image principale" style="max-width: 100%; border-radius: 10px;">
+    </div>
+    <div class="form-container">
+      <form id="lead-form" method="POST">
+        <input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1">
+        <input type="hidden" name="name" value="tele50">
+        <input type="hidden" name="type" value="landing">
+        <label for="nom">Nom</label>
+        <input type="text" name="nom" id="nom" placeholder="Votre nom" required>
+        <label for="prenom">Prenom</label>
+        <input type="text" name="prenom" id="prenom" placeholder="Votre prenom" required>
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" placeholder="Votre email" required>
+        <label for="telephone">Telephone</label>
+        <input type="text" name="telephone" id="telephone" placeholder="Votre telephone" required>
+        <label for="adresse">Adresse</label>
+        <input type="text" name="adresse" id="adresse" placeholder="Votre adresse" required>
+        <input type="submit" value="tele50">
+      </form>
+    </div>
+  </div>
+  <video controls>
+    <source src="https://alricpaon.github.io/sellyo-hosting/media/landing/tele50/20250607_1140_Café Freelancing Success_simple_compose_01jx4w73gdf4j8tvxdfeytvjfq.mp4" type="video/mp4">
+    Votre navigateur ne supporte pas la lecture vidéo.
+  </video>
+</div>
+<script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+</body>
+</html>
