@@ -1,0 +1,82 @@
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sale Landing Page</title>
+<style>
+    body {
+        background-color: #111111;
+        color: #ffffff;
+        font-family: Arial, sans-serif;
+    }
+    h1, p {
+        text-align: center;
+    }
+    form {
+        max-width: 400px;
+        margin: auto;
+    }
+    input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        border: none;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+    button {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        background: #00ccff;
+        color: white;
+        font-size: 16px;
+        margin-top: 10px;
+    }
+    @media (min-width: 768px) {
+        .row {
+            display: flex;
+        }
+        .column {
+            flex: 1;
+            padding: 10px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<h1>sale</h1>
+<p style="max-width: 600px; margin: auto;">sale</p>
+
+<div class="row">
+    <div class="column">
+    </div>
+    <div class="column">
+        <form id="lead-form" method="POST">
+            <input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1">
+            <input type="hidden" name="name" value="sale">
+            <input type="hidden" name="type" value="landing">
+            <label for="nom">Nom</label>
+            <input type="text" id="nom" name="nom" placeholder="Votre nom" required>
+            <label for="prenom">Prenom</label>
+            <input type="text" id="prenom" name="prenom" placeholder="Votre prenom" required>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Votre email" required>
+            <label for="telephone">Telephone</label>
+            <input type="text" id="telephone" name="telephone" placeholder="Votre telephone" required>
+            <label for="adresse">Adresse</label>
+            <input type="text" id="adresse" name="adresse" placeholder="Votre adresse" required>
+            <button type="submit">sale</button>
+        </form>
+    </div>
+</div>
+
+<script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+</body>
+</html>
+```
