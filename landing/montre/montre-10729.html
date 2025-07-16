@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vendeur de montre</title>
+  <style>
+    body {
+      background-color: #e392fe;
+      color: white;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      text-align: center;
+      margin-top: 20px;
+    }
+    h1, p {
+      text-align: center;
+      margin: 20px auto;
+      max-width: 600px;
+    }
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+      margin: 20px auto;
+      max-width: 1000px;
+    }
+    .column {
+      flex: 1;
+      min-width: 300px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 400px;
+      margin: auto;
+    }
+    input, select {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    button {
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #450e59;
+      color: white;
+      font-size: 16px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    button:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 10px rgba(0,204,255,0.5);
+    }
+    video {
+      max-width: 100%;
+      display: block;
+      margin: 30px auto;
+    }
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.8rem;
+    }
+    footer a {
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/montre/logo.jpg" alt="Logo" style="max-height: 80px;">
+</header>
+
+<h1>Je vends des montres</h1>
+<p>Je vends en direct des montres à -50%</p>
+
+<div class="row">
+  <div class="column">
+    <form id="lead-form" method="POST">
+      <p style="font-weight: bold; text-align: center;">Montres à prix cassés maintenant</p>
+
+      <label>Nom</label>
+      <input type="text" name="nom" placeholder="Votre nom">
+
+      <label>Prénom</label>
+      <input type="text" name="prenom" placeholder="Votre prénom">
+
+      <label>Email</label>
+      <input type="email" name="email" placeholder="Votre email">
+
+      <label>Téléphone</label>
+      <input type="text" name="telephone" placeholder="Votre téléphone">
+
+      <label>Adresse</label>
+      <input type="text" name="adresse" placeholder="Votre adresse">
+
+      <input type="hidden" name="userId" value="pOoqftYacXhirXtjxVk60Or09nm2">
+      <input type="hidden" name="name" value="Vendeur de montre">
+      <input type="hidden" name="type" value="landing">
+
+      <button type="submit">Inscription pour avoir l'offre</button>
+    </form>
+  </div>
+</div>
+
+<p style="text-align: center; max-width: 600px; margin: 30px auto;">Rolex, Apple Watch, toutes marques</p>
+
+<video controls>
+  <source src="https://alricpaon.github.io/sellyo-hosting/media/landing/montre/20250607_1043_Entrepreneur's Exciting Success_simple_compose_01jx4rxdtxfvv9sbs3m6bk4030.mp4" type="video/mp4">
+</video>
+
+<footer>
+  <a href="https://alricpaon.github.io/sellyo-hosting/mentions.html" target="_blank">Mentions légales</a>
+</footer>
+
+<script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+
+</body>
+</html>
