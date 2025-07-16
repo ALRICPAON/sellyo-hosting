@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>lacotion velo</title>
+  <style>
+    body {
+      background-color: #6f7608;
+      color: white;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      text-align: center;
+      margin-top: 20px;
+    }
+    h1, p {
+      text-align: center;
+      margin: 20px auto;
+      max-width: 600px;
+    }
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+      margin: 20px auto;
+      max-width: 1000px;
+    }
+    .column {
+      flex: 1;
+      min-width: 300px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 400px;
+      margin: auto;
+    }
+    input, select {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    button {
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #e32400;
+      color: white;
+      font-size: 16px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    button:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 10px rgba(0,204,255,0.5);
+    }
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.8rem;
+    }
+    footer a {
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Location Vélo</h1>
+<p>Faites de la location de vélo facilement !</p>
+
+<div class="row">
+  <div class="column">
+    <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/nklmfqe/683ea744940d3_ChatGPTImage3juin2025a09_41_40.png" alt="Image" style="max-width: 100%; height: auto; display: block; margin: auto;">
+  </div>
+  <div class="column">
+    <form id="lead-form" method="POST">
+      <p style="font-weight: bold; text-align: center;">Inscrivez-vous pour louer dès maintenant !</p>
+      
+      <input type="text" name="nom" placeholder="Votre nom" required>
+      <input type="text" name="prenom" placeholder="Votre prénom" required>
+      <input type="email" name="email" placeholder="Votre email" required>
+      <input type="text" name="telephone" placeholder="Votre téléphone" required>
+      <input type="text" name="adresse" placeholder="Votre adresse" required>
+
+      <input type="hidden" name="userId" value="pOoqftYacXhirXtjxVk60Or09nm2">
+      <input type="hidden" name="name" value="lacotion velo">
+      <input type="hidden" name="type" value="landing">
+
+      <button type="submit">Louer</button>
+    </form>
+  </div>
+</div>
+
+<p style="text-align: center; max-width: 600px; margin: 30px auto;">Validez rapidement votre réservation!</p>
+
+<footer>
+  <a href="https://alricpaon.github.io/sellyo-hosting/mentions.html" target="_blank">Mentions légales</a>
+</footer>
+
+<script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+
+</body>
+</html>
