@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Landing Page</title>
+  <style>
+    body {
+      background-color: #001e57;
+      color: white;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      text-align: center;
+      margin-top: 20px;
+    }
+    h1, p {
+      text-align: center;
+      margin: 20px auto;
+      max-width: 600px;
+    }
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+      margin: 20px auto;
+      max-width: 1000px;
+    }
+    .column {
+      flex: 1;
+      min-width: 300px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 400px;
+      margin: auto;
+    }
+    input, select {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    button {
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #7b219f;
+      color: white;
+      font-size: 16px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    button:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 10px rgba(0,204,255,0.5);
+    }
+    video {
+      max-width: 100%;
+      display: block;
+      margin: 30px auto;
+    }
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.8rem;
+    }
+    footer a {
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/sellyo/logo.jpg" alt="Logo" style="max-height: 80px;">
+</header>
+
+<h1>Capter des leads</h1>
+<p>Faire une landing. Je veux réussir à tester le chemin complet avec l'envoi de mail.</p>
+
+<div class="row">
+  <div class="column">
+    <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/sellyo/payment.png" alt="Image" style="max-width: 100%; height: auto; display: block; margin: auto;">
+  </div>
+  <div class="column">
+    <form id="lead-form" method="POST">
+      <p style="font-weight: bold; text-align: center;">Veuillez remplir le formulaire ci-dessous :</p>
+
+      <input type="text" name="nom" placeholder="Votre nom" required>
+      <input type="text" name="prenom" placeholder="Votre prénom" required>
+      <input type="email" name="email" placeholder="Votre email" required>
+      <input type="text" name="telephone" placeholder="Votre téléphone" required>
+      <input type="text" name="adresse" placeholder="Votre adresse" required>
+
+      <input type="hidden" name="userId" value="pOoqftYacXhirXtjxVk60Or09nm2">
+      <input type="hidden" name="name" value="landing page">
+      <input type="hidden" name="type" value="landing">
+
+      <button type="submit">Test</button>
+    </form>
+  </div>
+</div>
+
+<p style="text-align: center; max-width: 600px; margin: 30px auto;">Offre valable le 19 juillet</p>
+
+<video controls>
+  <source src="https://alricpaon.github.io/sellyo-hosting/media/landing/sellyo/20250607_1055_From Frustration to Success_simple_compose_01jx4skh6pfsfvd8ng6k0p5hab.mp4" type="video/mp4">
+</video>
+
+<footer>
+  <a href="https://alricpaon.github.io/sellyo-hosting/mentions.html" target="_blank">Mentions légales</a>
+</footer>
+
+<script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+
+</body>
+</html>
