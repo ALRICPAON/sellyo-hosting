@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>odeur</title>
+  <style>
+    body {
+      background-color: #111111;
+      color: white;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      text-align: center;
+      margin-top: 20px;
+    }
+    h1, p {
+      text-align: center;
+      margin: 20px auto;
+      max-width: 600px;
+    }
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+      margin: 20px auto;
+      max-width: 1000px;
+    }
+    .column {
+      flex: 1;
+      min-width: 300px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 400px;
+      margin: auto;
+    }
+    input, select {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    button {
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #00ccff;
+      color: white;
+      font-size: 16px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    button:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 10px rgba(0,204,255,0.5);
+    }
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.8rem;
+    }
+    footer a {
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="https://alricpaon.github.io/sellyo-hosting/media/landing/odeur/5077fdf7890a2c5aa673ea0932cd5344_tplv-tiktokx-cropcenter-1080-1080.jpg.avif" alt="Logo" style="max-height: 80px;">
+</header>
+
+<h1>v</h1>
+<p>odeur</p>
+
+<div class="row">
+  <div class="column">
+    <form id="lead-form" method="POST">
+
+      <p style="font-weight: bold; text-align: center;"></p>
+
+      <input type="hidden" name="userId" value="R7vPQBXA1dYCZDkp6lxMKfs120v1">
+      <input type="hidden" name="name" value="odeur">
+      <input type="hidden" name="type" value="landing">
+
+      <label for="nom">Nom</label>
+      <input type="text" name="nom" placeholder="Votre nom">
+
+      <label for="prenom">Prénom</label>
+      <input type="text" name="prenom" placeholder="Votre prénom">
+
+      <label for="email">Email</label>
+      <input type="email" name="email" placeholder="Votre email">
+
+      <label for="telephone">Téléphone</label>
+      <input type="text" name="telephone" placeholder="Votre téléphone">
+
+      <label for="adresse">Adresse</label>
+      <input type="text" name="adresse" placeholder="Votre adresse">
+
+      <button type="submit">odeur</button>
+    </form>
+  </div>
+</div>
+
+<p style="text-align: center; max-width: 600px; margin: 30px auto;"></p>
+
+<footer>
+  <a href="https://alricpaon.github.io/sellyo-hosting/mentions.html" target="_blank">Mentions légales</a>
+</footer>
+
+<script type="module" src="https://cdn.sellyo.fr/js/firebase-init.js"></script>
+<script type="module" src="https://cdn.sellyo.fr/js/save-lead.js"></script>
+
+</body>
+</html>
