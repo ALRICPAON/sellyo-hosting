@@ -15,7 +15,6 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const form = document.getElementById("lead-form");
 
-// Fonction pour récupérer l'utilisateur Firebase si connecté
 const getCurrentUser = () => {
   return new Promise((resolve) => {
     onAuthStateChanged(auth, (user) => {
@@ -30,7 +29,6 @@ if (form) {
 
     const firebaseUser = await getCurrentUser();
 
-    // Récupération userId : priorité à Firebase, sinon champ HTML
     const userIdFromHTML = form.querySelector('input[name="userId"]')?.value?.trim();
     const userId = firebaseUser?.uid || userIdFromHTML || "";
 
@@ -46,6 +44,7 @@ if (form) {
     const adresse = form.querySelector('input[name="adresse"]')?.value.trim();
     const name = form.querySelector('input[name="name"]')?.value.trim();
     const type = form.querySelector('input[name="type"]')?.value.trim();
+    const slug = form.querySelector('input[name="slug"]')?.value.trim();
 
     if (!email && !telephone) {
       alert("Merci de renseigner au moins un email ou un numéro de téléphone.");
@@ -53,20 +52,21 @@ if (form) {
     }
 
     const lead = {
-  userId,
-  nom: nom || "",
-  prenom: prenom || "",
-  email: email || "",
-  telephone: telephone || "",
-  adresse: adresse || "",
-  name: name || "",
-  type: type || "landing",
-  createdAt: serverTimestamp(),
-  source: {
-    type: type || "landing",
-    refId: form.querySelector('input[name="slug"]')?.value?.trim() || null
-  }
-};
+      userId,
+      nom: nom || "",
+      prenom: prenom || "",
+      email: email || "",
+      telephone: telephone || "",
+      adresse: adresse || "",
+      name: name || "",
+      type: type || "landing",
+      slug: slug || "",
+      createdAt: serverTimestamp(),
+      source: {
+        type: type || "landing",
+        refId: slug || null
+      }
+    };
 
     try {
       await addDoc(collection(db, "leads"), lead);
