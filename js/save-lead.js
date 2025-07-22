@@ -64,7 +64,7 @@ if (form) {
   createdAt: serverTimestamp(),
   source: {
     type: type || "landing",
-    refId: form.querySelector('input[name="refId"]')?.value?.trim() || null
+    refId: form.querySelector('input[name="slug"]')?.value?.trim() || null
   }
 };
 
