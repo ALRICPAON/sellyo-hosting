@@ -53,16 +53,20 @@ if (form) {
     }
 
     const lead = {
-      userId,
-      nom: nom || "",
-      prenom: prenom || "",
-      email: email || "",
-      telephone: telephone || "",
-      adresse: adresse || "",
-      name: name || "",
-      type: type || "landing",
-      createdAt: serverTimestamp()
-    };
+  userId,
+  nom: nom || "",
+  prenom: prenom || "",
+  email: email || "",
+  telephone: telephone || "",
+  adresse: adresse || "",
+  name: name || "",
+  type: type || "landing",
+  createdAt: serverTimestamp(),
+  source: {
+    type: type || "landing",
+    refId: form.querySelector('input[name="refId"]')?.value?.trim() || null
+  }
+};
 
     try {
       await addDoc(collection(db, "leads"), lead);
