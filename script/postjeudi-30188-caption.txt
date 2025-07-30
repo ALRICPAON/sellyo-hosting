@@ -1,0 +1,5 @@
+```json
+{
+  "caption": "💰 Transformez votre smartphone en machine à cash avec la magie des outils web ! 🚀 #IA #Innovation #MoneyMaker"
+}
+```
