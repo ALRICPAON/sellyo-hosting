@@ -1,0 +1,5 @@
+```json
+{
+  "caption": "Découvre toutes les bonnes affaires avant tout le monde en t'abonnant à notre newsletter ! 🚀 #BonnesAffaires #PromoExclusive #NewsLetter #AlerteBonPlan #ShoppingAddict #OffresDuJour #DealsEnOr"
+}
+```
