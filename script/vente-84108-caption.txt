@@ -1,0 +1,5 @@
+```json
+{
+  "caption": "✨ Transformez votre conduite en une expérience unique avec notre Mercedes électrique ! À la fois élégance et innovation, à portée de main. ⚡️🚗 #Mercedes #VoitureDeRêve"
+}
+```
