@@ -1,0 +1,5 @@
+```json
+{
+  "caption": "⚡️ Oserez-vous conduire l'avenir ? Découvrez notre Mercedes EQE AMG : la puissance rencontre l'électrique. 🌟 Ne la laissez pas vous échapper ! #VoitureDeRêve #VendMercedes"
+}
+```
