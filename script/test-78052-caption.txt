@@ -1,0 +1,5 @@
+```json
+{
+  "caption": "🚀 Découvrez comment une stratégie éprouvée transforme vos ventes ! 🌟 #VentesOptimisées #RéussiteDigitale"
+}
+```
