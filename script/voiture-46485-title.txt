@@ -1,0 +1,5 @@
+```json
+{
+  "title": "Mercedes à prix choc : découvrez l’offre irrésistible !"
+}
+```
