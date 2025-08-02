@@ -1,0 +1,5 @@
+```json
+{
+  "caption": "📈 Testez l'approche révolutionnaire qui transforme vos ventes dès aujourd'hui. Prêt à passer à la vitesse supérieure ? #SuccèsAssuré #VentesBoostées"
+}
+```
