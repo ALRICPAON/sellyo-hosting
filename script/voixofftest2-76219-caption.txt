@@ -1,0 +1,5 @@
+```json
+{
+    "caption": "🎙️ Découvrez l'impact d'une voix captivante sur vos contenus 🎥 Prêt à transformer vos scripts en histoires inoubliables ? #VoixOff #Créateurs #TestVoix #ScriptPuissant #VideoIA"
+}
+```
