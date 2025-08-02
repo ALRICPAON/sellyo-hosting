@@ -1,0 +1,5 @@
+```json
+{
+    "caption": "✨ Découvrez comment transformer votre maison en un havre de paix avec nos astuces fun et efficaces! Abonnez-vous à notre newsletter pour plus de magie du rangement 🧹 #MaisonClutterNoMore #AstucesDuJour #NettoyageFun #RangementCreatif"
+}
+```
