@@ -1,0 +1,5 @@
+```json
+{
+  "caption": "💡 Triplez vos conversions avec nos conseils infaillibles : de simples ajustements pour des résultats spectaculaires ! 🌟 #VentesEnLigne #TunnelDeVente"
+}
+```
