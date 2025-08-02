@@ -1,0 +1,5 @@
+```json
+{
+  "title": "Décollez vos chiffres d'affaires avec cette stratégie !"
+}
+```
