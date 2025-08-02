@@ -1,0 +1,5 @@
+```json
+{
+  "caption": "💡 Transformez votre stratégie et vendez sans pub avec ces 3 astuces puissantes ! 🌟 #VentesSansPub #StratégieDeConversion"
+}
+```
