@@ -1,0 +1,5 @@
+```json
+{
+  "title": "Découvrez l'astuce secrète pour booster vos ventes !"
+}
+```
