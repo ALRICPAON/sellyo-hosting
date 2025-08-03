@@ -1,0 +1,5 @@
+```json
+{
+  "caption": "🔪 Prêt à devenir le maître des petits plats sans effort ? Découvrez nos astuces pour cuisiner facile et régaler vos proches ! 👩‍🍳 #CuisineFacile #PlatsSimples #Foodie #MangerBien #PassionCuisine"
+}
+```
