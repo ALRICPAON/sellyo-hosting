@@ -1,0 +1,17 @@
+```
+1
+00:00:00,000 --> 00:00:02,500
+Découvrez le secret pour transformer
+
+2
+00:00:02,500 --> 00:00:05,000
+vos repas en instants de bien-être
+
+3
+00:00:05,000 --> 00:00:07,500
+délicieux rejoignez-nous et cuisinez
+
+4
+00:00:07,500 --> 00:00:10,000
+simplement mais avec saveur chaque jour.
+```
