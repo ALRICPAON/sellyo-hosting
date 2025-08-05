@@ -1,0 +1,37 @@
+Bien sûr, voici un script ajusté pour une durée de 30 secondes, formaté en fichier SRT :
+
+```
+1
+00:00:00,000 --> 00:00:04,000
+Bonjour à tous ! Aujourd'hui, c'est un moment spécial.
+
+2
+00:00:04,001 --> 00:00:08,000
+Nous lançons notre première vidéo test pour Redirectio.
+
+3
+00:00:08,001 --> 00:00:12,000
+Si vous êtes curieux, vous êtes au bon endroit !
+
+4
+00:00:12,001 --> 00:00:16,000
+Nous avons plein de surprises et d'innovations à partager avec vous.
+
+5
+00:00:16,001 --> 00:00:20,000
+Restez avec nous pour découvrir ce que l'avenir nous réserve.
+
+6
+00:00:20,001 --> 00:00:24,000
+N'oubliez pas de nous donner votre avis. C'est important pour nous !
+
+7
+00:00:24,001 --> 00:00:28,000
+Merci d'être ici et à très bientôt pour d'autres aventures.
+
+8
+00:00:28,001 --> 00:00:30,000
+Prenez soin de vous !
+```
+
+Ce fichier de sous-titres suit le format SRT strict, compatible avec la plupart des logiciels de montage vidéo.
