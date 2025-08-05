@@ -1,0 +1,45 @@
+Voici un script ajusté à une durée de 60 secondes, converti en fichier de sous-titres SRT au format strict :
+
+```srt
+1
+00:00:00,000 --> 00:00:05,000
+Bonjour et bienvenue dans ce premier test de présentation de Sellyo.
+
+2
+00:00:05,001 --> 00:00:10,000
+Aujourd'hui, découvrons comment cet outil révolutionnaire peut transformer votre façon de travailler.
+
+3
+00:00:10,001 --> 00:00:14,000
+Propulsé par l'IA, Sellyo optimise vos performances.
+
+4
+00:00:14,001 --> 00:00:19,000
+Imaginez un assistant intelligent qui vous aide à atteindre vos objectifs plus rapidement.
+
+5
+00:00:19,001 --> 00:00:23,000
+Que vous soyez coach ou entrepreneur, le futur de la productivité est ici.
+
+6
+00:00:23,001 --> 00:00:28,000
+Avec Sellyo, simplifiez vos tâches, concentrez-vous sur l'essentiel.
+
+7
+00:00:28,001 --> 00:00:33,000
+Ne manquez pas cette opportunité de faire évoluer votre activité.
+
+8
+00:00:33,001 --> 00:00:38,000
+Préparez-vous à embrasser l'innovation avec Sellyo.
+
+9
+00:00:38,001 --> 00:00:43,000
+Merci d'avoir regardé. Restez connectés pour plus d'informations.
+
+10
+00:00:43,001 --> 00:00:48,000
+À très bientôt pour une nouvelle ère de productivité.
+```
+
+Assurez-vous que la vitesse de lecture est adaptée à la durée totale afin de respecter la durée cible de 60 secondes.
