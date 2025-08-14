@@ -6,31 +6,16 @@ import {
   addDoc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import {
-  getAuth,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const db = getFirestore(app);
-const auth = getAuth(app);
 const form = document.getElementById("lead-form");
-
-const getCurrentUser = () => {
-  return new Promise((resolve) => {
-    onAuthStateChanged(auth, (user) => {
-      resolve(user);
-    });
-  });
-};
 
 if (form) {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const firebaseUser = await getCurrentUser();
-
     const userIdFromHTML = form.querySelector('input[name="userId"]')?.value?.trim();
-    const userId = firebaseUser?.uid || userIdFromHTML || "";
+    const userId = userIdFromHTML || "";
 
     if (!userId) {
       alert("Erreur : userId manquant. Merci de recharger la page.");
@@ -71,7 +56,6 @@ if (form) {
 
     try {
       await addDoc(collection(db, "leads"), lead);
-      // 🔹 Redirection dynamique
       if (nextUrl) {
         window.location.href = nextUrl;
       } else {
