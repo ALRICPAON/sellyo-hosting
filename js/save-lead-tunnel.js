@@ -1,69 +1,66 @@
-// js/save-lead-tunnel.js
+// js/save-lead-tunnel.js (robuste)
 import { app } from "./firebase-init.js";
 import {
-  getFirestore,
-  collection,
-  addDoc,
-  serverTimestamp
+  getFirestore, collection, addDoc, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const db = getFirestore(app);
-const form = document.getElementById("lead-form");
 
-if (form) {
-  form.addEventListener("submit", async (e) => {
+function q(f, sel){ return f.querySelector(sel); }
+function v(f, name){ return (q(f, `[name="${name}"]`)?.value || "").trim(); }
+
+async function handleSubmit(form){
+  const userId = v(form,"userId");
+  if(!userId){ alert("Erreur : userId manquant. Merci de recharger la page."); return; }
+
+  const email = v(form,"email");
+  const tel   = v(form,"telephone");
+  if(!email && !tel){ alert("Merci d’indiquer au moins un email ou un téléphone."); return; }
+
+  const payload = {
+    userId,
+    nom: v(form,"nom"),
+    prenom: v(form,"prenom"),
+    email,
+    telephone: tel,
+    adresse: v(form,"adresse"),
+    name: v(form,"name"),
+    type: v(form,"type") || "tunnel",
+    slug: v(form,"slug"),
+    createdAt: serverTimestamp(),
+    source: { type: v(form,"type") || "tunnel", refId: v(form,"slug") || null },
+    userAgent: navigator.userAgent,
+    referer: document.referrer || null,
+    page: location.href
+  };
+
+  await addDoc(collection(db,"leads"), payload);
+  const nextUrl = v(form,"nextUrl");
+  location.href = nextUrl || "https://alricpaon.github.io/sellyo-hosting/merci.html";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("lead-form");
+  if(!form) return;
+
+  // 1) empêcher tout POST natif (GitHub Pages refuserait)
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
-
-    const userIdFromHTML = form.querySelector('input[name="userId"]')?.value?.trim();
-    const userId = userIdFromHTML || "";
-
-    if (!userId) {
-      alert("Erreur : userId manquant. Merci de recharger la page.");
-      return;
-    }
-
-    const nom = form.querySelector('input[name="nom"]')?.value.trim();
-    const prenom = form.querySelector('input[name="prenom"]')?.value.trim();
-    const email = form.querySelector('input[name="email"]')?.value.trim();
-    const telephone = form.querySelector('input[name="telephone"]')?.value.trim();
-    const adresse = form.querySelector('input[name="adresse"]')?.value.trim();
-    const name = form.querySelector('input[name="name"]')?.value.trim();
-    const type = form.querySelector('input[name="type"]')?.value.trim();
-    const slug = form.querySelector('input[name="slug"]')?.value.trim();
-    const nextUrl = form.querySelector('input[name="nextUrl"]')?.value?.trim();
-
-    if (!email && !telephone) {
-      alert("Merci de renseigner au moins un email ou un numéro de téléphone.");
-      return;
-    }
-
-    const lead = {
-      userId,
-      nom: nom || "",
-      prenom: prenom || "",
-      email: email || "",
-      telephone: telephone || "",
-      adresse: adresse || "",
-      name: name || "",
-      type: type || "tunnel",
-      slug: slug || "",
-      createdAt: serverTimestamp(),
-      source: {
-        type: type || "tunnel",
-        refId: slug || null
-      }
-    };
-
-    try {
-      await addDoc(collection(db, "leads"), lead);
-      if (nextUrl) {
-        window.location.href = nextUrl;
-      } else {
-        window.location.href = "https://cdn.sellyo.fr/merci.html";
-      }
-    } catch (err) {
+    handleSubmit(form).catch(err => {
       console.error("Erreur lors de l'enregistrement :", err);
       alert("Erreur lors de l'envoi du formulaire.");
-    }
+    });
   });
-}
+
+  // 2) si le bouton n'est pas type="submit", on capte le click aussi
+  const btn = document.getElementById("lead-submit");
+  if(btn){
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      handleSubmit(form).catch(err => {
+        console.error("Erreur lors de l'enregistrement :", err);
+        alert("Erreur lors de l'envoi du formulaire.");
+      });
+    });
+  }
+});
