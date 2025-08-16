@@ -43,6 +43,31 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("lead-form");
   if(!form) return;
 
+    // ✅ Détermine si c'est vraiment une optin
+  const hasEmail = !!form.querySelector('input[name="email" i]');
+  const hasPhone = !!form.querySelector('input[name="telephone" i], input[name="phone" i]');
+  const isOptin = form.hasAttribute('data-optin') || hasEmail || hasPhone;
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    // 🧱 Si ce n'est PAS une optin, on ne traite pas le lead : on redirige seulement
+    if (!isOptin) {
+      const next = form.querySelector('input[name="nextUrl"]')?.value;
+      if (next) {
+        location.href = next;
+      } else {
+        // fallback: /pageX.html -> /pageX+1.html
+        const m = location.pathname.match(/page(\d+)\.html$/);
+        location.href = m ? `page${(+m[1] + 1)}.html` : location.href;
+      }
+      return;
+    }
+
+    // ✳️ Sinon (vraie optin) -> laisser ton code existant d'enregistrement du lead ici
+    // ... (validation email/téléphone, save Firestore, puis redirection nextUrl)
+  });
+
   // 1) empêcher tout POST natif (GitHub Pages refuserait)
   form.addEventListener("submit", (e) => {
     e.preventDefault();
