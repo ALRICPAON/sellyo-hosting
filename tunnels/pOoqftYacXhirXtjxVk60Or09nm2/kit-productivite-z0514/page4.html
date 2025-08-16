@@ -1,0 +1,76 @@
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src= 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f); })(window,document,'script','dataLayer','');</script>
+  <!-- End Google Tag Manager -->
+  <!-- Meta Pixel Code -->
+  <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod? n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n; n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0; t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window, document,'script','https://connect.facebook.net/en_US/fbevents.js'); fbq('init','');fbq('track','PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=&ev=PageView&noscript=1"/></noscript>
+  <!-- End Meta Pixel Code -->
+  <style>
+    :root{--bg:#00364a;--btn:#7b219f;--text:#f2f2f2}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,Helvetica,Arial,sans-serif}
+    *,*::before,*::after{box-sizing:border-box}
+    .container{max-width:1100px;margin:0 auto;padding:24px}
+    header{display:flex;justify-content:center;align-items:center;padding:12px 0}
+    header img{max-height:56px;width:auto;height:auto;display:block}
+    img,video{max-width:720px;width:100%;height:auto;display:block;margin:16px auto;border-radius:10px}
+    a.button,button.button{background:var(--btn);color:#fff;border:0;border-radius:12px;padding:14px 18px;font-weight:700;text-decoration:none;display:inline-block;cursor:pointer}
+    .button[disabled]{opacity:.6;cursor:not-allowed}
+    form .form-grid{display:grid;grid-template-columns:1fr;gap:12px;margin:16px 0}
+    label.form-field{display:flex;flex-direction:column;gap:6px;text-align:left;max-width:720px;margin:0 auto}
+    input,textarea,select{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.2);color:#fff}
+    .muted{opacity:.8}
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  <header>
+    <img src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fkit-productivite-z0514%2Flogo-1755331416184?alt=media&token=432a39f1-9a90-43a8-b5c8-e9227cf088bf" alt="Logo">
+  </header>
+
+  <main class="container">
+    <video controls playsinline src="" poster="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fkit-productivite-z0514%2Fpage4-hero-1755331419660?alt=media&token=3fcb3015-2598-4cfa-b895-636553b67b16"></video>
+
+    <h1 style="text-align:center">⚡ Pack Pro + Templates</h1>
+    <h2 style="text-align:center">50 templates Notion + Tableaux Google Sheets prêts à l’emploi</h2>
+
+    <form id="lead-form" autocomplete="on">
+      <div class="form-grid">
+        <!-- Insère ici les <label class="form-field">…</label> selon formFields -->
+      </div>
+      <input type="hidden" name="userId" value="pOoqftYacXhirXtjxVk60Or09nm2">
+      <input type="hidden" name="slug" value="kit-productivite-z0514">
+      <input type="hidden" name="name" value="Kit-Productivité">
+      <input type="hidden" name="type" value="tunnel">
+      <input type="hidden" name="nextUrl" value="https://alricpaon.github.io/sellyo-hosting/tunnels/pOoqftYacXhirXtjxVk60Or09nm2/kit-productivite-z0514/page5.html">
+      <button class="button" type="submit" id="lead-submit">Ajouter le Pack Pro</button>
+    </form>
+
+    <script>
+      (function(){
+        var m = location.pathname.match(/tunnels\/([^/]+)\/([^/]+)\//);
+        if(!m) return;
+        var uid=m[1], slug=m[2], f=document.getElementById('lead-form');
+        if(!f) return;
+        var u=f.querySelector('[name="userId"]'), s=f.querySelector('[name="slug"]');
+        if(u && !u.value) u.value=uid;
+        if(s && !s.value) s.value=slug;
+      })();
+    </script>
+  </main>
+
+  <script type="module" src="https://alricpaon.github.io/sellyo-hosting/js/firebase-init.js"></script>
+  <script type="module" src="https://alricpaon.github.io/sellyo-hosting/js/save-lead-tunnel.js"></script>
+</body>
+</html>
+```
