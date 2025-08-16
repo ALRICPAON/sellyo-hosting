@@ -1,0 +1,122 @@
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMWSérie-32018</title>
+    <style>
+        :root {
+            --bg: #00364a;
+            --btn: #7b219f;
+            --text: #f2f2f2;
+        }
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, sans-serif;
+        }
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+        header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px 0;
+        }
+        header img {
+            max-height: 56px;
+            width: auto;
+            height: auto;
+            display: block;
+        }
+        img, video {
+            max-width: 720px;
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 16px auto;
+            border-radius: 10px;
+        }
+        a.button, button.button {
+            background: var(--btn);
+            color: #fff;
+            border: 0;
+            border-radius: 12px;
+            padding: 14px 18px;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .button[disabled] {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+        form .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin: 16px 0;
+        }
+        label.form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            text-align: left;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, .15);
+            background: rgba(0, 0, 0, .2);
+            color: #fff;
+        }
+        .muted {
+            opacity: .8;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fbmwserie-32018-wnuxo%2Flogo-1755327483996?alt=media&token=59523872-7229-4674-8c20-a41791fc018b" alt="Logo">
+    </header>
+    <main class="container">
+        <img src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fbmwserie-32018-wnuxo%2Fcover-1755327484595?alt=media&token=916f6502-7499-4a5f-9980-d162eea9cb33" alt="Cover Image">
+        <form id="lead-form" autocomplete="on" onsubmit="return false">
+            <div class="form-grid">
+                <label class="form-field">
+                    Nom
+                    <input name="nom" type="text">
+                </label>
+                <label class="form-field">
+                    Prénom
+                    <input name="prenom" type="text">
+                </label>
+                <label class="form-field">
+                    Email
+                    <input name="email" type="email">
+                </label>
+            </div>
+            <input type="hidden" name="userId" value="pOoqftYacXhirXtjxVk60Or09nm2">
+            <input type="hidden" name="slug" value="bmwserie-32018-wnuxo">
+            <input type="hidden" name="name" value="BMWSérie-32018">
+            <input type="hidden" name="type" value="tunnel">
+            <input type="hidden" name="nextUrl" value="https://alricpaon.github.io/sellyo-hosting/tunnels/pOoqftYacXhirXtjxVk60Or09nm2/bmwserie-32018-wnuxo/page2.html">
+            <button class="button" type="submit" id="lead-submit" aria-label="oui je le veux">oui je le veux</button>
+        </form>
+    </main>
+</body>
+</html>
+```
