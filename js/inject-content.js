@@ -13,31 +13,29 @@ const setBullets = (sel, items = []) => {
   el.innerHTML = items.map(i => `<li>${i}</li>`).join("");
 };
 
-// js/inject-content.js — remplace uniquement loadConfig
-
+// js/inject-content.js — remplacer UNIQUEMENT loadConfig par ceci
 async function loadConfig(slug) {
   if (!slug) throw new Error("slug manquant dans l'URL");
   const qs = new URLSearchParams(location.search);
   const userId = qs.get("userId");
   if (!userId) throw new Error("userId manquant dans l'URL");
 
-  // Détermine le préfixe absolu du "project site" GitHub Pages: /<repo>/
-  const parts = location.pathname.split("/"); // ["", "sellyo-hosting", "optin.html"]
-  const project = parts[1] || "";             // "sellyo-hosting"
-  const root = project ? `/${project}/` : "/";
-
-  // slugs
+  // slug base ⇒ ajoute -p1 (ou ?page=2 ⇒ -p2)
   const pageParam = qs.get("page");
   const hasSuffix = /-p\d+$/.test(slug);
   const effectiveSlug = hasSuffix ? slug : `${slug}-p${pageParam ? String(parseInt(pageParam,10)||1) : "1"}`;
 
-  // candidates : relatifs + absolus (sécurise Safari / bases)
+  // Préfixe absolu pour site GitHub Pages de projet: https://host/<repo>/
+  const repo = (location.pathname.split("/")[1] || "");
+  const rootPath = repo ? `/${repo}/` : "/";
+  const base = new URL(rootPath, location.origin).href; // ABSOLU
+
   const rel1 = `tunnels/${encodeURIComponent(userId)}/${encodeURIComponent(effectiveSlug)}.json`;
   const rel2 = `tunnels/${encodeURIComponent(userId)}/${encodeURIComponent(slug)}.json`;
-  const abs1 = new URL(rel1, root).href; // https://alricpaon.github.io/sellyo-hosting/...
-  const abs2 = new URL(rel2, root).href;
+  const abs1 = new URL(rel1, base).href;
+  const abs2 = new URL(rel2, base).href;
 
-  const candidates = [abs1, abs2, rel1, rel2]; // on teste d'abord les absolues
+  const candidates = [abs1, abs2, rel1, rel2]; // teste d'abord absolues
   console.log("[inject] candidates =", candidates);
 
   for (const path of candidates) {
@@ -52,6 +50,7 @@ async function loadConfig(slug) {
   }
   throw new Error(`Config introuvable pour slug=${slug}`);
 }
+
 // (Optionnel) microcopy depuis un endpoint Make si présent
 async function loadMicrocopy(page, slug) {
   try {
