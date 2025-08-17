@@ -12,6 +12,17 @@ const setBullets = (sel, items = []) => {
   const el = $(sel); if (!el) return;
   el.innerHTML = items.map(i => `<li>${i}</li>`).join("");
 };
+// -- AJOUTER --
+function parseJsonLenient(s) {
+  // 1) enlève les éventuels blocs ```json ... ```
+  s = s.replace(/```json|```/g, "");
+  // 2) coupe tout ce qui est avant la première '{' et après la dernière '}'
+  const i = s.indexOf("{");
+  const j = s.lastIndexOf("}");
+  if (i !== -1 && j !== -1 && j > i) s = s.slice(i, j + 1);
+  // 3) parse
+  return JSON.parse(s);
+}
 
 // js/inject-content.js
 async function loadConfig(slug) {
@@ -41,8 +52,7 @@ async function loadConfig(slug) {
       const res = await fetch(url, { cache: "no-store" });
       const text = await res.text();
       console.error("[inject] fetch", { url, status: res.status, ok: res.ok, sample: text.slice(0, 80) });
-      if (res.ok) {
-        try { return JSON.parse(text); }
+      if (res.ok) return parseJsonLenient(text);
         catch (e) {
           console.error("[inject] JSON parse error", url, e, "firstChars=", text.slice(0, 40));
           throw e;
