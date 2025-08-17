@@ -19,12 +19,20 @@
 </main>
 
 <script type="module">
-  import { injectSlots } from "/js/inject-content.js";
-  const qs = new URLSearchParams(location.search);
-  const slug = qs.get("slug");
-  injectSlots({ slug, page: "thankyou" }).then(cfg=>{
-    document.getElementById("deliver").href = cfg.deliverable.url;
-  });
+  import { injectSlots } from "./js/inject-content.js?v=fix1";
+
+  (async () => {
+    try {
+      const qs  = new URLSearchParams(location.search);
+      const slug = qs.get("slug");
+      const cfg  = await injectSlots({ slug, page: "thankyou" });
+
+      const url = cfg.deliverable?.url || cfg.delivery?.productUrl || "#";
+      const a = document.getElementById("deliver");
+      a.href = url;
+      if (url === "#") a.textContent = "Lien indisponible";
+    } catch (e) { console.error("[thankyou] error", e); }
+  })();
 </script>
 </body>
 </html>
