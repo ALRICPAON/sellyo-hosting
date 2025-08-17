@@ -1,5 +1,8 @@
 // js/inject-content.js
 
+const DEBUG = true;
+const dbg = (...a) => { if (DEBUG) console.log("[inject]", ...a); };
+
 // Helpers
 const $ = (sel) => document.querySelector(sel);
 const show = (el) => { if (el) el.style.display = ""; };
@@ -10,14 +13,13 @@ const setBullets = (sel, items = []) => {
   el.innerHTML = items.map(i => `<li>${i}</li>`).join("");
 };
 
-// Charge JSON de config tunnel (gère slug base OU slug -pX)
+// Charge JSON de config tunnel (gère slug base OU slug -pX) + LOGS
 async function loadConfig(slug) {
   if (!slug) throw new Error("slug manquant dans l'URL");
   const qs = new URLSearchParams(location.search);
   const userId = qs.get("userId");
   if (!userId) throw new Error("userId manquant dans l'URL");
 
-  // si l'URL ne donne que le slug "base", on prend p=1 par défaut (ou ?page=2 -> p2)
   const pageParam = qs.get("page");
   const hasSuffix = /-p\d+$/.test(slug);
   const effectiveSlug = hasSuffix
@@ -26,31 +28,51 @@ async function loadConfig(slug) {
 
   const candidates = [
     `tunnels/${encodeURIComponent(userId)}/${encodeURIComponent(effectiveSlug)}.json`,
-    `tunnels/${encodeURIComponent(userId)}/${encodeURIComponent(slug)}.json` // fallback si jamais créé sans suffixe
+    `tunnels/${encodeURIComponent(userId)}/${encodeURIComponent(slug)}.json`
   ];
+  dbg("loadConfig:start", { slug, userId, pageParam, hasSuffix, effectiveSlug, candidates });
 
   for (const path of candidates) {
-    const res = await fetch(path, { cache: "no-store" });
-    if (res.ok) return res.json();
+    try {
+      const res = await fetch(path, { cache: "no-store" });
+      const body = await res.text();
+      dbg("fetch", { path, status: res.status, ok: res.ok, sample: body.slice(0, 120) });
+      if (res.ok) {
+        try {
+          return JSON.parse(body);
+        } catch (parseErr) {
+          dbg("JSON parse error", path, parseErr);
+          throw parseErr;
+        }
+      }
+    } catch (err) {
+      dbg("fetch error", path, err);
+    }
   }
-  throw new Error(`Config introuvable pour ${slug}`);
+  throw new Error(`Config introuvable pour slug=${slug}`);
 }
 
 // (Optionnel) microcopy depuis un endpoint Make si présent
 async function loadMicrocopy(page, slug) {
   try {
-    const r = await fetch(`microcopy/${encodeURIComponent(page)}?slug=${encodeURIComponent(slug)}`, { cache: "no-store" });
-    if (r.ok) return r.json();
-  } catch (_e) {}
+    const url = `microcopy/${encodeURIComponent(page)}?slug=${encodeURIComponent(slug)}`;
+    dbg("microcopy:fetch", url);
+    const r = await fetch(url, { cache: "no-store" });
+    const b = await r.text();
+    dbg("microcopy:resp", { status: r.status, ok: r.ok, sample: b.slice(0, 120) });
+    if (r.ok) return JSON.parse(b);
+  } catch (e) {
+    dbg("microcopy error", e);
+  }
   return null;
 }
 
 // Applique couleurs du thème (lit cfg.colors et fallback sur cfg.ui)
 function applyThemeColors(cfg) {
-  if (!cfg) return;
   const bg = cfg.colors?.bg ?? "#0b1220";
   const text = cfg.colors?.text ?? "#ffffff";
   const btn = cfg.colors?.btn ?? cfg.ui?.buttonColor ?? "#3b82f6";
+  dbg("theme", { bg, text, btn });
   document.documentElement.style.setProperty("--bg", bg);
   document.documentElement.style.setProperty("--text", text);
   document.documentElement.style.setProperty("--btn", btn);
@@ -58,9 +80,9 @@ function applyThemeColors(cfg) {
 
 // Gère les médias (image / vidéo mp4 / embed)
 function applyMedia(cfg) {
-  // Image
   const imgWrap = document.querySelector('[data-optional="image"]');
   const hasImage = cfg.ui?.showImage && cfg.media?.imageUrl;
+  dbg("media:image", { hasImage, imageUrl: cfg.media?.imageUrl });
   if (hasImage) {
     const img = document.getElementById("hero-img");
     if (img) img.src = cfg.media.imageUrl;
@@ -69,11 +91,11 @@ function applyMedia(cfg) {
     hide(imgWrap);
   }
 
-  // Vidéo
   const vidWrap = document.querySelector('[data-optional="video"]');
   const mp4 = cfg.media?.videoMp4;
   const emb = cfg.media?.videoEmbed;
   const allowVideo = cfg.ui?.showVideo && (mp4 || emb);
+  dbg("media:video", { allowVideo, mp4, emb });
 
   const vid = document.getElementById("hero-mp4");
   const iframeHost = document.getElementById("hero-embed");
@@ -100,8 +122,9 @@ function applyMedia(cfg) {
 // Affiche/masque CTA secondaire (upsell/downsell)
 function applySecondaryCta(cfg) {
   const secondary = document.getElementById("secondary-cta");
-  if (!secondary) return;
   const shouldShow = !!cfg.ui?.showSecondaryCta;
+  dbg("secondary-cta", { shouldShow });
+  if (!secondary) return;
   if (shouldShow) show(secondary); else hide(secondary);
 }
 
@@ -148,12 +171,29 @@ function normalizeConfig(cfg) {
   if (!flow.nextSlug && cfg.nextSlug) flow.nextSlug = cfg.nextSlug;
   if (!flow.declineSlug && cfg.declineSlug) flow.declineSlug = cfg.declineSlug;
 
-  return { ...cfg, pageType, media, copy, ui, flow };
+  const out = { ...cfg, pageType, media, copy, ui, flow };
+  dbg("normalize", { pageType: out.pageType, slug: out.slug, hasBullets: !!out.copy?.bullets?.length });
+  return out;
 }
 
-// Fonction principale exportée
+// Fonction principale exportée + LOGS
 export async function injectSlots({ slug, page }) {
-  let cfg = await loadConfig(slug);
+  dbg("injectSlots:begin", { slug, page });
+
+  let cfg;
+  try {
+    cfg = await loadConfig(slug);
+  } catch (e) {
+    dbg("loadConfig failed", e);
+    throw e;
+  }
+
+  dbg("cfg loaded", {
+    cfgSlug: cfg.slug,
+    pageType: cfg.pageType || cfg.type,
+    headline: (cfg.copy && (cfg.copy.headline || cfg.title)) || null
+  });
+
   cfg = normalizeConfig(cfg);
 
   // Theme
@@ -161,6 +201,8 @@ export async function injectSlots({ slug, page }) {
 
   // Microcopy optionnelle
   const mc = await loadMicrocopy(page, slug);
+  dbg("microcopy data", mc);
+
   const copy = {
     headline: mc?.headline ?? cfg.copy?.headline ?? "",
     bullets: mc?.bullets ?? cfg.copy?.bullets ?? [],
@@ -170,18 +212,18 @@ export async function injectSlots({ slug, page }) {
     pageTitle: mc?.pageTitle ?? cfg.copy?.pageTitle
   };
 
-  // Texte / bullets / CTA
+  dbg("write DOM", copy);
   applyTitles(cfg, copy);
   setBullets('[data-slot="bullets"]', copy.bullets);
-  setText('[data-slot="cta"]', copy.cta);           // optin/checkout
-  setText('[data-slot="ctaPrimary"]', copy.ctaPrimary);   // sales
+  setText('[data-slot="cta"]', copy.cta);
+  setText('[data-slot="ctaPrimary"]', copy.ctaPrimary);
   setText('[data-slot="ctaSecondary"]', copy.ctaSecondary);
 
-  // Médias & CTA secondaire visibles selon flags
   applyMedia(cfg);
   applySecondaryCta(cfg);
 
-  return cfg; // la page gère ses redirections avec ce cfg
+  dbg("injectSlots:done");
+  return cfg;
 }
 
 export default { injectSlots };
