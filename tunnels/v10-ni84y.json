@@ -1,0 +1,39 @@
+```json
+{
+    "slug": "exclusive-offer",
+    "pageType": "sales",
+    "userId": "12345",
+    "baseUrl": "https://example.com",
+    "ui": {
+        "theme": "dark",
+        "layout": "two-column"
+    },
+    "media": {
+        "heroImage": "https://example.com/hero.jpg",
+        "video": "https://example.com/intro.mp4"
+    },
+    "copy": {
+        "headline": "Découvrez notre offre spéciale limitée",
+        "bullets": [
+            "Profitez d'une réduction exclusive.",
+            "Service client disponible 24/7.",
+            "Facilité d'utilisation garantie."
+        ],
+        "ctaPrimary": "Achetez maintenant",
+        "ctaSecondary": "En savoir plus"
+    },
+    "flow": {
+        "steps": ["details", "payment", "confirmation"],
+        "currentStep": "details"
+    },
+    "pricing": {
+        "currency": "EUR",
+        "originalPrice": 99.99,
+        "discountedPrice": 79.99
+    },
+    "deliverable": {
+        "type": "digital",
+        "format": "PDF"
+    }
+}
+```
