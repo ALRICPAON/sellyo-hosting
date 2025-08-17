@@ -28,23 +28,33 @@
   </form>
 </main>
 
-<script type="module" src="./js/firebase-init.js?v=20250817a"></script>
-<script type="module" src="./js/save-lead-tunnel.js?v=20250817a"></script>
+<script>
+  // logge TOUT ce qui fuit en promesse ou erreur
+  window.addEventListener('error', e => console.error('[window.onerror]', e.message, e.error || e));
+  window.addEventListener('unhandledrejection', e => console.error('[unhandledrejection]', e.reason));
+</script>
+
+<script type="module" src="./js/firebase-init.js?v=dbg1"></script>
+<script type="module" src="./js/save-lead-tunnel.js?v=dbg1"></script>
 <script type="module">
-  import { injectSlots } from "./js/inject-content.js?v=20250817a";
+  import { injectSlots } from "./js/inject-content.js?v=dbg1";
 
   const qs = new URLSearchParams(location.search);
   const slug = qs.get("slug");
+  console.log("[page] slug param =", slug);
 
   injectSlots({ slug, page: "optin" })
     .then(cfg => {
-      console.log("CFG:", cfg);            // ✅ vois ce qui arrive
+      console.log("[page] cfg =", cfg);
       const f = document.getElementById("optin-form");
       f.userId.value = cfg.userId;
       f.slug.value = cfg.slug;
       f.nextUrl.value = `checkout.html?slug=${(cfg.flow && cfg.flow.nextSlug) || cfg.slug}&userId=${cfg.userId}`;
+      console.log("[page] form values set", {
+        userId: f.userId.value, slug: f.slug.value, nextUrl: f.nextUrl.value
+      });
     })
-    .catch(err => console.error("Injection error", err));
+    .catch(err => console.error("[page] inject error", err));
 </script>
 </body>
 </html>
