@@ -13,45 +13,45 @@ const setBullets = (sel, items = []) => {
   el.innerHTML = items.map(i => `<li>${i}</li>`).join("");
 };
 
-// Charge JSON de config tunnel (gère slug base OU slug -pX) + LOGS
+// js/inject-content.js — remplace uniquement loadConfig
+
 async function loadConfig(slug) {
   if (!slug) throw new Error("slug manquant dans l'URL");
   const qs = new URLSearchParams(location.search);
   const userId = qs.get("userId");
   if (!userId) throw new Error("userId manquant dans l'URL");
 
+  // Détermine le préfixe absolu du "project site" GitHub Pages: /<repo>/
+  const parts = location.pathname.split("/"); // ["", "sellyo-hosting", "optin.html"]
+  const project = parts[1] || "";             // "sellyo-hosting"
+  const root = project ? `/${project}/` : "/";
+
+  // slugs
   const pageParam = qs.get("page");
   const hasSuffix = /-p\d+$/.test(slug);
-  const effectiveSlug = hasSuffix
-    ? slug
-    : `${slug}-p${pageParam ? String(parseInt(pageParam, 10) || 1) : "1"}`;
+  const effectiveSlug = hasSuffix ? slug : `${slug}-p${pageParam ? String(parseInt(pageParam,10)||1) : "1"}`;
 
-  const candidates = [
-    `tunnels/${encodeURIComponent(userId)}/${encodeURIComponent(effectiveSlug)}.json`,
-    `tunnels/${encodeURIComponent(userId)}/${encodeURIComponent(slug)}.json`
-  ];
-  dbg("loadConfig:start", { slug, userId, pageParam, hasSuffix, effectiveSlug, candidates });
+  // candidates : relatifs + absolus (sécurise Safari / bases)
+  const rel1 = `tunnels/${encodeURIComponent(userId)}/${encodeURIComponent(effectiveSlug)}.json`;
+  const rel2 = `tunnels/${encodeURIComponent(userId)}/${encodeURIComponent(slug)}.json`;
+  const abs1 = new URL(rel1, root).href; // https://alricpaon.github.io/sellyo-hosting/...
+  const abs2 = new URL(rel2, root).href;
+
+  const candidates = [abs1, abs2, rel1, rel2]; // on teste d'abord les absolues
+  console.log("[inject] candidates =", candidates);
 
   for (const path of candidates) {
     try {
       const res = await fetch(path, { cache: "no-store" });
       const body = await res.text();
-      dbg("fetch", { path, status: res.status, ok: res.ok, sample: body.slice(0, 120) });
-      if (res.ok) {
-        try {
-          return JSON.parse(body);
-        } catch (parseErr) {
-          dbg("JSON parse error", path, parseErr);
-          throw parseErr;
-        }
-      }
-    } catch (err) {
-      dbg("fetch error", path, err);
+      console.log("[inject] fetch", { path, status: res.status, ok: res.ok, sample: body.slice(0, 80) });
+      if (res.ok) return JSON.parse(body);
+    } catch (e) {
+      console.log("[inject] fetch error", path, e);
     }
   }
   throw new Error(`Config introuvable pour slug=${slug}`);
 }
-
 // (Optionnel) microcopy depuis un endpoint Make si présent
 async function loadMicrocopy(page, slug) {
   try {
