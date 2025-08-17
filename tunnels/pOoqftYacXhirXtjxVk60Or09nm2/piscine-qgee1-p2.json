@@ -1,0 +1,48 @@
+Pour transformer les données du webhook en fichiers JSON valides et les formater pour le tunnel marketing Sellyo, je vais structurer vos informations suivantes selon les contraintes fournies. Voici un exemple de JSON pour chaque page du tableau `pagesData` :
+
+```json
+{
+  "slug": "piscine-qgee1-p2",
+  "pageType": "checkout",
+  "userId": "pOoqftYacXhirXtjxVk60Or09nm2",
+  "baseUrl": "https://alricpaon.github.io/sellyo-hosting",
+  "ui": {
+    "theme": "dark",
+    "mainColor": "#004d65",
+    "buttonColor": "#7b219f"
+  },
+  "media": {
+    "imageUrl": "",
+    "videoMp4": ""
+  },
+  "copy": {
+    "headline": "Découvrez notre solution optimale aujourd'hui",
+    "bullets": [
+      "Avantages inégalés et fonctionnalités supérieures",
+      "Facilité d'utilisation et efficacité prouvée",
+      "Support client exceptionnel, à votre service"
+    ],
+    "cta": "Passez à l'action maintenant"
+  },
+  "flow": {
+    "nextSlug": "piscine-qgee1-p3"
+  },
+  "pricing": {
+    "priceId": "price_1Rx31U4PUVU3ejcHtRO3U55v",
+    "currency": "EUR",
+    "amount": 500
+  },
+  "deliverable": {
+    "url": "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fpiscine-qgee1%2Fdelivery-product-1755437992264?alt=media&token=ec833346-1836-4d4e-916a-1454b2e601c6"
+  }
+}
+```
+
+### Explications des modifications apportées :
+- **headline** : Reformulé pour accrocher davantage le lecteur avec une offre engageante.
+- **bullets** : Listes modifiées et corrigées pour mieux mettre en avant les points forts.
+- **cta** : Reformulé pour inciter à l'action de manière plus persuasive.
+
+Chaque page du tableau `pagesData` sera structurée de manière similaire, avec les valeurs spécifiques pour chaque champ adaptées à votre jeu de données de base. Assurez-vous de remplacer les valeurs d'exemple par celles réellement reçues via votre webhook.
+
+Si vous avez plus de pages ou d'autres données à incorporer, il faudra étendre cette structure de base pour chaque entrée concernée!
