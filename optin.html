@@ -38,7 +38,7 @@
     const f = document.getElementById("optin-form");
     f.userId.value = cfg.userId;
     f.slug.value = cfg.slug;
-    f.nextUrl.value = `checkout.html?slug=${cfg.slug}&userId=${cfg.userId}`;
+    f.nextUrl.value = `checkout.html?slug=${(cfg.flow && cfg.flow.nextSlug) || cfg.slug}&userId=${cfg.userId}`;
   });
 </script>
 </body>
