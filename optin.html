@@ -16,6 +16,13 @@
 <main>
   <h1 data-slot="headline">Titre optin</h1>
   <ul data-slot="bullets"></ul>
+  <header style="text-align:center;margin-bottom:16px">
+  <img id="logo" alt="Logo" style="max-height:48px;display:none">
+</header>
+
+<section id="hero-image" data-optional="image" style="display:none">
+  <img id="hero-img" style="max-width:100%;border-radius:12px">
+</section>
 
   <form id="optin-form">
     <input name="name" placeholder="Ton prénom" required>
@@ -27,6 +34,7 @@
     <button type="submit"><span data-slot="cta">Continuer</span></button>
   </form>
 </main>
+
 
 <script>
   // logge TOUT ce qui fuit en promesse ou erreur
