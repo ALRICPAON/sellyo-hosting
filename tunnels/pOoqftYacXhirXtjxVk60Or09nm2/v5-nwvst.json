@@ -1,0 +1,40 @@
+```json
+{
+  "slug": "acheter-formation-excel",
+  "pageType": "sales",
+  "userId": 102,
+  "baseUrl": "https://cours-excel.com",
+  "ui": {
+    "theme": "corporate",
+    "layout": "single-column"
+  },
+  "media": {
+    "heroImage": "https://cours-excel.com/images/excel-formation.jpg"
+  },
+  "copy": {
+    "headline": "Maîtrisez Excel pour booster votre carrière",
+    "bullets": [
+      "Augmentez votre efficacité avec des outils avancés.",
+      "Transformez vos données en analyses claires et précises.",
+      "Accédez à des tutoriels simples, adaptés à tous les niveaux."
+    ],
+    "ctaPrimary": "Inscrivez-vous maintenant",
+    "ctaSecondary": "En savoir plus"
+  },
+  "flow": {
+    "steps": [
+      "choisir-formation",
+      "payer",
+      "suivre-formation"
+    ]
+  },
+  "pricing": {
+    "currency": "EUR",
+    "amount": 99
+  },
+  "deliverable": {
+    "type": "online-course",
+    "accessDuration": "lifetime"
+  }
+}
+```
