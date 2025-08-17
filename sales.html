@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sales</title>
+  <style>
+    :root{--bg:#0b1220;--btn:#3b82f6;--text:#fff}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui}
+    main{max-width:720px;margin:40px auto;padding:24px;text-align:center}
+    button{padding:12px 18px;border:0;border-radius:12px;background:var(--btn);color:#fff;font-weight:700;cursor:pointer;margin:8px}
+    section{margin:20px 0}
+    video,iframe,img{max-width:100%;border-radius:12px}
+  </style>
+</head>
+<body>
+<main>
+  <h1 data-slot="headline">Titre vente</h1>
+  <ul data-slot="bullets"></ul>
+
+  <section id="hero-image" data-optional="image"><img id="hero-img"></section>
+  <section id="hero-video" data-optional="video">
+    <video id="hero-mp4" controls style="display:none"></video>
+    <div id="hero-embed" style="aspect-ratio:16/9;display:none"></div>
+  </section>
+
+  <div id="cta-buttons">
+    <button id="primary-cta"><span data-slot="ctaPrimary">Continuer</span></button>
+    <button id="secondary-cta" style="background:#666;display:none"><span data-slot="ctaSecondary">Non merci</span></button>
+  </div>
+</main>
+
+<script type="module">
+  import { injectSlots } from "/js/inject-content.js";
+  const qs = new URLSearchParams(location.search);
+  const slug = qs.get("slug");
+  const uid = qs.get("userId");
+  let cfg;
+  injectSlots({ slug, page: "sales" }).then(c=>cfg=c);
+
+  document.getElementById("primary-cta").onclick = ()=>{
+    if(!cfg) return;
+    if(cfg.ui?.autoRedirect && cfg.flow?.redirectUrl){
+      location.href = cfg.flow.redirectUrl;
+    } else {
+      const target = cfg.flow?.nextSlug || "";
+      if(cfg.pricing?.priceIdUpsell || cfg.pricing?.priceIdDownsell){
+        location.href = `checkout.html?slug=${target}&userId=${uid}&priceId=${cfg.pricing.priceIdUpsell||cfg.pricing.priceIdDownsell}`;
+      } else {
+        location.href = `${target}.html?slug=${target}&userId=${uid}`;
+      }
+    }
+  };
+  document.getElementById("secondary-cta").onclick = ()=>{
+    if(cfg?.flow?.declineSlug){
+      location.href = `${cfg.flow.declineSlug}.html?slug=${cfg.flow.declineSlug}&userId=${uid}`;
+    }
+  };
+</script>
+</body>
+</html>
