@@ -14,8 +14,13 @@ const setBullets = (sel, items=[]) => {
 // Charge JSON de config tunnel (sans "/" initial pour GitHub Pages)
 async function loadConfig(slug) {
   if (!slug) throw new Error("slug manquant dans l'URL");
-  const res = await fetch(`tunnels/${encodeURIComponent(slug)}.json`, { cache: "no-store" });
-  if (!res.ok) throw new Error(`Config introuvable: tunnels/${slug}.json`);
+  const qs = new URLSearchParams(location.search);
+  const userId = qs.get("userId");
+  if (!userId) throw new Error("userId manquant dans l'URL");
+
+  const path = `tunnels/${encodeURIComponent(userId)}/${encodeURIComponent(slug)}.json`;
+  const res = await fetch(path, { cache: "no-store" });
+  if (!res.ok) throw new Error(`Config introuvable: ${path}`);
   return res.json();
 }
 
