@@ -20,30 +20,47 @@
 </main>
 
 <script type="module">
-  import { injectSlots } from "/js/inject-content.js";
-  const qs = new URLSearchParams(location.search);
-  const slug = qs.get("slug");
-  const uid = qs.get("userId");
-  const overridePrice = qs.get("priceId");
-  let cfg;
-  injectSlots({ slug, page: "checkout" }).then(c=>cfg=c);
+  import { injectSlots } from "./js/inject-content.js?v=fix1";
 
-  document.getElementById("pay").onclick = async ()=>{
-    try{
-      const r = await fetch("https://YOUR_FUNCTION_URL/createCheckoutSession", {
-        method:"POST", headers:{ "Content-Type":"application/json" },
-        body: JSON.stringify({
-          priceId: overridePrice || cfg.pricing.priceId,
-          userId: uid,
-          slug: cfg.slug,
-          baseUrl: cfg.baseUrl
-        })
-      });
-      const { url, error } = await r.json();
-      if(error) throw new Error(error);
-      location.href = url;
-    }catch(e){ document.getElementById("msg").textContent = "Erreur paiement : "+e.message; }
-  };
+  (async () => {
+    try {
+      const qs  = new URLSearchParams(location.search);
+      const slug = qs.get("slug");
+      const uid  = qs.get("userId");
+      const overridePrice = qs.get("priceId");
+
+      const cfg = await injectSlots({ slug, page: "checkout" });
+
+      const priceId = overridePrice || cfg.pricing?.priceId;
+      if (!priceId) {
+        document.getElementById("msg").textContent = "Aucun priceId trouvé pour cette page.";
+        return;
+      }
+
+      // Si tu as un endpoint dans le JSON -> cfg.payment.checkoutUrl
+      const PAY_ENDPOINT = cfg.payment?.checkoutUrl || "https://YOUR_FUNCTION_URL/createCheckoutSession";
+
+      document.getElementById("pay").onclick = async () => {
+        try {
+          const r = await fetch(PAY_ENDPOINT, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              priceId,
+              userId: uid,
+              slug: cfg.slug,
+              baseUrl: cfg.baseUrl
+            })
+          });
+          const { url, error } = await r.json();
+          if (error) throw new Error(error);
+          location.href = url;
+        } catch (e) {
+          document.getElementById("msg").textContent = "Erreur paiement : " + e.message;
+        }
+      };
+    } catch (e) { console.error("[checkout] error", e); }
+  })();
 </script>
 </body>
 </html>
