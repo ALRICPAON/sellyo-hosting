@@ -1,6 +1,4 @@
-Pour produire un fichier JSON valide à partir des données que vous avez fournies, je vais reformuler et corriger les textes pour qu'ils soient engageants, tout en respectant les contraintes que vous avez mentionnées. Voici un exemple de génération conforme aux spécifications :
 
-```json
 {
   "slug": "exemple-slug",
   "pageType": "exemple-type",
@@ -36,20 +34,6 @@ Pour produire un fichier JSON valide à partir des données que vous avez fourni
     "url": "https://exemple-product-url.com"
   }
 }
-```
 
-Pour appliquer ce format à chaque page dans votre tableau `pagesData`, il faut remplacer les valeurs d'exemple par celles de vos données reçues :
 
-1. Remplacez `"slug"`, `"pageType"`, `"userId"`, `"baseUrl"` avec les valeurs spécifiques.
-
-2. Mettez à jour `"mainColor"` et `"buttonColor"` avec vos valeurs.
-
-3. Insérez votre `logoUrl` et `heroImage` dans `"imageUrl"`, et s'il s'agit d'une vidéo, remplacez `"videoMp4"`.
-
-4. Reformulez les éléments de `"bullets"` et `"cta"` de façon engageante, comme illustré. 
-
-5. Assurez-vous que `"amount"` reste un nombre, pas une chaîne de caractères.
-
-6. Conservez `"flow.nextSlug"` même si sa valeur est `null`.
-
-Il n'est pas possible de fournir une solution généralisée pour chaque page sans connaître vos données exactes, mais vous pouvez suivre cette structure pour transformer chaque entrée de votre tableau `pagesData` en un fichier JSON valide.
+ir une solution généralisée pour chaque page sans connaître vos données exactes, mais vous pouvez suivre cette structure pour transformer chaque entrée de votre tableau `pagesData` en un fichier JSON valide.
