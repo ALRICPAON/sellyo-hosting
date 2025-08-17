@@ -80,6 +80,13 @@ function applyThemeColors(cfg) {
 
 // Gère les médias (image / vidéo mp4 / embed)
 function applyMedia(cfg) {
+  // LOGO (brand.logoUrl ou logoUrl)
+const logoEl = document.getElementById("logo");
+const logoUrl = cfg.brand?.logoUrl || cfg.logoUrl || "";
+if (logoEl && logoUrl) {
+  logoEl.src = logoUrl;
+  logoEl.style.display = "";
+}
   const imgWrap = document.querySelector('[data-optional="image"]');
   const hasImage = cfg.ui?.showImage && cfg.media?.imageUrl;
   if (hasImage) {
