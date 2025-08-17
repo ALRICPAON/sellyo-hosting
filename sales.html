@@ -31,31 +31,41 @@
 </main>
 
 <script type="module">
-  import { injectSlots } from "/js/inject-content.js";
-  const qs = new URLSearchParams(location.search);
-  const slug = qs.get("slug");
-  const uid = qs.get("userId");
-  let cfg;
-  injectSlots({ slug, page: "sales" }).then(c=>cfg=c);
+  import { injectSlots } from "./js/inject-content.js?v=fix1";
 
-  document.getElementById("primary-cta").onclick = ()=>{
-    if(!cfg) return;
-    if(cfg.ui?.autoRedirect && cfg.flow?.redirectUrl){
-      location.href = cfg.flow.redirectUrl;
-    } else {
-      const target = cfg.flow?.nextSlug || "";
-      if(cfg.pricing?.priceIdUpsell || cfg.pricing?.priceIdDownsell){
-        location.href = `checkout.html?slug=${target}&userId=${uid}&priceId=${cfg.pricing.priceIdUpsell||cfg.pricing.priceIdDownsell}`;
-      } else {
-        location.href = `${target}.html?slug=${target}&userId=${uid}`;
-      }
-    }
-  };
-  document.getElementById("secondary-cta").onclick = ()=>{
-    if(cfg?.flow?.declineSlug){
-      location.href = `${cfg.flow.declineSlug}.html?slug=${cfg.flow.declineSlug}&userId=${uid}`;
-    }
-  };
+  (async () => {
+    try {
+      const qs  = new URLSearchParams(location.search);
+      const slug = qs.get("slug");
+      const uid  = qs.get("userId");
+
+      const cfg = await injectSlots({ slug, page: "sales" });
+
+      const goNext = (targetSlug) => {
+        if (!targetSlug) return;
+        const priceId = cfg.pricing?.priceIdUpsell || cfg.pricing?.priceIdDownsell || null;
+        if (priceId) {
+          location.href = `checkout.html?slug=${encodeURIComponent(targetSlug)}&userId=${encodeURIComponent(uid)}&priceId=${encodeURIComponent(priceId)}`;
+        } else {
+          location.href = `${encodeURIComponent(targetSlug)}.html?slug=${encodeURIComponent(targetSlug)}&userId=${encodeURIComponent(uid)}`;
+        }
+      };
+
+      document.getElementById("primary-cta")?.addEventListener("click", () => {
+        if (cfg.ui?.autoRedirect && cfg.flow?.redirectUrl) {
+          location.href = cfg.flow.redirectUrl;
+        } else {
+          goNext(cfg.flow?.nextSlug || "");
+        }
+      });
+
+      document.getElementById("secondary-cta")?.addEventListener("click", () => {
+        if (cfg.flow?.declineSlug) {
+          location.href = `${cfg.flow.declineSlug}.html?slug=${cfg.flow.declineSlug}&userId=${uid}`;
+        }
+      });
+    } catch (e) { console.error("[sales] error", e); }
+  })();
 </script>
 </body>
 </html>
