@@ -37,7 +37,7 @@
 <script type="module" src="./js/firebase-init.js?v=dbg1"></script>
 <script type="module" src="./js/save-lead-tunnel.js?v=dbg1"></script>
 <script type="module">
-  import { injectSlots } from "./js/inject-content.js?v=dbg1";
+  import { injectSlots } from "./js/inject-content.js?v=dbg2";
 
   const qs = new URLSearchParams(location.search);
   const slug = qs.get("slug");
@@ -50,9 +50,6 @@
       f.userId.value = cfg.userId;
       f.slug.value = cfg.slug;
       f.nextUrl.value = `checkout.html?slug=${(cfg.flow && cfg.flow.nextSlug) || cfg.slug}&userId=${cfg.userId}`;
-      console.log("[page] form values set", {
-        userId: f.userId.value, slug: f.slug.value, nextUrl: f.nextUrl.value
-      });
     })
     .catch(err => console.error("[page] inject error", err));
 </script>
