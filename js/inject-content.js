@@ -98,10 +98,51 @@ function applyTitles(cfg, copy) {
   }
   setText('[data-slot="headline"]', copy?.headline || "Titre");
 }
+function normalizeConfig(cfg){
+  // pageType
+  const pageType = cfg.pageType || cfg.type || "sales";
+
+  // media : map heroImage / videoUrl -> media.*
+  const rawVideo = cfg.media?.videoMp4 || cfg.media?.videoEmbed ? "" : (cfg.videoUrl || "");
+  const media = {
+    imageUrl: cfg.media?.imageUrl ?? cfg.heroImage ?? "",
+    videoMp4: cfg.media?.videoMp4 ?? (rawVideo && /\.mp4($|\?)/i.test(rawVideo) ? rawVideo : ""),
+    videoEmbed: cfg.media?.videoEmbed ?? (rawVideo && !/\.mp4($|\?)/i.test(rawVideo) ? rawVideo : "")
+  };
+
+  // copy : map title / bullets / ctaText -> copy.*
+  const copy = {
+    headline: cfg.copy?.headline ?? cfg.title ?? "",
+    bullets:  cfg.copy?.bullets  ?? cfg.copy?.benefits ?? cfg.bullets ?? [],
+    cta:      cfg.copy?.cta      ?? cfg.ctaText ?? "Continuer",
+    ctaPrimary:   cfg.copy?.ctaPrimary ?? cfg.ctaText ?? cfg.copy?.cta ?? "Continuer",
+    ctaSecondary: cfg.copy?.ctaSecondary ?? "Non merci",
+    pageTitle:    cfg.copy?.pageTitle ?? cfg.seo?.metaTitle ?? ""
+  };
+
+  // ui : si non fourni, déduire du média
+  const ui = {
+    showImage: cfg.ui?.showImage ?? !!media.imageUrl,
+    showVideo: cfg.ui?.showVideo ?? !!(media.videoMp4 || media.videoEmbed),
+    showPrimaryCta: cfg.ui?.showPrimaryCta ?? true,
+    showSecondaryCta: cfg.ui?.showSecondaryCta ?? (pageType === "upsell" || pageType === "downsell"),
+    autoRedirect: cfg.ui?.autoRedirect ?? false,
+    theme: cfg.ui?.theme ?? "dark"
+  };
+
+  // flow : reprendre d’anciens champs si présents
+  const flow = cfg.flow ? { ...cfg.flow } : {};
+  if (!flow.nextSlug && cfg.nextSlug) flow.nextSlug = cfg.nextSlug;
+  if (!flow.declineSlug && cfg.declineSlug) flow.declineSlug = cfg.declineSlug;
+
+  return { ...cfg, pageType, media, copy, ui, flow };
+}
 
 // Exporte la fonction principale
 export async function injectSlots({ slug, page }) {
-  const cfg = await loadConfig(slug);
+  let cfg = await loadConfig(slug);
+cfg = normalizeConfig(cfg);
+
 
   // Theme
   applyThemeColors(cfg.colors);
