@@ -7,12 +7,8 @@ import {
 const db = getFirestore(app);
 
 document.addEventListener("DOMContentLoaded", () => {
-  // ⚠️ ton HTML utilise id="optin-form"
-  const form = document.getElementById("optin-form");
-  if (!form) {
-    console.error("[lead] form #optin-form introuvable");
-    return;
-  }
+  const form = document.getElementById("optin-form"); // ✅ correspond à ton HTML
+  if (!form) { console.error("[lead] #optin-form introuvable"); return; }
 
   const val = (name) => (form.querySelector(`[name="${name}"]`)?.value || "").trim();
 
@@ -28,10 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const email = val("email").toLowerCase();
     const phone = val("telephone") || val("phone");
-    if (!email && !phone) {
-      alert("Merci d’indiquer un email ou un téléphone.");
-      return;
-    }
+    if (!email && !phone) { alert("Merci d’indiquer un email ou un téléphone."); return; }
 
     const payload = {
       userId, slug,
@@ -46,18 +39,22 @@ document.addEventListener("DOMContentLoaded", () => {
       meta: { href: location.href, ua: navigator.userAgent, ref: document.referrer || null }
     };
 
-    // Tente l’écriture, mais ne bloque pas la redirection si ça échoue
     try {
       await addDoc(collection(db, "leads"), payload);
       console.log("[lead] enregistré");
     } catch (err) {
+      // Si règles Firestore bloquent, on log et on continue la redirection
       console.warn("[lead] Firestore error (lead non sauvegardé)", err?.code || err?.message || err);
-      // on continue quand même
     }
 
-    const next = val("nextUrl")
-      || `checkout.html?slug=${encodeURIComponent(slug)}&userId=${encodeURIComponent(userId)}`;
+    const next =
+      val("nextUrl")
+      || (/-p(\d+)$/.test(slug)
+           ? `checkout.html?slug=${slug.replace(/-p(\d+)$/, (_,n)=>`-p${(+n+1)}`)}&userId=${encodeURIComponent(userId)}`
+           : `checkout.html?slug=${encodeURIComponent(slug)}-p2&userId=${encodeURIComponent(userId)}`);
 
     location.href = next;
   });
+
+  console.log("[lead] listener installé sur #optin-form");
 });
