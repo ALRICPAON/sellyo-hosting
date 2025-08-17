@@ -11,18 +11,32 @@ const setBullets = (sel, items=[]) => {
   el.innerHTML = items.map(i => `<li>${i}</li>`).join("");
 };
 
-// Charge JSON de config tunnel (sans "/" initial pour GitHub Pages)
+// Charge JSON de config tunnel (gère slug base OU slug -pX)
 async function loadConfig(slug) {
   if (!slug) throw new Error("slug manquant dans l'URL");
   const qs = new URLSearchParams(location.search);
   const userId = qs.get("userId");
   if (!userId) throw new Error("userId manquant dans l'URL");
 
-  const path = `tunnels/${encodeURIComponent(userId)}/${encodeURIComponent(slug)}.json`;
-  const res = await fetch(path, { cache: "no-store" });
-  if (!res.ok) throw new Error(`Config introuvable: ${path}`);
-  return res.json();
+  // si l'URL ne donne que le slug "base", on prend p=1 par défaut
+  const pageParam = qs.get("page");
+  const hasSuffix = /-p\d+$/.test(slug);
+  const effectiveSlug = hasSuffix
+    ? slug
+    : `${slug}-p${pageParam ? String(parseInt(pageParam,10)||1) : "1"}`;
+
+  const candidates = [
+    `tunnels/${encodeURIComponent(userId)}/${encodeURIComponent(effectiveSlug)}.json`,
+    `tunnels/${encodeURIComponent(userId)}/${encodeURIComponent(slug)}.json` // fallback si jamais le fichier a été créé sans suffixe
+  ];
+
+  for (const path of candidates) {
+    const res = await fetch(path, { cache: "no-store" });
+    if (res.ok) return res.json();
+  }
+  throw new Error(`Config introuvable pour ${slug} (essayé: ${candidates.join(" ; ")})`);
 }
+
 
 // (Optionnel) microcopy depuis un endpoint Make si présent
 async function loadMicrocopy(page, slug) {
