@@ -34,26 +34,22 @@
   window.addEventListener('unhandledrejection', e => console.error('[unhandledrejection]', e.reason));
 </script>
 
-<script type="module" src="./js/firebase-init.js?v=dbg1"></script>
-<script type="module" src="./js/save-lead-tunnel.js?v=dbg1"></script>
+<script type="module" src="./js/firebase-init.js?v=fix3"></script>
+<script type="module" src="./js/save-lead-tunnel.js?v=fix3"></script>
 <script type="module">
-  import { injectSlots } from "./js/inject-content.js?v=fix1";
-
+  import { injectSlots } from "./js/inject-content.js?v=fix3";
   (async () => {
-    try {
-      const qs = new URLSearchParams(location.search);
-      const slug = qs.get("slug");
-
-      const cfg = await injectSlots({ slug, page: "optin" });
-
-      const f = document.getElementById("optin-form");
-      f.userId.value = cfg.userId;
-      f.slug.value = cfg.slug;
-      f.nextUrl.value = `checkout.html?slug=${(cfg.flow && cfg.flow.nextSlug) || cfg.slug}&userId=${cfg.userId}`;
-    } catch (err) {
-      console.error("[page] inject error", err);
-    }
-  })();
+    const qs = new URLSearchParams(location.search);
+    const slug = qs.get("slug");
+    const cfg = await injectSlots({ slug, page: "optin" });
+    // Remplit les hidden utilisés par save-lead-tunnel.js
+    const f = document.getElementById("optin-form");
+    f.userId.value = cfg.userId;
+    f.slug.value = cfg.slug;
+    // next : si nextSlug existe on l’utilise, sinon fallback incrémente -pX
+    const nextSlug = cfg.flow?.nextSlug || (cfg.slug?.replace(/-p(\d+)$/, (_,n)=>`-p${(+n+1)}`));
+    f.nextUrl.value = `checkout.html?slug=${nextSlug}&userId=${cfg.userId}`;
+  })().catch(e => console.error("[optin] inject error", e));
 </script>
 </body>
 </html>
