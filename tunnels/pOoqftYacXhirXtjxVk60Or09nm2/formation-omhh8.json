@@ -1,0 +1,28 @@
+```json
+{
+  "slug": "innovation-de-produits",
+  "pageType": "optin",
+  "userId": "user_456",
+  "baseUrl": "https://example.com",
+  "ui": "modern",
+  "media": {
+    "images": ["innovation.jpg"],
+    "videos": ["intro.mp4"]
+  },
+  "copy": {
+    "headline": "Boostez Votre Innovation Produit",
+    "bullets": [
+      "Augmentez votre efficacité immédiatement.",
+      "Découvrez des méthodes innovantes rapidement.",
+      "Développez un avantage concurrentiel durable."
+    ],
+    "cta": "Inscrivez-vous maintenant"
+  },
+  "flow": "standard",
+  "pricing": {
+    "currency": "EUR",
+    "amount": 49.99
+  },
+  "deliverable": "ebook"
+}
+```
