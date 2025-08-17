@@ -20,32 +20,36 @@ async function loadConfig(slug) {
   const userId = qs.get("userId");
   if (!userId) throw new Error("userId manquant dans l'URL");
 
-  // slug base ⇒ ajoute -p1 (ou ?page=2 ⇒ -p2)
+  // slug base ⇒ -p1 par défaut (ou ?page=2 ⇒ -p2)
   const pageParam = qs.get("page");
   const hasSuffix = /-p\d+$/.test(slug);
   const effectiveSlug = hasSuffix ? slug : `${slug}-p${pageParam ? String(parseInt(pageParam,10)||1) : "1"}`;
 
-  // fabrique une URL ABSOLUE sans utiliser new URL(base relative)
-  const repo = (location.pathname.split("/")[1] || "");       // "sellyo-hosting"
-  const rootPath = repo ? `/${repo}/` : "/";                   // "/sellyo-hosting/" ou "/"
-  const abs = (rel) => `${location.origin}${rootPath}${rel.replace(/^\/+/, "")}`;
+  // 🔒 Base absolue (hardcodée) pour éviter toute ambiguïté de chemin
+  const BASE = "https://alricpaon.github.io/sellyo-hosting/";
+  const path = (rel) => BASE + rel.replace(/^\/+/, "");
 
-  const rel1 = `tunnels/${encodeURIComponent(userId)}/${encodeURIComponent(effectiveSlug)}.json`;
-  const rel2 = `tunnels/${encodeURIComponent(userId)}/${encodeURIComponent(slug)}.json`;
-  const abs1 = abs(rel1);
-  const abs2 = abs(rel2);
+  const abs1 = path(`tunnels/${encodeURIComponent(userId)}/${encodeURIComponent(effectiveSlug)}.json`);
+  const abs2 = path(`tunnels/${encodeURIComponent(userId)}/${encodeURIComponent(slug)}.json`);
 
-  const candidates = [abs1, abs2, rel1, rel2]; // teste d'abord les absolues
-  console.log("[inject] candidates =", candidates);
+  // ❗ logs en error pour être visibles dans l’onglet "Erreurs"
+  console.error("[inject] params", { urlUserId: userId, urlSlug: slug, effectiveSlug });
+  console.error("[inject] candidates", [abs1, abs2]);
 
-  for (const path of candidates) {
+  for (const url of [abs1, abs2]) {
     try {
-      const res = await fetch(path, { cache: "no-store" });
-      const body = await res.text();
-      console.log("[inject] fetch", { path, status: res.status, ok: res.ok, sample: body.slice(0, 80) });
-      if (res.ok) return JSON.parse(body);
+      const res = await fetch(url, { cache: "no-store" });
+      const text = await res.text();
+      console.error("[inject] fetch", { url, status: res.status, ok: res.ok, sample: text.slice(0, 80) });
+      if (res.ok) {
+        try { return JSON.parse(text); }
+        catch (e) {
+          console.error("[inject] JSON parse error", url, e, "firstChars=", text.slice(0, 40));
+          throw e;
+        }
+      }
     } catch (e) {
-      console.log("[inject] fetch error", path, e);
+      console.error("[inject] fetch error", url, e);
     }
   }
   throw new Error(`Config introuvable pour slug=${slug}`);
