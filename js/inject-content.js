@@ -13,7 +13,7 @@ const setBullets = (sel, items = []) => {
   el.innerHTML = items.map(i => `<li>${i}</li>`).join("");
 };
 
-// js/inject-content.js — remplacer UNIQUEMENT loadConfig par ceci
+// js/inject-content.js
 async function loadConfig(slug) {
   if (!slug) throw new Error("slug manquant dans l'URL");
   const qs = new URLSearchParams(location.search);
@@ -25,17 +25,17 @@ async function loadConfig(slug) {
   const hasSuffix = /-p\d+$/.test(slug);
   const effectiveSlug = hasSuffix ? slug : `${slug}-p${pageParam ? String(parseInt(pageParam,10)||1) : "1"}`;
 
-  // Préfixe absolu pour site GitHub Pages de projet: https://host/<repo>/
-  const repo = (location.pathname.split("/")[1] || "");
-  const rootPath = repo ? `/${repo}/` : "/";
-  const base = new URL(rootPath, location.origin).href; // ABSOLU
+  // fabrique une URL ABSOLUE sans utiliser new URL(base relative)
+  const repo = (location.pathname.split("/")[1] || "");       // "sellyo-hosting"
+  const rootPath = repo ? `/${repo}/` : "/";                   // "/sellyo-hosting/" ou "/"
+  const abs = (rel) => `${location.origin}${rootPath}${rel.replace(/^\/+/, "")}`;
 
   const rel1 = `tunnels/${encodeURIComponent(userId)}/${encodeURIComponent(effectiveSlug)}.json`;
   const rel2 = `tunnels/${encodeURIComponent(userId)}/${encodeURIComponent(slug)}.json`;
-  const abs1 = new URL(rel1, base).href;
-  const abs2 = new URL(rel2, base).href;
+  const abs1 = abs(rel1);
+  const abs2 = abs(rel2);
 
-  const candidates = [abs1, abs2, rel1, rel2]; // teste d'abord absolues
+  const candidates = [abs1, abs2, rel1, rel2]; // teste d'abord les absolues
   console.log("[inject] candidates =", candidates);
 
   for (const path of candidates) {
