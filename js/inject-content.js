@@ -72,7 +72,8 @@ async function loadMicrocopy(page, slug) {
 function applyThemeColors(cfg) {
   const bg = cfg.colors?.bg ?? "#0b1220";
   const text = cfg.colors?.text ?? "#ffffff";
-  const btn = cfg.colors?.btn ?? cfg.ui?.buttonColor ?? "#3b82f6";
+  // bouton = buttonColor OU mainColor
+  const btn = cfg.colors?.btn ?? cfg.ui?.buttonColor ?? cfg.ui?.mainColor ?? "#3b82f6";
   document.documentElement.style.setProperty("--bg", bg);
   document.documentElement.style.setProperty("--text", text);
   document.documentElement.style.setProperty("--btn", btn);
@@ -80,13 +81,22 @@ function applyThemeColors(cfg) {
 
 // Gère les médias (image / vidéo mp4 / embed)
 function applyMedia(cfg) {
-  // LOGO (brand.logoUrl ou logoUrl)
-const logoEl = document.getElementById("logo");
-const logoUrl = cfg.brand?.logoUrl || cfg.logoUrl || "";
-if (logoEl && logoUrl) {
-  logoEl.src = logoUrl;
-  logoEl.style.display = "";
-}
+  // LOGO (brand.logoUrl normalisé ; fallback ancien champs si besoin)
+  const logoEl = document.getElementById("logo");
+  const logoUrl =
+    cfg.brand?.logoUrl || // normalisé
+    cfg.logoUrl ||        // anciens exports
+    "";                   // pas de logo → on laisse vide
+  if (logoEl) {
+    if (logoUrl) {
+      logoEl.src = logoUrl;
+      show(logoEl);
+    } else {
+      hide(logoEl);
+    }
+  }
+
+  // HERO IMAGE
   const imgWrap = document.querySelector('[data-optional="image"]');
   const hasImage = cfg.ui?.showImage && cfg.media?.imageUrl;
   if (hasImage) {
@@ -97,6 +107,7 @@ if (logoEl && logoUrl) {
     hide(imgWrap);
   }
 
+  // VIDEO (mp4 ou embed)
   const vidWrap = document.querySelector('[data-optional="video"]');
   const mp4 = cfg.media?.videoMp4;
   const emb = cfg.media?.videoEmbed;
@@ -144,12 +155,41 @@ function applyTitles(cfg, copy) {
 // Normalisation
 function normalizeConfig(cfg) {
   const pageType = cfg.pageType || cfg.type || "sales";
-  const rawVideo = cfg.media?.videoMp4 || cfg.media?.videoEmbed ? "" : (cfg.videoUrl || "");
-  const media = {
-    imageUrl: cfg.media?.imageUrl ?? cfg.heroImage ?? "",
-    videoMp4: cfg.media?.videoMp4 ?? (rawVideo && /\.mp4($|\?)/i.test(rawVideo) ? rawVideo : ""),
-    videoEmbed: cfg.media?.videoEmbed ?? (rawVideo && !/\.mp4($|\?)/i.test(rawVideo) ? rawVideo : "")
+
+  // normalisation logo (fallback image si pas de logo dédié)
+  const brand = {
+    logoUrl:
+      cfg.brand?.logoUrl ||
+      cfg.logoUrl ||
+      cfg.media?.logoUrl ||
+      cfg.heroImage ||
+      cfg.media?.imageUrl ||
+      ""
   };
+
+  // tolérant aux variantes (images[], videos[], coverUrl, videoUrl brut, etc.)
+  const rawVideo = cfg.media?.videoMp4 || cfg.media?.videoEmbed ? "" : (cfg.videoUrl || "");
+  const arrVideo0 = Array.isArray(cfg.media?.videos) ? cfg.media.videos[0] : "";
+  const media = {
+    imageUrl: (
+      cfg.media?.imageUrl ??
+      cfg.heroImage ??
+      (Array.isArray(cfg.media?.images) ? cfg.media.images[0] : "") ??
+      cfg.coverUrl ??
+      ""
+    ),
+    videoMp4: (
+      cfg.media?.videoMp4 ??
+      (/\.mp4($|\?)/i.test(arrVideo0) ? arrVideo0 : "") ??
+      (rawVideo && /\.mp4($|\?)/i.test(rawVideo) ? rawVideo : "")
+    ),
+    videoEmbed: (
+      cfg.media?.videoEmbed ??
+      (arrVideo0 && !/\.mp4($|\?)/i.test(arrVideo0) ? arrVideo0 : "") ??
+      (rawVideo && !/\.mp4($|\?)/i.test(rawVideo) ? rawVideo : "")
+    )
+  };
+
   const copy = {
     headline: cfg.copy?.headline ?? cfg.title ?? "",
     bullets:  cfg.copy?.bullets  ?? cfg.copy?.benefits ?? cfg.bullets ?? [],
@@ -158,6 +198,7 @@ function normalizeConfig(cfg) {
     ctaSecondary: cfg.copy?.ctaSecondary ?? "Non merci",
     pageTitle:    cfg.copy?.pageTitle ?? cfg.seo?.metaTitle ?? ""
   };
+
   const ui = {
     showImage: cfg.ui?.showImage ?? !!media.imageUrl,
     showVideo: cfg.ui?.showVideo ?? !!(media.videoMp4 || media.videoEmbed),
@@ -165,13 +206,14 @@ function normalizeConfig(cfg) {
     showSecondaryCta: cfg.ui?.showSecondaryCta ?? (pageType === "upsell" || pageType === "downsell"),
     autoRedirect: cfg.ui?.autoRedirect ?? false,
     theme: cfg.ui?.theme ?? "dark",
-    buttonColor: cfg.ui?.buttonColor
+    buttonColor: cfg.ui?.buttonColor ?? cfg.ui?.mainColor
   };
+
   const flow = cfg.flow ? { ...cfg.flow } : {};
   if (!flow.nextSlug && cfg.nextSlug) flow.nextSlug = cfg.nextSlug;
   if (!flow.declineSlug && cfg.declineSlug) flow.declineSlug = cfg.declineSlug;
 
-  return { ...cfg, pageType, media, copy, ui, flow };
+  return { ...cfg, pageType, brand, media, copy, ui, flow };
 }
 
 // Fonction principale
