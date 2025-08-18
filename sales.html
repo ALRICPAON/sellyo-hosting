@@ -1,37 +1,153 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sales</title>
   <style>
     :root{--bg:#0b1220;--btn:#3b82f6;--text:#fff}
     body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui}
-    main{max-width:720px;margin:40px auto;padding:24px;text-align:center}
-    button{padding:12px 18px;border:0;border-radius:12px;background:var(--btn);color:#fff;font-weight:700;cursor:pointer;margin:8px}
-    section{margin:20px 0}
+    main{max-width:980px;margin:40px auto;padding:24px}
+    header{display:flex;justify-content:center;margin-bottom:16px}
+    #logo{max-height:48px;display:none}
+    h1{margin:8px 0 6px;text-align:center}
+    p.muted{opacity:.75;text-align:center}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+    ul{padding-left:18px}
+    .badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .badge{background:#ffffff20;padding:6px 10px;border-radius:999px;font-size:12px}
+    .cta{display:flex;gap:12px;justify-content:center;margin-top:16px}
+    button{padding:12px 18px;border:0;border-radius:12px;background:var(--btn);color:#fff;font-weight:700;cursor:pointer}
+    #secondary-cta{background:#666}
     video,iframe,img{max-width:100%;border-radius:12px}
+    details{background:#ffffff10;padding:12px;border-radius:10px}
   </style>
 </head>
 <body>
 <main>
-  <h1 data-slot="headline">Titre vente</h1>
-  <ul data-slot="bullets"></ul>
+  <header><img id="logo" alt="Logo"></header>
 
-  <section id="hero-image" data-optional="image"><img id="hero-img"></section>
-  <section id="hero-video" data-optional="video">
-    <video id="hero-mp4" controls style="display:none"></video>
-    <div id="hero-embed" style="aspect-ratio:16/9;display:none"></div>
+  <h1 data-slot="headline">Titre vente</h1>
+  <p class="muted" data-slot="subtitle"></p>
+
+  <section class="grid">
+    <div>
+      <section id="hero-image" data-optional="image"><img id="hero-img" alt=""></section>
+      <section id="hero-video" data-optional="video" style="margin-top:10px">
+        <video id="hero-mp4" controls style="display:none"></video>
+        <div id="hero-embed" style="aspect-ratio:16/9;display:none"></div>
+      </section>
+    </div>
+    <div>
+      <h3>Points clés</h3>
+      <ul data-slot="bullets"></ul>
+
+      <h3>Bénéfices</h3>
+      <ul data-slot="benefits"></ul>
+
+      <p><strong>Garantie :</strong> <em data-slot="guarantee"></em></p>
+      <div class="badges" id="badges"></div>
+    </div>
   </section>
 
-  <div id="cta-buttons">
+  <section class="grid">
+    <div>
+      <h3>Problème</h3>
+      <p data-slot="problem"></p>
+    </div>
+    <div>
+      <h3>Solution</h3>
+      <p data-slot="solution"></p>
+    </div>
+  </section>
+
+  <section id="product">
+    <h3>Ce que vous obtenez</h3>
+    <p data-slot="productDescription"></p>
+  </section>
+
+  <section>
+    <h3>Témoignages</h3>
+    <div id="testimonials"></div>
+  </section>
+
+  <section>
+    <h3>Questions fréquentes</h3>
+    <div id="faqs"></div>
+  </section>
+
+  <section id="timer-block" style="display:none">
+    <h3>Offre limitée</h3>
+    <p id="countdown" style="font-size:28px;font-weight:800"></p>
+  </section>
+
+  <div class="cta">
     <button id="primary-cta"><span data-slot="ctaPrimary">Continuer</span></button>
-    <button id="secondary-cta" style="background:#666;display:none"><span data-slot="ctaSecondary">Non merci</span></button>
+    <button id="secondary-cta" style="display:none"><span data-slot="ctaSecondary">Non merci</span></button>
   </div>
 </main>
 
 <script type="module">
-  import { injectSlots } from "./js/inject-content.js?v=fix1";
+  import { injectSlots } from "./js/inject-content.js";
+
+  const $ = (s)=>document.querySelector(s);
+  const setText = (sel, v)=>{ const el=$(sel); if(el) el.textContent = v || ""; }
+  const setBullets = (sel, arr)=>{ const el=$(sel); if(!el) return; el.innerHTML = (arr||[]).map(i=>`<li>${i}</li>`).join(""); }
+
+  function renderBadges(list=[]) {
+    const host = document.getElementById("badges");
+    if(!host) return;
+    host.innerHTML = (list||[]).map(b=>`<span class="badge">${b}</span>`).join("");
+  }
+  function renderTestimonials(list=[]) {
+    const host = document.getElementById("testimonials");
+    if(!host) return;
+    host.innerHTML = (list||[]).map(t=>`
+      <details><summary><strong>${t.name || "Avis"}</strong></summary><p>${t.text || ""}</p></details>
+    `).join("") || '<p class="muted">Aucun témoignage pour l’instant.</p>';
+  }
+  function renderFaqs(list=[]) {
+    const host = document.getElementById("faqs");
+    if(!host) return;
+    host.innerHTML = (list||[]).map(f=>`
+      <details><summary>${f.q || "Question"}</summary><p>${f.a || ""}</p></details>
+    `).join("") || '<p class="muted">Aucune FAQ.</p>';
+  }
+  function startTimer(cfg) {
+    const ok = !!(cfg.components?.timer);
+    const minutes = Number(cfg.timers?.evergreenMinutes ?? 0);
+    const block = document.getElementById("timer-block");
+    if(!ok || !minutes){ block.style.display="none"; return; }
+    block.style.display = "";
+    const label = document.getElementById("countdown");
+    const end = Date.now() + minutes*60*1000;
+    const tick = ()=>{
+      const rest = Math.max(0, end - Date.now());
+      const s = Math.floor(rest/1000)%60;
+      const m = Math.floor(rest/60000)%60;
+      const h = Math.floor(rest/3600000);
+      label.textContent = `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+      if(rest<=0) clearInterval(iv);
+    };
+    tick();
+    const iv = setInterval(tick, 1000);
+  }
+  async function resolveNextUrl(userId, nextSlug){
+    if(!nextSlug) return "";
+    const repo = (location.pathname.split("/")[1] || "");
+    const rootPath = repo ? `/${repo}/` : "/";
+    const base = `${location.origin}${rootPath}`;
+    try {
+      const res = await fetch(`${base}tunnels/${encodeURIComponent(userId)}/${encodeURIComponent(nextSlug)}.json`, {cache:"no-store"});
+      const cfgNext = res.ok ? await res.json() : null;
+      const type = (cfgNext?.pageType || cfgNext?.type || "checkout").toLowerCase();
+      const map = { checkout:"checkout", sales:"sales", optin:"optin", thankyou:"thankyou", upsell:"sales", downsell:"sales", webinar:"sales" };
+      const file = map[type] || "checkout";
+      return `${file}.html?slug=${encodeURIComponent(nextSlug)}&userId=${encodeURIComponent(userId)}`;
+    } catch {
+      return `checkout.html?slug=${encodeURIComponent(nextSlug)}&userId=${encodeURIComponent(userId)}`;
+    }
+  }
 
   (async () => {
     try {
@@ -41,29 +157,34 @@
 
       const cfg = await injectSlots({ slug, page: "sales" });
 
-      const goNext = (targetSlug) => {
-        if (!targetSlug) return;
-        const priceId = cfg.pricing?.priceIdUpsell || cfg.pricing?.priceIdDownsell || null;
-        if (priceId) {
-          location.href = `checkout.html?slug=${encodeURIComponent(targetSlug)}&userId=${encodeURIComponent(uid)}&priceId=${encodeURIComponent(priceId)}`;
-        } else {
-          location.href = `${encodeURIComponent(targetSlug)}.html?slug=${encodeURIComponent(targetSlug)}&userId=${encodeURIComponent(uid)}`;
-        }
+      // Texte étendu
+      setText('[data-slot="subtitle"]', cfg.subtitle || "");
+      setBullets('[data-slot="benefits"]', Array.isArray(cfg.copy?.benefits) ? cfg.copy.benefits : []);
+      setText('[data-slot="problem"]', cfg.copy?.problem || "");
+      setText('[data-slot="solution"]', cfg.copy?.solution || "");
+      setText('[data-slot="guarantee"]', cfg.copy?.guarantee || "");
+      setText('[data-slot="productDescription"]', cfg.productDescription || "");
+      renderBadges(cfg.components?.badges || []);
+      renderTestimonials(cfg.testimonials || []);
+      renderFaqs(cfg.faqs || []);
+      startTimer(cfg);
+
+      const nextSlug = cfg.flow?.nextSlug || (cfg.slug?.replace(/-p(\d+)$/, (_,n)=>`-p${(+n+1)}`));
+
+      const goNext = async () => {
+        const url = await resolveNextUrl(uid, nextSlug);
+        if(url) location.href = url;
       };
 
-      document.getElementById("primary-cta")?.addEventListener("click", () => {
-        if (cfg.ui?.autoRedirect && cfg.flow?.redirectUrl) {
-          location.href = cfg.flow.redirectUrl;
-        } else {
-          goNext(cfg.flow?.nextSlug || "");
-        }
-      });
-
-      document.getElementById("secondary-cta")?.addEventListener("click", () => {
-        if (cfg.flow?.declineSlug) {
-          location.href = `${cfg.flow.declineSlug}.html?slug=${cfg.flow.declineSlug}&userId=${uid}`;
-        }
-      });
+      document.getElementById("primary-cta")?.addEventListener("click", goNext);
+      const second = document.getElementById("secondary-cta");
+      if (second && cfg.flow?.declineSlug) {
+        second.style.display = "";
+        second.addEventListener("click", async () => {
+          const url = await resolveNextUrl(uid, cfg.flow.declineSlug);
+          if(url) location.href = url;
+        });
+      }
     } catch (e) { console.error("[sales] error", e); }
   })();
 </script>
