@@ -15,6 +15,8 @@
     button{width:100%;padding:14px;border:0;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;cursor:pointer;margin-top:12px}
     .muted{opacity:.75}
     ul{padding-left:18px}
+    video,iframe,img{max-width:100%;border-radius:12px}
+    #paypal-buttons{margin-top:10px}
   </style>
 </head>
 <body>
@@ -24,7 +26,7 @@
   <h1 data-slot="headline">Finalisez votre commande</h1>
   <p class="muted" data-slot="subtitle"></p>
 
-  <section id="hero-image" data-optional="image"><img id="hero-img" alt=""></section>
+  <section id="hero-image" data-optional="image" style="display:none"><img id="hero-img" alt=""></section>
   <section id="hero-video" data-optional="video" style="display:none">
     <video id="hero-mp4" controls style="display:none"></video>
     <div id="hero-embed" style="aspect-ratio:16/9;display:none"></div>
@@ -35,8 +37,16 @@
     <p data-slot="productRecap"></p>
     <p data-slot="productDescription"></p>
     <p><strong>Prix :</strong> <span id="amount"></span> <span id="currency"></span></p>
+
+    <!-- Stripe Checkout -->
+    <button id="pay-btn"><span data-slot="cta">Payer par carte (Stripe)</span></button>
     <div class="muted" id="checkout-msg"></div>
-    <button id="pay-btn"><span data-slot="cta">Payer maintenant</span></button>
+
+    <!-- PayPal -->
+    <div id="paypal-section" style="display:none">
+      <div id="paypal-buttons"></div>
+      <div class="muted" id="paypal-msg"></div>
+    </div>
   </section>
 
   <section style="margin-top:16px">
@@ -47,6 +57,7 @@
 
 <script type="module">
   import { injectSlots } from "./js/inject-content.js";
+
   const $ = (s)=>document.querySelector(s);
   const setText = (sel,v)=>{ const el=$(sel); if(el) el.textContent=v||""; }
   function renderFaqs(list=[]) {
@@ -70,46 +81,107 @@
     renderFaqs(cfg.faqs || []);
 
     // Pricing
-    const amount = Number(cfg.pricing?.amount || 0);
-    const currency = (cfg.pricing?.currency || "").toUpperCase();
-    $("#amount").textContent = amount ? (amount/100).toFixed(2) : "—";
-    $("#currency").textContent = currency || "";
+    const amountCents = Number(cfg.pricing?.amount || 0);               // en cents
+    const currency = (cfg.pricing?.currency || "EUR").toUpperCase();
+    const amountMajor = amountCents ? (amountCents/100) : 0;
+    $("#amount").textContent = amountCents ? amountMajor.toFixed(2) : "—";
+    $("#currency").textContent = currency;
 
-    // Stripe / Payment
+    // Clés/IDs depuis JSON ou Query (fallback)
     const priceFromUrl = qs.get("priceId");
-    const effectivePriceId = priceFromUrl || cfg.pricing?.priceId || "";
+    const paymentLinkFromUrl = qs.get("paymentLink");
+    const stripePkFromUrl = qs.get("stripePk");
+    const paypalClientIdFromUrl = qs.get("paypalClientId");
+
+    const effectivePriceId =
+      priceFromUrl ||
+      cfg.pricing?.priceId || "";
+
+    const effectivePaymentLink =
+      paymentLinkFromUrl ||
+      cfg.payment?.paymentLink || cfg.paymentLink || "";
+
+    const effectiveStripePk =
+      stripePkFromUrl ||
+      cfg.payment?.stripePublishableKey || cfg.stripePk || "";
+
+    const effectivePaypalClientId =
+      paypalClientIdFromUrl ||
+      cfg.payment?.paypalClientId || cfg.paypal?.clientId || "";
+
+    // --- Stripe (Checkout) + Payment Link ---
     const btn = document.getElementById("pay-btn");
     const msg = document.getElementById("checkout-msg");
 
-    // Optionnel : paymentLink (si tu le passes dans ton JSON global)
-    const paymentLink = cfg.paymentLink || "";
-
-    if (!effectivePriceId && !paymentLink) {
-      msg.textContent = "Configuration paiement incomplète : aucun priceId/Payment Link détecté.";
+    if (!effectivePriceId && !effectivePaymentLink) {
+      msg.textContent = "Configuration Stripe incomplète (aucun priceId ni Payment Link).";
       btn.disabled = true;
-      return;
     }
 
     btn.addEventListener("click", async () => {
       try {
-        if (paymentLink) {
-          // redirection directe lien Stripe
-          location.href = paymentLink;
+        // 1) Payment Link direct si fourni
+        if (effectivePaymentLink) {
+          location.href = effectivePaymentLink;
           return;
         }
-        // Si tu ajoutes stripePk côté front/global, lis-le ici :
-        const stripePk = cfg.stripePk || ""; // à alimenter si nécessaire
-        if (!stripePk) {
-          msg.textContent = "Clé Stripe publique manquante. Ajoute-la au JSON ou utilise un Payment Link.";
+        // 2) Stripe Checkout via priceId
+        if (!effectiveStripePk) {
+          msg.textContent = "Clé Stripe publique manquante (stripePk). Ajoute-la au JSON ou à l’URL.";
           return;
         }
-        const stripe = window.Stripe(stripePk);
-        await stripe.redirectToCheckout({ lineItems: [{ price: effectivePriceId, quantity: 1 }], mode: 'payment', successUrl: location.href, cancelUrl: location.href });
+        const stripe = window.Stripe(effectiveStripePk);
+        await stripe.redirectToCheckout({
+          lineItems: [{ price: effectivePriceId, quantity: 1 }],
+          mode: 'payment',
+          successUrl: location.href,
+          cancelUrl: location.href
+        });
       } catch (e) {
-        console.error("[checkout] pay error", e);
-        msg.textContent = "Erreur lors de la redirection vers le paiement.";
+        console.error("[checkout] stripe error", e);
+        msg.textContent = "Erreur Stripe.";
       }
     });
+
+    // --- PayPal Smart Buttons ---
+    if (effectivePaypalClientId) {
+      const ppSec = document.getElementById("paypal-section");
+      ppSec.style.display = "";
+      const ppMsg = document.getElementById("paypal-msg");
+
+      // Injecte dynamiquement le SDK (client-side only)
+      const script = document.createElement("script");
+      script.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(effectivePaypalClientId)}&currency=${encodeURIComponent(currency)}`;
+      script.onload = () => {
+        if (!window.paypal) { ppMsg.textContent = "SDK PayPal non disponible."; return; }
+        window.paypal.Buttons({
+          style: { layout: "vertical", color: "gold", shape: "rect", label: "paypal" },
+          createOrder: (data, actions) => {
+            return actions.order.create({
+              purchase_units: [{
+                amount: { value: amountMajor.toFixed(2), currency_code: currency },
+                description: cfg.copy?.headline || cfg.productRecap || cfg.slug
+              }]
+            });
+          },
+          onApprove: (data, actions) => {
+            return actions.order.capture().then((details) => {
+              ppMsg.textContent = `Paiement PayPal confirmé : ${details.id}`;
+              // Rediriger si tu as une page de merci:
+              if (cfg.flow?.nextSlug) {
+                location.href = `thankyou.html?slug=${encodeURIComponent(cfg.flow.nextSlug)}&userId=${encodeURIComponent(uid)}`;
+              }
+            });
+          },
+          onError: (err) => {
+            console.error("[checkout] PayPal error", err);
+            ppMsg.textContent = "Erreur PayPal.";
+          }
+        }).render("#paypal-buttons");
+      };
+      script.onerror = () => { ppMsg.textContent = "Impossible de charger PayPal."; };
+      document.head.appendChild(script);
+    }
   })().catch(e => console.error("[checkout] inject error", e));
 </script>
 </body>
