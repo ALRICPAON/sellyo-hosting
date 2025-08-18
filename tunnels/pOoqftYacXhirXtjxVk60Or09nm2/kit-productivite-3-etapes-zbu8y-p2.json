@@ -1,0 +1,43 @@
+```json
+{
+  "slug": "kit-productivite-3-etapes-zbu8y-p2",
+  "pageType": "sales",
+  "userId": "pOoqftYacXhirXtjxVk60Or09nm2",
+  "baseUrl": "https://alricpaon.github.io/sellyo-hosting",
+  "ui": {
+    "theme": "dark",
+    "mainColor": "#450e59",
+    "buttonColor": "#371a94"
+  },
+  "brand": {
+    "logoUrl": "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fkit-productivite-3-etapes-zbu8y%2Flogo-1755513360610?alt=media&token=891371c3-8e40-4298-badd-36dcb99221cb"
+  },
+  "media": {
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fkit-productivite-3-etapes-zbu8y%2Fpage2-hero-1755513376257?alt=media&token=cf4db88c-5eb7-49a5-befa-c463d0c247c3",
+    "videoMp4": "",
+    "videoEmbed": "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fkit-productivite-3-etapes-zbu8y%2Fpage2-video-1755513376519?alt=media&token=64ec7fca-83ad-469b-9587-a222a7b5961c"
+  },
+  "copy": {
+    "headline": "Améliorez votre productivité avec notre formation express",
+    "bullets": [
+      "10 modules vidéos captivants",
+      "Exercices pratiques pour un apprentissage efficace",
+      "Accès illimité à toutes les futures mises à jour",
+      "Une organisation simplifiée pour des résultats optimaux",
+      "Travaillez mieux avec moins de stress"
+    ],
+    "cta": "Débutez votre formation maintenant"
+  },
+  "flow": {
+    "nextSlug": "kit-productivite-3-etapes-zbu8y-p3"
+  },
+  "pricing": {
+    "priceId": "price_1Rx31U4PUVU3ejcHtRO3U55v",
+    "currency": "EUR",
+    "amount": 49
+  },
+  "deliverable": {
+    "url": "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fkit-productivite-3-etapes-zbu8y%2Fdelivery-product-1755513372971?alt=media&token=ae0d4069-75b1-4f58-969a-26b53f54817b"
+  }
+}
+```
