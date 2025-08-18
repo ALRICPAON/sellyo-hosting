@@ -1,0 +1,44 @@
+```json
+{
+  "slug": "kit-productivite-3-etapes-4n01d-p1",
+  "pageType": "optin",
+  "userId": "pOoqftYacXhirXtjxVk60Or09nm2",
+  "baseUrl": "https://alricpaon.github.io/sellyo-hosting",
+  "ui": {
+    "theme": "dark",
+    "mainColor": "#450e59",
+    "buttonColor": "#371a94"
+  },
+  "brand": {
+    "logoUrl": "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fkit-productivite-3-etapes-4n01d%2Flogo-1755522279409?alt=media&token=50693098-e1cb-4245-b24e-92d0677c89cd"
+  },
+  "media": {
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fkit-productivite-3-etapes-4n01d%2Fpage1-hero-1755522281460?alt=media&token=7117e0bb-5631-40c5-927b-406c3ac8317e",
+    "videoMp4": "",
+    "videoEmbed": "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fkit-productivite-3-etapes-4n01d%2Fpage1-video-1755522281780?alt=media&token=02e22b00-e960-4523-a3f8-6833374c19de"
+  },
+  "copy": {
+    "headline": "Débloque ton potentiel de productivité",
+    "bullets": [
+      "Applique ces méthodes dès demain",
+      "Suis notre plan d'action détaillé",
+      "Accès gratuit et immédiat",
+      "Gagne 2 heures supplémentaires chaque jour",
+      "Réduis significativement ton stress",
+      "Priorise l'essentiel pour avancer"
+    ],
+    "cta": "Obtiens ton kit gratuit maintenant"
+  },
+  "flow": {
+    "nextSlug": "kit-productivite-3-etapes-4n01d-p2"
+  },
+  "pricing": {
+    "priceId": "price_1Rx31U4PUVU3ejcHtRO3U55v",
+    "currency": "EUR",
+    "amount": 49
+  },
+  "deliverable": {
+    "url": "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fkit-productivite-3-etapes-4n01d%2Fdelivery-product-1755522280556?alt=media&token=1bf62309-7863-4410-819c-a990c0c222f1"
+  }
+}
+```
