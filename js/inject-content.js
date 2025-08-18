@@ -1,16 +1,28 @@
 // js/inject-content.js
 
-// Helpers
+// ---------- Helpers ----------
 const $ = (sel) => document.querySelector(sel);
 const show = (el) => { if (el) el.style.display = ""; };
 const hide = (el) => { if (el) el.style.display = "none"; };
-const setText = (sel, txt) => { const el = $(sel); if (el) el.textContent = txt ?? ""; };
-const setBullets = (sel, items = []) => {
-  const el = $(sel); if (!el) return;
-  el.innerHTML = (items || []).map(i => `<li>${i}</li>`).join("");
-};
 
-// Parser JSON tolérant (si GPT a ajouté du texte/fences)
+// Cache l'élément (ou son conteneur [data-block]) si vide
+function setTextOrHide(sel, txt) {
+  const el = $(sel); if (!el) return;
+  const val = (txt ?? "").toString().trim();
+  const host = el.closest("[data-block]") || el;
+  if (!val) { el.textContent = ""; hide(host); }
+  else { el.textContent = val; show(host); }
+}
+
+function setListOrHide(sel, items = []) {
+  const el = $(sel); if (!el) return;
+  const host = el.closest("[data-block]") || el;
+  const arr = (items || []).map(s => (s ?? "").toString().trim()).filter(Boolean);
+  if (!arr.length) { el.innerHTML = ""; hide(host); }
+  else { el.innerHTML = arr.map(i => `<li>${i}</li>`).join(""); show(host); }
+}
+
+// ---------- Parser JSON tolérant ----------
 function parseJsonLenient(s) {
   if (typeof s !== "string") return s;
   s = s.replace(/```json|```/g, "");
@@ -20,7 +32,7 @@ function parseJsonLenient(s) {
   return JSON.parse(s);
 }
 
-// Charge JSON de config tunnel (slug base ou -pX) — chemins absolus GitHub Pages
+// ---------- Charge JSON tunnel ----------
 async function loadConfig(slug) {
   if (!slug) throw new Error("slug manquant dans l'URL");
   const qs = new URLSearchParams(location.search);
@@ -31,7 +43,7 @@ async function loadConfig(slug) {
   const hasSuffix = /-p\d+$/.test(slug);
   const effectiveSlug = hasSuffix ? slug : `${slug}-p${pageParam ? String(parseInt(pageParam, 10) || 1) : "1"}`;
 
-  // Base absolue pour project site: https://<host>/<repo>/
+  // Base absolue pour GitHub Pages: https://<host>/<repo>/
   const repo = (location.pathname.split("/")[1] || "");
   const rootPath = repo ? `/${repo}/` : "/";
   const ABS_BASE = `${location.origin}${rootPath}`;
@@ -41,21 +53,19 @@ async function loadConfig(slug) {
   const abs1 = `${ABS_BASE}${rel1}`;
   const abs2 = `${ABS_BASE}${rel2}`;
 
-  const candidates = [abs1, abs2]; // on force absolu pour Safari/Pages
+  const candidates = [abs1, abs2];
 
   for (const url of candidates) {
     try {
       const res = await fetch(url, { cache: "no-store" });
       const text = await res.text();
       if (res.ok) return parseJsonLenient(text);
-    } catch (e) {
-      // on tente la suivante
-    }
+    } catch (_) {}
   }
   throw new Error(`Config introuvable pour slug=${slug}`);
 }
 
-// (Optionnel) microcopy depuis Make
+// ---------- Microcopy optionnel ----------
 async function loadMicrocopy(page, slug) {
   try {
     const url = `microcopy/${encodeURIComponent(page)}?slug=${encodeURIComponent(slug)}`;
@@ -63,40 +73,44 @@ async function loadMicrocopy(page, slug) {
     if (!r.ok) return null;
     const t = await r.text();
     return parseJsonLenient(t);
-  } catch (e) {
+  } catch (_) {
     return null;
   }
 }
 
-// Applique couleurs du thème
+// ---------- Thème ----------
 function applyThemeColors(cfg) {
   const bg = cfg.colors?.bg ?? "#0b1220";
   const text = cfg.colors?.text ?? "#ffffff";
-  // bouton = buttonColor OU mainColor
   const btn = cfg.colors?.btn ?? cfg.ui?.buttonColor ?? cfg.ui?.mainColor ?? "#3b82f6";
   document.documentElement.style.setProperty("--bg", bg);
   document.documentElement.style.setProperty("--text", text);
   document.documentElement.style.setProperty("--btn", btn);
 }
 
-// Gère les médias (image / vidéo mp4 / embed)
+// ---------- Médias (logo / image / vidéo) ----------
 function applyMedia(cfg) {
-  // LOGO
+  // LOGO (depuis brand.logoUrl ; fallback legacy)
   const logoEl = document.getElementById("logo");
-  const logoUrl = cfg.brand?.logoUrl || cfg.logoUrl || "";
-  if (logoEl && logoUrl) { logoEl.src = logoUrl; logoEl.style.display = ""; }
-  else if (logoEl) logoEl.style.display = "none";
+  const logoUrl =
+    cfg.brand?.logoUrl ||
+    cfg.logoUrl ||
+    "";
+  if (logoEl) {
+    if (logoUrl) { logoEl.src = logoUrl; show(logoEl); }
+    else { hide(logoEl); }
+  }
 
-  // IMAGE (affiche si on a une URL, peu importe ui.showImage)
+  // IMAGE
   const imgWrap = document.querySelector('[data-optional="image"]');
   const img = document.getElementById("hero-img");
   const imgUrl = cfg.media?.imageUrl || cfg.heroImage || "";
   if (imgWrap && img) {
-    if (imgUrl) { img.src = imgUrl; imgWrap.style.display = ""; }
-    else { img.removeAttribute("src"); imgWrap.style.display = "none"; }
+    if (imgUrl) { img.src = imgUrl; show(imgWrap); }
+    else { img.removeAttribute("src"); hide(imgWrap); }
   }
 
-  // VIDEO — heuristique (mp4 → <video>, plateformes → <iframe>)
+  // VIDEO : mp4 → <video>, host (yt/vimeo/loom…) → <iframe>
   const vidWrap = document.querySelector('[data-optional="video"]');
   const vid = document.getElementById("hero-mp4");
   const iframeHost = document.getElementById("hero-embed");
@@ -113,7 +127,6 @@ function applyMedia(cfg) {
     } catch { return false; }
   };
 
-  // Reclassement tolérant si besoin
   if (!mp4 && candidate && !isEmbedHost(candidate) && !candidate.startsWith("<iframe")) {
     mp4 = candidate; emb = "";
   } else if (!emb && candidate && (isEmbedHost(candidate) || candidate.startsWith("<iframe"))) {
@@ -121,27 +134,26 @@ function applyMedia(cfg) {
   }
 
   if (!vidWrap || (!mp4 && !emb)) {
-    if (vidWrap) vidWrap.style.display = "none";
+    if (vidWrap) hide(vidWrap);
     if (vid) vid.removeAttribute("src");
     if (iframeHost) iframeHost.innerHTML = "";
     return;
   }
 
   if (mp4 && vid) {
-    vid.src = mp4;
-    vid.style.display = "";
-    if (iframeHost) { iframeHost.innerHTML = ""; iframeHost.style.display = "none"; }
-    vidWrap.style.display = "";
+    vid.src = mp4; show(vid);
+    if (iframeHost) { iframeHost.innerHTML = ""; hide(iframeHost); }
+    show(vidWrap);
   } else if (emb && iframeHost) {
     if (emb.startsWith("<iframe")) iframeHost.innerHTML = emb;
     else iframeHost.innerHTML = `<iframe src="${emb}" frameborder="0" allow="autoplay; fullscreen" allowfullscreen style="width:100%;height:100%"></iframe>`;
-    iframeHost.style.display = "";
-    if (vid) { vid.removeAttribute("src"); vid.style.display = "none"; }
-    vidWrap.style.display = "";
+    show(iframeHost);
+    if (vid) { vid.removeAttribute("src"); hide(vid); }
+    show(vidWrap);
   }
 }
 
-// CTA secondaire (upsell/downsell)
+// ---------- CTA secondaire ----------
 function applySecondaryCta(cfg) {
   const secondary = document.getElementById("secondary-cta");
   if (!secondary) return;
@@ -149,20 +161,20 @@ function applySecondaryCta(cfg) {
   if (shouldShow) show(secondary); else hide(secondary);
 }
 
-// Titres
+// ---------- Titres ----------
 function applyTitles(cfg, copy) {
   const t = (document.title || "").toLowerCase();
-  if (!t || ["sales", "optin", "paiement", "merci"].includes(t)) {
+  if (!t || ["sales", "optin", "paiement", "merci", "checkout"].includes(t)) {
     document.title = copy?.pageTitle || cfg.name || "Sellyo";
   }
-  setText('[data-slot="headline"]', copy?.headline || "Titre");
+  const h = document.querySelector('[data-slot="headline"]');
+  if (h) h.textContent = (copy?.headline || "Titre").trim();
 }
 
-// --- Normalisation centrale ---
+// ---------- Normalisation ----------
 function normalizeConfig(cfg) {
   const pageType = cfg.pageType || cfg.type || "sales";
 
-  // Brand / Logo
   const brand = {
     logoUrl:
       cfg.brand?.logoUrl ||
@@ -173,7 +185,6 @@ function normalizeConfig(cfg) {
       ""
   };
 
-  // Media
   const rawVideo = cfg.media?.videoMp4 || cfg.media?.videoEmbed ? "" : (cfg.videoUrl || "");
   const arrVideo0 = Array.isArray(cfg.media?.videos) ? cfg.media.videos[0] : "";
   const media = {
@@ -196,7 +207,6 @@ function normalizeConfig(cfg) {
     )
   };
 
-  // Copy étendu
   const copy = {
     headline:   cfg.copy?.headline   ?? cfg.title ?? "",
     subtitle:   cfg.copy?.subtitle   ?? cfg.subtitle ?? "",
@@ -211,7 +221,6 @@ function normalizeConfig(cfg) {
     pageTitle:  cfg.copy?.pageTitle  ?? cfg.seo?.metaTitle ?? ""
   };
 
-  // UI
   const ui = {
     showImage: cfg.ui?.showImage ?? !!media.imageUrl,
     showVideo: cfg.ui?.showVideo ?? !!(media.videoMp4 || media.videoEmbed),
@@ -222,15 +231,12 @@ function normalizeConfig(cfg) {
     buttonColor: cfg.ui?.buttonColor ?? cfg.ui?.mainColor
   };
 
-  // Flow
   const flow = cfg.flow ? { ...cfg.flow } : {};
   if (!flow.nextSlug && cfg.nextSlug) flow.nextSlug = cfg.nextSlug;
   if (!flow.declineSlug && cfg.declineSlug) flow.declineSlug = cfg.declineSlug;
 
-  // Form fields
   const formFields = cfg.formFields || cfg.components?.formFields || null;
 
-  // Payment/pricing unifiés
   const payment = {
     stripePublishableKey: cfg.payment?.stripePublishableKey || cfg.stripePk || "",
     stripePriceId:        cfg.payment?.stripePriceId        || cfg.pricing?.priceId || "",
@@ -244,14 +250,11 @@ function normalizeConfig(cfg) {
     amount:   Number(cfg.pricing?.amount ?? cfg.payment?.price ?? 0)
   };
 
-  // SEO
   const seo = cfg.seo ? { ...cfg.seo } : { metaTitle: "", metaDescription: "" };
 
-  // Produit / Récap
   const productDescription = cfg.productDescription || "";
   const productRecap = cfg.productRecap || "";
 
-  // Slug sécurité
   const slug = cfg.slug || "";
 
   return {
@@ -272,7 +275,7 @@ function normalizeConfig(cfg) {
   };
 }
 
-// SEO
+// ---------- SEO ----------
 function applySeo(cfg, copy) {
   const title = copy?.pageTitle || cfg.seo?.metaTitle || cfg.name || document.title;
   if (title) document.title = title;
@@ -289,7 +292,30 @@ function applySeo(cfg, copy) {
   }
 }
 
-// --- Fonction principale injectSlots (MANQUANTE chez toi) ---
+// ---------- Applique tous les slots ----------
+function applyCopySlots(cfg, copy) {
+  applySeo(cfg, copy);
+
+  // Headline + sous-éléments
+  applyTitles(cfg, copy);
+  setTextOrHide('[data-slot="subtitle"]',   copy?.subtitle);
+
+  // Texte marketing
+  setTextOrHide('[data-slot="problem"]',    copy?.problem);
+  setTextOrHide('[data-slot="solution"]',   copy?.solution);
+  setTextOrHide('[data-slot="guarantee"]',  copy?.guarantee);
+
+  // Listes
+  setListOrHide('[data-slot="bullets"]',    copy?.bullets);
+  setListOrHide('[data-slot="benefits"]',   copy?.benefits);
+
+  // CTAs
+  setTextOrHide('[data-slot="cta"]',         copy?.cta);
+  setTextOrHide('[data-slot="ctaPrimary"]',  copy?.ctaPrimary ?? copy?.cta);
+  setTextOrHide('[data-slot="ctaSecondary"]',copy?.ctaSecondary);
+}
+
+// ---------- Fonction principale ----------
 export async function injectSlots({ slug, page }) {
   let cfg = await loadConfig(slug);
   cfg = normalizeConfig(cfg);
@@ -298,37 +324,20 @@ export async function injectSlots({ slug, page }) {
 
   const mc = await loadMicrocopy(page, slug);
   const copy = {
-    headline: mc?.headline ?? cfg.copy?.headline ?? "",
-    subtitle: mc?.subtitle ?? cfg.copy?.subtitle ?? cfg.subtitle ?? "",
-    bullets: mc?.bullets ?? cfg.copy?.bullets ?? [],
-    benefits: mc?.benefits ?? cfg.copy?.benefits ?? [],
-    problem: mc?.problem ?? cfg.copy?.problem ?? "",
-    solution: mc?.solution ?? cfg.copy?.solution ?? "",
-    guarantee: mc?.guarantee ?? cfg.copy?.guarantee ?? "",
-    cta: mc?.cta ?? cfg.copy?.cta ?? "Continuer",
-    ctaPrimary: mc?.ctaPrimary ?? cfg.copy?.ctaPrimary ?? cfg.copy?.cta ?? "Continuer",
+    headline:     mc?.headline     ?? cfg.copy?.headline ?? "",
+    subtitle:     mc?.subtitle     ?? cfg.copy?.subtitle ?? "",
+    bullets:      mc?.bullets      ?? cfg.copy?.bullets ?? [],
+    benefits:     mc?.benefits     ?? cfg.copy?.benefits ?? [],
+    problem:      mc?.problem      ?? cfg.copy?.problem ?? "",
+    solution:     mc?.solution     ?? cfg.copy?.solution ?? "",
+    guarantee:    mc?.guarantee    ?? cfg.copy?.guarantee ?? "",
+    cta:          mc?.cta          ?? cfg.copy?.cta ?? "Continuer",
+    ctaPrimary:   mc?.ctaPrimary   ?? cfg.copy?.ctaPrimary ?? cfg.copy?.cta ?? "Continuer",
     ctaSecondary: mc?.ctaSecondary ?? cfg.copy?.ctaSecondary ?? "Non merci",
-    pageTitle: mc?.pageTitle ?? cfg.copy?.pageTitle ?? cfg.seo?.metaTitle ?? ""
+    pageTitle:    mc?.pageTitle    ?? cfg.copy?.pageTitle
   };
 
-  // Titres / CTA / listes
-  applyTitles(cfg, copy);
-  setText('[data-slot="cta"]', copy.cta);
-  setText('[data-slot="ctaPrimary"]', copy.ctaPrimary);
-  setText('[data-slot="ctaSecondary"]', copy.ctaSecondary);
-  setBullets('[data-slot="bullets"]', copy.bullets);
-
-  // Champs de texte additionnels (si présents dans le DOM)
-  setText('[data-slot="subtitle"]', copy.subtitle || "");
-  setText('[data-slot="problem"]', copy.problem || "");
-  setText('[data-slot="solution"]', copy.solution || "");
-  setBullets('[data-slot="benefits"]', Array.isArray(copy.benefits) ? copy.benefits : []);
-  setText('[data-slot="guarantee"]', copy.guarantee || "");
-
-  // SEO
-  applySeo(cfg, copy);
-
-  // Médias / CTAs secondaires
+  applyCopySlots(cfg, copy);
   applyMedia(cfg);
   applySecondaryCta(cfg);
 
