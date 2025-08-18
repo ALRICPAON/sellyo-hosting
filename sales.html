@@ -91,36 +91,72 @@
   import { injectSlots } from "./js/inject-content.js";
 
   const $ = (s)=>document.querySelector(s);
-  const setText = (sel, v)=>{ const el=$(sel); if(el) el.textContent = v || ""; }
-  const setBullets = (sel, arr)=>{ const el=$(sel); if(!el) return; el.innerHTML = (arr||[]).map(i=>`<li>${i}</li>`).join(""); }
+  const show = (el)=>{ if(el) el.style.display=""; };
+  const hide = (el)=>{ if(el) el.style.display="none"; };
 
+  // --- helpers d’affichage ---
+  function setText(sel, v){
+    const el = $(sel);
+    if(!el) return false;
+    const val = (v||"").toString().trim();
+    if(!val){ el.textContent=""; hide(el); return false; }
+    el.textContent = val; show(el); return true;
+  }
+  function setBullets(sel, arr){
+    const el = $(sel);
+    if(!el) return 0;
+    const items = (arr||[]).map(s=>String(s||"").trim()).filter(Boolean);
+    if(!items.length){ el.innerHTML=""; hide(el); return 0; }
+    el.innerHTML = items.map(i=>`<li>${i}</li>`).join("");
+    show(el); return items.length;
+  }
+  function hideIfEmptyBlock(titleSel, contentSel){
+    const t = $(titleSel), c = $(contentSel);
+    if(!t || !c) return;
+    const isEmpty = (c.tagName==="UL") ? !c.querySelector("li") : !c.textContent.trim();
+    if(isEmpty){ hide(t); hide(c); } else { show(t); show(c); }
+  }
   function renderBadges(list=[]) {
-    const host = document.getElementById("badges");
+    const host = $("#badges");
     if(!host) return;
-    host.innerHTML = (list||[]).map(b=>`<span class="badge">${b}</span>`).join("");
+    const items = (list||[]).filter(Boolean);
+    if(!items.length){ host.innerHTML=""; hide(host); return; }
+    host.innerHTML = items.map(b=>`<span class="badge">${b}</span>`).join("");
+    show(host);
   }
   function renderTestimonials(list=[]) {
-    const host = document.getElementById("testimonials");
-    if(!host) return;
-    host.innerHTML = (list||[]).map(t=>`
+    const host = $("#testimonials");
+    const section = host?.closest("section");
+    if(!host || !section) return;
+    const items = Array.isArray(list)?list:[];
+    if(!items.length){ host.innerHTML=""; hide(section); return; }
+    host.innerHTML = items.map(t=>`
       <details><summary><strong>${t.name || "Avis"}</strong></summary><p>${t.text || ""}</p></details>
-    `).join("") || '<p class="muted">Aucun témoignage pour l’instant.</p>';
+    `).join("");
+    show(section);
   }
   function renderFaqs(list=[]) {
-    const host = document.getElementById("faqs");
-    if(!host) return;
-    host.innerHTML = (list||[]).map(f=>`
+    const host = $("#faqs");
+    const section = host?.closest("section");
+    if(!host || !section) return;
+    const items = Array.isArray(list)?list:[];
+    if(!items.length){ host.innerHTML=""; hide(section); return; }
+    host.innerHTML = items.map(f=>`
       <details><summary>${f.q || "Question"}</summary><p>${f.a || ""}</p></details>
-    `).join("") || '<p class="muted">Aucune FAQ.</p>';
+    `).join("");
+    show(section);
   }
   function startTimer(cfg) {
-    const ok = !!(cfg.components?.timer);
+    const enabled = !!(cfg.components?.timer);
     const minutes = Number(cfg.timers?.evergreenMinutes ?? 0);
-    const block = document.getElementById("timer-block");
-    if(!ok || !minutes){ block.style.display="none"; return; }
-    block.style.display = "";
+    const deadline = cfg.timers?.deadlineISO || null;
+    const block = $("#timer-block");
+    if(!enabled || (!minutes && !deadline)){ hide(block); return; }
+
+    show(block);
     const label = document.getElementById("countdown");
-    const end = Date.now() + minutes*60*1000;
+    const end = deadline ? new Date(deadline).getTime() : Date.now() + minutes*60*1000;
+
     const tick = ()=>{
       const rest = Math.max(0, end - Date.now());
       const s = Math.floor(rest/1000)%60;
@@ -132,6 +168,8 @@
     tick();
     const iv = setInterval(tick, 1000);
   }
+
+  // Choisit le fichier réel de la prochaine page (optin/sales/checkout/thankyou…)
   async function resolveNextUrl(userId, nextSlug){
     if(!nextSlug) return "";
     const repo = (location.pathname.split("/")[1] || "");
@@ -141,7 +179,7 @@
       const res = await fetch(`${base}tunnels/${encodeURIComponent(userId)}/${encodeURIComponent(nextSlug)}.json`, {cache:"no-store"});
       const cfgNext = res.ok ? await res.json() : null;
       const type = (cfgNext?.pageType || cfgNext?.type || "checkout").toLowerCase();
-      const map = { checkout:"checkout", sales:"sales", optin:"optin", thankyou:"thankyou", upsell:"sales", downsell:"sales", webinar:"sales" };
+      const map = { optin:"optin", sales:"sales", checkout:"checkout", thankyou:"thankyou", upsell:"sales", downsell:"sales", webinar:"sales" };
       const file = map[type] || "checkout";
       return `${file}.html?slug=${encodeURIComponent(nextSlug)}&userId=${encodeURIComponent(userId)}`;
     } catch {
@@ -155,37 +193,84 @@
       const slug = qs.get("slug");
       const uid  = qs.get("userId");
 
+      // inject-content gère : logo, image, vidéo, thème, headline, bullets de base
       const cfg = await injectSlots({ slug, page: "sales" });
 
-      // Texte étendu
-      setText('[data-slot="subtitle"]', cfg.subtitle || "");
+      // — Texte étendu & masquage des blocs vides —
+      const hadSubtitle = setText('[data-slot="subtitle"]', cfg.subtitle || "");
+      if(!hadSubtitle){ hide($('[data-slot="subtitle"]')); }
+
       setBullets('[data-slot="benefits"]', Array.isArray(cfg.copy?.benefits) ? cfg.copy.benefits : []);
+      hideIfEmptyBlock('h3:has(+ ul[data-slot="benefits"])', 'ul[data-slot="benefits"]'); // support moderne
+      // Fallback si :has n’est pas supporté
+      if(!CSS.supports('selector(:has(*))')){
+        const ben = $('ul[data-slot="benefits"]');
+        const title = ben ? ben.previousElementSibling : null;
+        if(ben && title && !ben.querySelector('li')){ hide(title); hide(ben); }
+      }
+
       setText('[data-slot="problem"]', cfg.copy?.problem || "");
+      hideIfEmptyBlock('h3:has(+ p[data-slot="problem"])', 'p[data-slot="problem"]');
+
       setText('[data-slot="solution"]', cfg.copy?.solution || "");
+      hideIfEmptyBlock('h3:has(+ p[data-slot="solution"])', 'p[data-slot="solution"]');
+
       setText('[data-slot="guarantee"]', cfg.copy?.guarantee || "");
-      setText('[data-slot="productDescription"]', cfg.productDescription || "");
+      // ton HTML met <strong>Garantie :</strong> … → on masque le <p> complet si vide
+      const gP = document.querySelector('em[data-slot="guarantee"]')?.closest('p');
+      if(gP && !gP.querySelector('em')?.textContent.trim()) hide(gP);
+
+      // Produit
+      const prodSec = document.getElementById("product");
+      const hadProd = setText('[data-slot="productDescription"]', cfg.productDescription || "");
+      if(prodSec && !hadProd) hide(prodSec);
+
+      // Badges / Témoignages / FAQ / Timer
       renderBadges(cfg.components?.badges || []);
       renderTestimonials(cfg.testimonials || []);
       renderFaqs(cfg.faqs || []);
       startTimer(cfg);
 
+      // — Navigation vers la page suivante + paiement —
       const nextSlug = cfg.flow?.nextSlug || (cfg.slug?.replace(/-p(\d+)$/, (_,n)=>`-p${(+n+1)}`));
+      const priceId  = (cfg.pricing && cfg.pricing.priceId) ? cfg.pricing.priceId : "";
+      const payLink  = (cfg.payment && cfg.payment.paymentLink) ? cfg.payment.paymentLink : "";
 
       const goNext = async () => {
+        // 1) si Stripe PriceId → on force le checkout avec priceId dans l’URL
+        if (priceId) {
+          const url = await resolveNextUrl(uid, nextSlug); // devrait pointer vers checkout.html
+          const u = new URL(url, location.href);
+          u.searchParams.set("priceId", priceId);
+          location.href = u.toString();
+          return;
+        }
+        // 2) sinon s’il y a un paymentLink (Stripe Checkout Link / autre)
+        if (payLink) {
+          location.href = payLink;
+          return;
+        }
+        // 3) sinon navigation simple vers la page suivante détectée
         const url = await resolveNextUrl(uid, nextSlug);
-        if(url) location.href = url;
+        if (url) location.href = url;
       };
 
-      document.getElementById("primary-cta")?.addEventListener("click", goNext);
-      const second = document.getElementById("secondary-cta");
+      $('#primary-cta')?.addEventListener('click', goNext);
+
+      const second = $('#secondary-cta');
       if (second && cfg.flow?.declineSlug) {
         second.style.display = "";
         second.addEventListener("click", async () => {
           const url = await resolveNextUrl(uid, cfg.flow.declineSlug);
           if(url) location.href = url;
         });
+      } else {
+        // masquer le bouton si pas de decline
+        if (second) hide(second);
       }
-    } catch (e) { console.error("[sales] error", e); }
+    } catch (e) {
+      console.error("[sales] error", e);
+    }
   })();
 </script>
 </body>
