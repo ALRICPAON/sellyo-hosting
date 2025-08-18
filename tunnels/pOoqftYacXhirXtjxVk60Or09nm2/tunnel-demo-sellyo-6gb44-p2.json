@@ -1,0 +1,44 @@
+```json
+{
+  "slug": "tunnel-demo-sellyo-6gb44-p2",
+  "pageType": "sales",
+  "userId": "pOoqftYacXhirXtjxVk60Or09nm2",
+  "baseUrl": "https://alricpaon.github.io/sellyo-hosting",
+  "ui": {
+    "theme": "dark",
+    "mainColor": "#4f7a28",
+    "buttonColor": "#ebf38f"
+  },
+  "brand": {
+    "logoUrl": "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftunnel-demo-sellyo-6gb44%2Flogo-1755525326404?alt=media&token=e66a5c08-2ee0-4d0f-be04-858845a75060"
+  },
+  "media": {
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftunnel-demo-sellyo-6gb44%2Fpage2-hero-1755525330913?alt=media&token=1d78f819-f1b5-4b85-a854-11291c54ad9c",
+    "videoMp4": "",
+    "videoEmbed": "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftunnel-demo-sellyo-6gb44%2Fpage2-video-1755525331168?alt=media&token=b4ef294f-56b6-4a82-9693-9656eb515910"
+  },
+  "copy": {
+    "headline": "Mini-Formation : Maîtrisez votre semaine",
+    "bullets": [
+      "Une méthode en 3 étapes",
+      "Des modèles prêts à l'emploi",
+      "Checklists à imprimer",
+      "Fixez vos priorités",
+      "Établissez des routines solides",
+      "Réduisez votre procrastination"
+    ],
+    "cta": "Accédez immédiatement à tout le contenu, y compris les modèles et le support par email !"
+  },
+  "flow": {
+    "nextSlug": "tunnel-demo-sellyo-6gb44-p3"
+  },
+  "pricing": {
+    "priceId": "price_1Rx31U4PUVU3ejcHtRO3U55v",
+    "currency": "EUR",
+    "amount": 29
+  },
+  "deliverable": {
+    "url": "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftunnel-demo-sellyo-6gb44%2Fdelivery-product-1755525327564?alt=media&token=a1fbfebd-e3aa-4a10-8954-8dec8081fe68"
+  }
+}
+```
