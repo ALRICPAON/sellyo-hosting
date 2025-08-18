@@ -1,0 +1,44 @@
+```json
+{
+  "slug": "kit-productivite-3-etapes-4n01d-p2",
+  "pageType": "sales",
+  "userId": "pOoqftYacXhirXtjxVk60Or09nm2",
+  "baseUrl": "https://alricpaon.github.io/sellyo-hosting",
+  "ui": {
+    "theme": "dark",
+    "mainColor": "#450e59",
+    "buttonColor": "#371a94"
+  },
+  "brand": {
+    "logoUrl": "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fkit-productivite-3-etapes-4n01d%2Flogo-1755522279409?alt=media&token=50693098-e1cb-4245-b24e-92d0677c89cd"
+  },
+  "media": {
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fkit-productivite-3-etapes-4n01d%2Fpage2-hero-1755522283254?alt=media&token=e20d5925-f08f-48a9-a139-053d8a6b868a",
+    "videoMp4": "",
+    "videoEmbed": "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fkit-productivite-3-etapes-4n01d%2Fpage2-video-1755522283572?alt=media&token=2dc6a1bf-f854-482a-ae3f-fa0549e1f67a"
+  },
+  "copy": {
+    "headline": "Élevez votre productivité avec notre Formation Express",
+    "bullets": [
+      "10 modules vidéos enrichissants",
+      "Exercices guidés pour une meilleure compréhension",
+      "Accès à vie avec mises à jour incluses",
+      "Organisation claire et durable pour une efficacité renforcée",
+      "Obtenez plus de résultats en un temps réduit",
+      "Allégez votre charge mentale"
+    ],
+    "cta": "Accédez à la formation maintenant"
+  },
+  "flow": {
+    "nextSlug": "kit-productivite-3-etapes-4n01d-p3"
+  },
+  "pricing": {
+    "priceId": "price_1Rx31U4PUVU3ejcHtRO3U55v",
+    "currency": "EUR",
+    "amount": 49
+  },
+  "deliverable": {
+    "url": "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fkit-productivite-3-etapes-4n01d%2Fdelivery-product-1755522280556?alt=media&token=1bf62309-7863-4410-819c-a990c0c222f1"
+  }
+}
+```
