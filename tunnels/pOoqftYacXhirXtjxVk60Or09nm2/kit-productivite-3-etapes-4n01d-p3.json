@@ -1,0 +1,37 @@
+```json
+{
+  "slug": "kit-productivite-3-etapes-4n01d-p3",
+  "pageType": "checkout",
+  "userId": "pOoqftYacXhirXtjxVk60Or09nm2",
+  "baseUrl": "https://alricpaon.github.io/sellyo-hosting",
+  "ui": {
+    "theme": "dark",
+    "mainColor": "#450e59",
+    "buttonColor": "#371a94"
+  },
+  "brand": {
+    "logoUrl": "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fkit-productivite-3-etapes-4n01d%2Flogo-1755522279409?alt=media&token=50693098-e1cb-4245-b24e-92d0677c89cd"
+  },
+  "media": {
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fkit-productivite-3-etapes-4n01d%2Fcover-1755522280131?alt=media&token=d9afec99-e7f0-4f1c-9f54-8143a285d1d4",
+    "videoMp4": "",
+    "videoEmbed": ""
+  },
+  "copy": {
+    "headline": "Finalisez votre achat dès maintenant",
+    "bullets": [],
+    "cta": "Procédez au paiement"
+  },
+  "flow": {
+    "nextSlug": null
+  },
+  "pricing": {
+    "priceId": "price_1Rx31U4PUVU3ejcHtRO3U55v",
+    "currency": "EUR",
+    "amount": 49
+  },
+  "deliverable": {
+    "url": "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fkit-productivite-3-etapes-4n01d%2Fdelivery-product-1755522280556?alt=media&token=1bf62309-7863-4410-819c-a990c0c222f1"
+  }
+}
+```
