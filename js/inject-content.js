@@ -7,7 +7,7 @@ const hide = (el) => { if (el) el.style.display = "none"; };
 const setText = (sel, txt) => { const el = $(sel); if (el) el.textContent = txt ?? ""; };
 const setBullets = (sel, items = []) => {
   const el = $(sel); if (!el) return;
-  el.innerHTML = items.map(i => `<li>${i}</li>`).join("");
+  el.innerHTML = (items || []).map(i => `<li>${i}</li>`).join("");
 };
 
 // Parser JSON tolérant (si GPT a ajouté du texte/fences)
@@ -96,9 +96,7 @@ function applyMedia(cfg) {
     else { img.removeAttribute("src"); imgWrap.style.display = "none"; }
   }
 
-  // VIDEO — heuristique :
-  // - Si emb contient <iframe> ou un host "embed" => iframe
-  // - Sinon, on joue la vidéo dans <video> (mp4/webm/ogg), parfait pour Firebase Storage
+  // VIDEO — heuristique (mp4 → <video>, plateformes → <iframe>)
   const vidWrap = document.querySelector('[data-optional="video"]');
   const vid = document.getElementById("hero-mp4");
   const iframeHost = document.getElementById("hero-embed");
@@ -106,7 +104,6 @@ function applyMedia(cfg) {
   const raw = (cfg.videoUrl || "").trim(); // legacy éventuel
   let mp4 = (cfg.media?.videoMp4 || "").trim();
   let emb = (cfg.media?.videoEmbed || "").trim();
-
   const candidate = mp4 || emb || raw;
 
   const isEmbedHost = (u) => {
@@ -118,11 +115,9 @@ function applyMedia(cfg) {
 
   // Reclassement tolérant si besoin
   if (!mp4 && candidate && !isEmbedHost(candidate) && !candidate.startsWith("<iframe")) {
-    mp4 = candidate;   // Firebase/Storage → <video>
-    emb = "";
+    mp4 = candidate; emb = "";
   } else if (!emb && candidate && (isEmbedHost(candidate) || candidate.startsWith("<iframe"))) {
-    emb = candidate;   // YouTube/Vimeo → <iframe>
-    mp4 = "";
+    emb = candidate; mp4 = "";
   }
 
   if (!vidWrap || (!mp4 && !emb)) {
@@ -163,11 +158,11 @@ function applyTitles(cfg, copy) {
   setText('[data-slot="headline"]', copy?.headline || "Titre");
 }
 
-// Normalisation
+// --- Normalisation centrale ---
 function normalizeConfig(cfg) {
   const pageType = cfg.pageType || cfg.type || "sales";
 
-  // normalisation logo (fallback image si pas de logo dédié)
+  // Brand / Logo
   const brand = {
     logoUrl:
       cfg.brand?.logoUrl ||
@@ -178,7 +173,7 @@ function normalizeConfig(cfg) {
       ""
   };
 
-  // tolérant aux variantes (images[], videos[], coverUrl, videoUrl brut, etc.)
+  // Media
   const rawVideo = cfg.media?.videoMp4 || cfg.media?.videoEmbed ? "" : (cfg.videoUrl || "");
   const arrVideo0 = Array.isArray(cfg.media?.videos) ? cfg.media.videos[0] : "";
   const media = {
@@ -201,15 +196,22 @@ function normalizeConfig(cfg) {
     )
   };
 
+  // Copy étendu
   const copy = {
-    headline: cfg.copy?.headline ?? cfg.title ?? "",
-    bullets:  cfg.copy?.bullets  ?? cfg.copy?.benefits ?? cfg.bullets ?? [],
-    cta:      cfg.copy?.cta      ?? cfg.ctaText ?? "Continuer",
-    ctaPrimary:   cfg.copy?.ctaPrimary ?? cfg.ctaText ?? cfg.copy?.cta ?? "Continuer",
+    headline:   cfg.copy?.headline   ?? cfg.title ?? "",
+    subtitle:   cfg.copy?.subtitle   ?? cfg.subtitle ?? "",
+    bullets:    cfg.copy?.bullets    ?? cfg.copy?.benefits ?? cfg.bullets ?? [],
+    benefits:   cfg.copy?.benefits   ?? [],
+    problem:    cfg.copy?.problem    ?? cfg.problem ?? "",
+    solution:   cfg.copy?.solution   ?? cfg.solution ?? "",
+    guarantee:  cfg.copy?.guarantee  ?? cfg.guarantee ?? "",
+    cta:        cfg.copy?.cta        ?? cfg.ctaText ?? "Continuer",
+    ctaPrimary: cfg.copy?.ctaPrimary ?? cfg.ctaText ?? cfg.copy?.cta ?? "Continuer",
     ctaSecondary: cfg.copy?.ctaSecondary ?? "Non merci",
-    pageTitle:    cfg.copy?.pageTitle ?? cfg.seo?.metaTitle ?? ""
+    pageTitle:  cfg.copy?.pageTitle  ?? cfg.seo?.metaTitle ?? ""
   };
 
+  // UI
   const ui = {
     showImage: cfg.ui?.showImage ?? !!media.imageUrl,
     showVideo: cfg.ui?.showVideo ?? !!(media.videoMp4 || media.videoEmbed),
@@ -220,14 +222,74 @@ function normalizeConfig(cfg) {
     buttonColor: cfg.ui?.buttonColor ?? cfg.ui?.mainColor
   };
 
+  // Flow
   const flow = cfg.flow ? { ...cfg.flow } : {};
   if (!flow.nextSlug && cfg.nextSlug) flow.nextSlug = cfg.nextSlug;
   if (!flow.declineSlug && cfg.declineSlug) flow.declineSlug = cfg.declineSlug;
 
-  return { ...cfg, pageType, brand, media, copy, ui, flow };
+  // Form fields
+  const formFields = cfg.formFields || cfg.components?.formFields || null;
+
+  // Payment/pricing unifiés
+  const payment = {
+    stripePublishableKey: cfg.payment?.stripePublishableKey || cfg.stripePk || "",
+    stripePriceId:        cfg.payment?.stripePriceId        || cfg.pricing?.priceId || "",
+    paymentLink:          cfg.payment?.paymentLink          || cfg.paymentLink || "",
+    paypalClientId:       cfg.payment?.paypalClientId       || cfg.paypal?.clientId || ""
+  };
+
+  const pricing = {
+    priceId:  cfg.pricing?.priceId || payment.stripePriceId || "",
+    currency: (cfg.pricing?.currency || cfg.currency || "").toUpperCase(),
+    amount:   Number(cfg.pricing?.amount ?? cfg.payment?.price ?? 0)
+  };
+
+  // SEO
+  const seo = cfg.seo ? { ...cfg.seo } : { metaTitle: "", metaDescription: "" };
+
+  // Produit / Récap
+  const productDescription = cfg.productDescription || "";
+  const productRecap = cfg.productRecap || "";
+
+  // Slug sécurité
+  const slug = cfg.slug || "";
+
+  return {
+    ...cfg,
+    slug,
+    pageType,
+    brand,
+    media,
+    copy,
+    ui,
+    flow,
+    formFields,
+    payment,
+    pricing,
+    seo,
+    productDescription,
+    productRecap
+  };
 }
 
-// Fonction principale
+// SEO
+function applySeo(cfg, copy) {
+  const title = copy?.pageTitle || cfg.seo?.metaTitle || cfg.name || document.title;
+  if (title) document.title = title;
+
+  const desc = cfg.seo?.metaDescription || cfg.metaDescription || "";
+  if (desc) {
+    let m = document.querySelector('meta[name="description"]');
+    if (!m) {
+      m = document.createElement('meta');
+      m.name = 'description';
+      document.head.appendChild(m);
+    }
+    m.content = desc;
+  }
+}
+
+// --- Fonction principale injectSlots (MANQUANTE chez toi) ---
 export async function injectSlots({ slug, page }) {
   let cfg = await loadConfig(slug);
   cfg = normalizeConfig(cfg);
@@ -237,19 +299,36 @@ export async function injectSlots({ slug, page }) {
   const mc = await loadMicrocopy(page, slug);
   const copy = {
     headline: mc?.headline ?? cfg.copy?.headline ?? "",
+    subtitle: mc?.subtitle ?? cfg.copy?.subtitle ?? cfg.subtitle ?? "",
     bullets: mc?.bullets ?? cfg.copy?.bullets ?? [],
+    benefits: mc?.benefits ?? cfg.copy?.benefits ?? [],
+    problem: mc?.problem ?? cfg.copy?.problem ?? "",
+    solution: mc?.solution ?? cfg.copy?.solution ?? "",
+    guarantee: mc?.guarantee ?? cfg.copy?.guarantee ?? "",
     cta: mc?.cta ?? cfg.copy?.cta ?? "Continuer",
     ctaPrimary: mc?.ctaPrimary ?? cfg.copy?.ctaPrimary ?? cfg.copy?.cta ?? "Continuer",
     ctaSecondary: mc?.ctaSecondary ?? cfg.copy?.ctaSecondary ?? "Non merci",
-    pageTitle: mc?.pageTitle ?? cfg.copy?.pageTitle
+    pageTitle: mc?.pageTitle ?? cfg.copy?.pageTitle ?? cfg.seo?.metaTitle ?? ""
   };
 
+  // Titres / CTA / listes
   applyTitles(cfg, copy);
-  setBullets('[data-slot="bullets"]', copy.bullets);
   setText('[data-slot="cta"]', copy.cta);
   setText('[data-slot="ctaPrimary"]', copy.ctaPrimary);
   setText('[data-slot="ctaSecondary"]', copy.ctaSecondary);
+  setBullets('[data-slot="bullets"]', copy.bullets);
 
+  // Champs de texte additionnels (si présents dans le DOM)
+  setText('[data-slot="subtitle"]', copy.subtitle || "");
+  setText('[data-slot="problem"]', copy.problem || "");
+  setText('[data-slot="solution"]', copy.solution || "");
+  setBullets('[data-slot="benefits"]', Array.isArray(copy.benefits) ? copy.benefits : []);
+  setText('[data-slot="guarantee"]', copy.guarantee || "");
+
+  // SEO
+  applySeo(cfg, copy);
+
+  // Médias / CTAs secondaires
   applyMedia(cfg);
   applySecondaryCta(cfg);
 
