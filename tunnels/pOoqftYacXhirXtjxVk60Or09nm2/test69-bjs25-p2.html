@@ -1,0 +1,48 @@
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test vente</title>
+    <style>
+        body { background-color: #1a0a53; color: #fff; font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        .container { width: 100%; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .logo { max-width: 150px; }
+        .hero-image { width: 100%; height: auto; }
+        .button { background-color: #4d22b3; padding: 10px 20px; color: #fff; text-decoration: none; border-radius: 5px; }
+        .button.disabled { background-color: grey; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest69-bjs25%2Flogo-1755533886413?alt=media&token=bfbbcdc3-b118-4042-a39e-eb666acdaae7" alt="Logo" class="logo">
+        
+        <h1>test vente</h1>
+        
+        <img src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest69-bjs25%2Fpage2-hero-1755533890282?alt=media&token=6001a75b-0bac-48d6-88a0-613b2551556a" alt="Hero Image" class="hero-image">
+        
+        <p>Prix : 49 EUR</p>
+        
+        <button class="button" onclick="handleStripeCheckout()">Payer maintenant</button>
+        
+        <a href="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest69-bjs25%2Fdelivery-product-1755533888193?alt=media&token=79b0cf54-9dbd-4277-98c9-70f7dc08fa41" class="button" download>Télécharger</a>
+    </div>
+    
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        function handleStripeCheckout() {
+            var stripe = Stripe('pk_test_51RVsTD4PUVU3ejcHlK1AAkobBcOKPp3k0l9AHMmq68d7OdSDjyVKLtA9XpMGqiUIeIgtMvhSTUDrMl9rPityqi5u002UMlmdET');
+            stripe.redirectToCheckout({
+                lineItems: [{ price: 'price_1Rx31U4PUVU3ejcHtRO3U55v', quantity: 1 }],
+                mode: 'payment',
+                successUrl: window.location.protocol + "//" + window.location.host + "/success",
+                cancelUrl: window.location.protocol + "//" + window.location.host + "/cancel"
+            }).then(function (result) {
+                console.error(result.error.message);
+            });
+        }
+    </script>
+</body>
+</html>
+```
