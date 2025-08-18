@@ -59,12 +59,38 @@
   import { injectSlots } from "./js/inject-content.js";
 
   const $ = (s)=>document.querySelector(s);
-  const setText = (sel,v)=>{ const el=$(sel); if(el) el.textContent=v||""; }
+  const show = (el)=>{ if(el) el.style.display=""; };
+  const hide = (el)=>{ if(el) el.style.display="none"; };
+  const setText = (sel,v)=>{ const el=$(sel); if(!el) return false; const t=(v??"").toString().trim(); if(!t){ el.textContent=""; hide(el); return false; } el.textContent=t; show(el); return true; };
+
   function renderFaqs(list=[]) {
+    const wrap = document.querySelector('section:has(#faqs)') || document.getElementById("faqs")?.closest("section");
     const host = document.getElementById("faqs");
-    host.innerHTML = (list||[]).map(f=>`
+    const items = Array.isArray(list)?list:[];
+    if(!wrap || !host) return;
+    if(!items.length){ host.innerHTML=""; hide(wrap); return; }
+    host.innerHTML = items.map(f=>`
       <details><summary>${f.q || "Question"}</summary><p>${f.a || ""}</p></details>
-    `).join("") || '<p class="muted">Aucune question.</p>';
+    `).join("");
+    show(wrap);
+  }
+
+  // Choisit le vrai fichier de la "page suivante"
+  async function resolveNextUrl(userId, nextSlug){
+    if(!nextSlug) return "";
+    const repo = (location.pathname.split("/")[1] || "");
+    const root = repo ? `/${repo}/` : "/";
+    const base = `${location.origin}${root}`;
+    try {
+      const res = await fetch(`${base}tunnels/${encodeURIComponent(userId)}/${encodeURIComponent(nextSlug)}.json`, {cache:"no-store"});
+      const cfgNext = res.ok ? await res.json() : null;
+      const type = (cfgNext?.pageType || cfgNext?.type || "thankyou").toLowerCase();
+      const map = { optin:"optin", sales:"sales", checkout:"checkout", thankyou:"thankyou", upsell:"sales", downsell:"sales", webinar:"sales" };
+      const file = map[type] || "thankyou";
+      return `${base}${file}.html?slug=${encodeURIComponent(nextSlug)}&userId=${encodeURIComponent(userId)}`;
+    } catch {
+      return `${base}thankyou.html?slug=${encodeURIComponent(nextSlug)}&userId=${encodeURIComponent(userId)}`;
+    }
   }
 
   (async () => {
@@ -74,109 +100,92 @@
 
     const cfg = await injectSlots({ slug, page: "checkout" });
 
-    // Texte élargi
+    // Texte & sections (masquage si vide)
     setText('[data-slot="subtitle"]', cfg.subtitle || "");
-    setText('[data-slot="productDescription"]', cfg.productDescription || "");
-    setText('[data-slot="productRecap"]', cfg.productRecap || cfg.productDescription || "");
+    const recapped = setText('[data-slot="productRecap"]', cfg.productRecap || cfg.productDescription || "");
+    const described = setText('[data-slot="productDescription"]', cfg.productDescription || "");
+    const recapSection = document.querySelector(".card");
+    if (recapSection && !recapped && !described) hide(recapSection);
+
     renderFaqs(cfg.faqs || []);
 
-    // Pricing
-    const amountCents = Number(cfg.pricing?.amount || 0);               // en cents
-    const currency = (cfg.pricing?.currency || "EUR").toUpperCase();
-    const amountMajor = amountCents ? (amountCents/100) : 0;
-    $("#amount").textContent = amountCents ? amountMajor.toFixed(2) : "—";
-    $("#currency").textContent = currency;
+    // Pricing (amount en unités "majeures", ex: 49.00)
+    const currency = (cfg.pricing?.currency || cfg.currency || "EUR").toUpperCase();
+    const amountMajor = Number(cfg.pricing?.amount ?? cfg.payment?.price ?? 0);
+    $('#amount').textContent = amountMajor ? amountMajor.toFixed(2) : "—";
+    $('#currency').textContent = currency;
+    setText('[data-slot="cta"]', cfg.copy?.cta || "Payer maintenant");
 
-    // Clés/IDs depuis JSON ou Query (fallback)
+    // Paramètres éventuels dans l'URL
     const priceFromUrl = qs.get("priceId");
-    const paymentLinkFromUrl = qs.get("paymentLink");
-    const stripePkFromUrl = qs.get("stripePk");
-    const paypalClientIdFromUrl = qs.get("paypalClientId");
+    const linkFromUrl  = qs.get("paymentLink");
+    const pkFromUrl    = qs.get("stripePk");
+    const ppFromUrl    = qs.get("paypalClientId");
 
-    const effectivePriceId =
-      priceFromUrl ||
-      cfg.pricing?.priceId || "";
+    // Sources effectives
+    const priceId  = priceFromUrl || cfg.pricing?.priceId || cfg.payment?.stripePriceId || "";
+    const payLink  = linkFromUrl  || cfg.payment?.paymentLink || cfg.paymentLink || "";
+    const stripePk = pkFromUrl    || cfg.payment?.stripePublishableKey || cfg.stripePk || "";
+    const paypalId = ppFromUrl    || cfg.payment?.paypalClientId || cfg.paypal?.clientId || "";
 
-    const effectivePaymentLink =
-      paymentLinkFromUrl ||
-      cfg.payment?.paymentLink || cfg.paymentLink || "";
+    // Détermination de l’URL success (merci/next)
+    const nextSlug = cfg.flow?.nextSlug || (cfg.slug?.replace(/-p(\d+)$/, (_,n)=>`-p${(+n+1)}`) || "");
+    const successUrl = await resolveNextUrl(uid, nextSlug || slug); // si pas de next → reload merci/suivant
+    const cancelUrl  = location.href;
 
-    const effectiveStripePk =
-      stripePkFromUrl ||
-      cfg.payment?.stripePublishableKey || cfg.stripePk || "";
+    // --- Stripe (Checkout) & Payment Link ---
+    const payBtn = document.getElementById("pay-btn");
+    const msg    = document.getElementById("checkout-msg");
 
-    const effectivePaypalClientId =
-      paypalClientIdFromUrl ||
-      cfg.payment?.paypalClientId || cfg.paypal?.clientId || "";
-
-    // --- Stripe (Checkout) + Payment Link ---
-    const btn = document.getElementById("pay-btn");
-    const msg = document.getElementById("checkout-msg");
-
-    if (!effectivePriceId && !effectivePaymentLink) {
+    if (!priceId && !payLink) {
       msg.textContent = "Configuration Stripe incomplète (aucun priceId ni Payment Link).";
-      btn.disabled = true;
+      payBtn.disabled = true;
     }
 
-    btn.addEventListener("click", async () => {
+    payBtn.addEventListener("click", async () => {
       try {
-        // 1) Payment Link direct si fourni
-        if (effectivePaymentLink) {
-          location.href = effectivePaymentLink;
-          return;
-        }
-        // 2) Stripe Checkout via priceId
-        if (!effectiveStripePk) {
-          msg.textContent = "Clé Stripe publique manquante (stripePk). Ajoute-la au JSON ou à l’URL.";
-          return;
-        }
-        const stripe = window.Stripe(effectiveStripePk);
-        await stripe.redirectToCheckout({
-          lineItems: [{ price: effectivePriceId, quantity: 1 }],
+        // 1) Payment Link direct
+        if (payLink) { location.href = payLink; return; }
+
+        // 2) Stripe Checkout (priceId requis)
+        if (!stripePk) { msg.textContent = "Clé Stripe publique manquante (stripePk)."; return; }
+        if (!priceId)  { msg.textContent = "Identifiant de prix manquant (priceId)."; return; }
+
+        const stripe = window.Stripe(stripePk);
+        const { error } = await stripe.redirectToCheckout({
+          lineItems: [{ price: priceId, quantity: 1 }],
           mode: 'payment',
-          successUrl: location.href,
-          cancelUrl: location.href
+          successUrl,
+          cancelUrl
         });
+        if (error) msg.textContent = error.message || "Erreur Stripe.";
       } catch (e) {
         console.error("[checkout] stripe error", e);
         msg.textContent = "Erreur Stripe.";
       }
     });
 
-    // --- PayPal Smart Buttons ---
-    if (effectivePaypalClientId) {
-      const ppSec = document.getElementById("paypal-section");
-      ppSec.style.display = "";
+    // --- PayPal Smart Buttons (optionnel) ---
+    if (paypalId) {
+      const wrap = document.getElementById("paypal-section");
+      show(wrap);
       const ppMsg = document.getElementById("paypal-msg");
 
-      // Injecte dynamiquement le SDK (client-side only)
       const script = document.createElement("script");
-      script.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(effectivePaypalClientId)}&currency=${encodeURIComponent(currency)}`;
+      script.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(paypalId)}&currency=${encodeURIComponent(currency)}`;
       script.onload = () => {
         if (!window.paypal) { ppMsg.textContent = "SDK PayPal non disponible."; return; }
         window.paypal.Buttons({
           style: { layout: "vertical", color: "gold", shape: "rect", label: "paypal" },
-          createOrder: (data, actions) => {
-            return actions.order.create({
-              purchase_units: [{
-                amount: { value: amountMajor.toFixed(2), currency_code: currency },
-                description: cfg.copy?.headline || cfg.productRecap || cfg.slug
-              }]
-            });
-          },
-          onApprove: (data, actions) => {
-            return actions.order.capture().then((details) => {
-              ppMsg.textContent = `Paiement PayPal confirmé : ${details.id}`;
-              // Rediriger si tu as une page de merci:
-              if (cfg.flow?.nextSlug) {
-                location.href = `thankyou.html?slug=${encodeURIComponent(cfg.flow.nextSlug)}&userId=${encodeURIComponent(uid)}`;
-              }
-            });
-          },
-          onError: (err) => {
-            console.error("[checkout] PayPal error", err);
-            ppMsg.textContent = "Erreur PayPal.";
-          }
+          createOrder: (data, actions) => actions.order.create({
+            purchase_units: [{
+              amount: { value: amountMajor.toFixed(2), currency_code: currency },
+              description: cfg.copy?.headline || cfg.productRecap || cfg.slug
+            }]
+          }),
+          onApprove: (data, actions) =>
+            actions.order.capture().then(() => { location.href = successUrl; }),
+          onError: (err) => { console.error("[checkout] PayPal error", err); ppMsg.textContent = "Erreur PayPal."; }
         }).render("#paypal-buttons");
       };
       script.onerror = () => { ppMsg.textContent = "Impossible de charger PayPal."; };
