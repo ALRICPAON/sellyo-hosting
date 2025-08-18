@@ -1,0 +1,37 @@
+```json
+{
+  "slug": "formation-productivite-express-w0rql-p4",
+  "pageType": "thankyou",
+  "userId": "pOoqftYacXhirXtjxVk60Or09nm2",
+  "baseUrl": "https://alricpaon.github.io/sellyo-hosting",
+  "ui": {
+    "theme": "dark",
+    "mainColor": "#2c1376",
+    "buttonColor": "#9a244f"
+  },
+  "brand": {
+    "logoUrl": "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fformation-productivite-express-w0rql%2Flogo-1755507805293?alt=media&token=7cbcdffc-61be-4c2b-8c4a-96ce1a8069e6"
+  },
+  "media": {
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fformation-productivite-express-w0rql%2Fcover-1755507805953?alt=media&token=7be5bb5c-9935-4dc9-8397-f297b05b03fd",
+    "videoMp4": "",
+    "videoEmbed": ""
+  },
+  "copy": {
+    "headline": "",
+    "bullets": "",
+    "cta": "Continuer"
+  },
+  "flow": {
+    "nextSlug": null
+  },
+  "pricing": {
+    "priceId": "price_1Rx31U4PUVU3ejcHtRO3U55v",
+    "currency": "EUR",
+    "amount": 500
+  },
+  "deliverable": {
+    "url": "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fformation-productivite-express-w0rql%2Fdelivery-product-1755507806866?alt=media&token=a398293f-2466-47a7-bb65-4c27030c4b25"
+  }
+}
+```
