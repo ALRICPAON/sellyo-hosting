@@ -1,0 +1,44 @@
+```json
+{
+  "slug": "formation-productivite-express-w0rql-p1",
+  "pageType": "optin",
+  "userId": "pOoqftYacXhirXtjxVk60Or09nm2",
+  "baseUrl": "https://alricpaon.github.io/sellyo-hosting",
+  "ui": {
+    "theme": "dark",
+    "mainColor": "#2c1376",
+    "buttonColor": "#9a244f"
+  },
+  "brand": {
+    "logoUrl": "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fformation-productivite-express-w0rql%2Flogo-1755507805293?alt=media&token=7cbcdffc-61be-4c2b-8c4a-96ce1a8069e6"
+  },
+  "media": {
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fformation-productivite-express-w0rql%2Fpage1-hero-1755507807764?alt=media&token=cfeb9222-6196-4fb8-9258-63da6713d658",
+    "videoMp4": "",
+    "videoEmbed": "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fformation-productivite-express-w0rql%2Fpage1-video-1755507808665?alt=media&token=5fe21743-feb0-4d44-8353-23cd4789fd1c"
+  },
+  "copy": {
+    "headline": "Obtenez votre guide gratuit maintenant",
+    "bullets": [
+      "Appliquez des méthodes simples dès demain",
+      "Utilisez les techniques des professionnels",
+      "100% gratuit et accès immédiat",
+      "Gagnez du temps chaque jour",
+      "Réduisez votre stress",
+      "Atteignez vos objectifs plus rapidement"
+    ],
+    "cta": "Je veux mon guide gratuit"
+  },
+  "flow": {
+    "nextSlug": "formation-productivite-express-w0rql-p2"
+  },
+  "pricing": {
+    "priceId": "price_1Rx31U4PUVU3ejcHtRO3U55v",
+    "currency": "EUR",
+    "amount": 0
+  },
+  "deliverable": {
+    "url": "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fformation-productivite-express-w0rql%2Fdelivery-product-1755507806866?alt=media&token=a398293f-2466-47a7-bb65-4c27030c4b25"
+  }
+}
+```
