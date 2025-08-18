@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Optin</title>
+  <meta name="description" content="">
   <style>
     :root{--bg:#0b1220;--btn:#3b82f6;--text:#fff}
     body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui, -apple-system, Segoe UI, Roboto}
@@ -24,6 +25,7 @@
     details{background:#ffffff10;padding:12px;border-radius:10px}
     .t-center{text-align:center}
     .muted{opacity:.7}
+    [data-block]{display:none} /* Caché par défaut, inject-content l’affiche seulement si contenu */
   </style>
 </head>
 <body>
@@ -31,13 +33,15 @@
   <header><img id="logo" alt="Logo"></header>
 
   <h1 data-slot="headline">Titre optin</h1>
-  <p class="muted" data-slot="subtitle"></p>
+  <section data-block>
+    <p class="muted" data-slot="subtitle"></p>
+  </section>
 
   <section class="t-center" id="media">
-    <section id="hero-image" data-optional="image" style="display:none">
+    <section id="hero-image" data-optional="image" data-block>
       <img id="hero-img" alt="">
     </section>
-    <section id="hero-video" data-optional="video" style="display:none">
+    <section id="hero-video" data-optional="video" data-block>
       <video id="hero-mp4" controls style="display:none"></video>
       <div id="hero-embed" style="aspect-ratio:16/9;display:none"></div>
     </section>
@@ -45,37 +49,51 @@
 
   <section class="row">
     <div>
-      <h3>Points clés</h3>
-      <ul data-slot="bullets"></ul>
+      <section data-block>
+        <h3>Points clés</h3>
+        <ul data-slot="bullets"></ul>
+      </section>
 
-      <h3>Bénéfices</h3>
-      <ul data-slot="benefits"></ul>
+      <section data-block>
+        <h3>Bénéfices</h3>
+        <ul data-slot="benefits"></ul>
+      </section>
 
-      <p><strong>Garantie :</strong> <em data-slot="guarantee"></em></p>
+      <section data-block>
+        <h3>Garantie</h3>
+        <p><em data-slot="guarantee"></em></p>
+      </section>
 
-      <div class="badges" id="badges"></div>
+      <section data-block>
+        <div class="badges" id="badges"></div>
+      </section>
     </div>
-    <div>
-      <h3>Problème</h3>
-      <p data-slot="problem"></p>
 
-      <h3>Solution</h3>
-      <p data-slot="solution"></p>
+    <div>
+      <section data-block>
+        <h3>Problème</h3>
+        <p data-slot="problem"></p>
+      </section>
+
+      <section data-block>
+        <h3>Solution</h3>
+        <p data-slot="solution"></p>
+      </section>
     </div>
   </section>
 
-  <section id="timer-block" style="display:none">
+  <section id="timer-block" data-block>
     <h3>Offre se termine dans</h3>
     <p id="countdown" style="font-size:28px;font-weight:800"></p>
     <small class="muted" id="timer-hint"></small>
   </section>
 
-  <section>
+  <section id="testi-block" data-block>
     <h3>Témoignages</h3>
     <div id="testimonials"></div>
   </section>
 
-  <section>
+  <section id="faq-block" data-block>
     <h3>Questions fréquentes</h3>
     <div id="faqs"></div>
   </section>
@@ -86,7 +104,6 @@
       <input type="hidden" name="slug">
       <input type="hidden" name="type" value="tunnel">
       <input type="hidden" name="nextUrl">
-      <!-- Champs dynamiques selon cfg.formFields -->
       <div id="dynamic-fields"></div>
       <button type="submit"><span data-slot="cta">Continuer</span></button>
       <p class="muted t-center"><small>Vos informations sont enregistrées de façon sécurisée.</small></p>
@@ -104,37 +121,49 @@
 <script type="module">
   import { injectSlots } from "./js/inject-content.js";
 
-  // helpers affichage
   const $ = (s)=>document.querySelector(s);
-  const setText = (sel, v)=>{ const el=$(sel); if(el) el.textContent = v || ""; }
-  const setBullets = (sel, arr)=>{ const el=$(sel); if(!el) return; el.innerHTML = (arr||[]).map(i=>`<li>${i}</li>`).join(""); }
+
+  function show(el){ if(el) el.style.display="" }
+  function hide(el){ if(el) el.style.display="none" }
 
   function renderBadges(list=[]) {
     const host = document.getElementById("badges");
-    if(!host) return;
-    host.innerHTML = (list||[]).map(b=>`<span class="badge">${b}</span>`).join("");
+    const block = host?.closest('[data-block]');
+    if(!host || !block) return;
+    const items = (list||[]).filter(Boolean);
+    if(!items.length){ host.innerHTML=""; hide(block); return; }
+    host.innerHTML = items.map(b=>`<span class="badge">${b}</span>`).join("");
+    show(block);
   }
 
   function renderTestimonials(list=[]) {
     const host = document.getElementById("testimonials");
-    if(!host) return;
-    host.innerHTML = (list||[]).map(t=>`
+    const block = document.getElementById("testi-block");
+    if(!host || !block) return;
+    const items = Array.isArray(list) ? list : [];
+    if(!items.length){ host.innerHTML=""; hide(block); return; }
+    host.innerHTML = items.map(t=>`
       <details>
         <summary><strong>${t.name || "Avis"}</strong></summary>
         <p>${t.text || ""}</p>
       </details>
-    `).join("") || '<p class="muted">Aucun témoignage pour l’instant.</p>';
+    `).join("");
+    show(block);
   }
 
   function renderFaqs(list=[]) {
     const host = document.getElementById("faqs");
-    if(!host) return;
-    host.innerHTML = (list||[]).map(f=>`
+    const block = document.getElementById("faq-block");
+    if(!host || !block) return;
+    const items = Array.isArray(list) ? list : [];
+    if(!items.length){ host.innerHTML=""; hide(block); return; }
+    host.innerHTML = items.map(f=>`
       <details>
         <summary>${f.q || "Question"}</summary>
         <p>${f.a || ""}</p>
       </details>
-    `).join("") || '<p class="muted">Aucune question fréquente.</p>';
+    `).join("");
+    show(block);
   }
 
   function startTimer(cfg) {
@@ -142,13 +171,11 @@
     const evergreen = cfg.timers?.evergreenMinutes ?? null;
     const deadline = cfg.timers?.deadlineISO || null;
     const block = document.getElementById("timer-block");
-    if(!enabled || (!evergreen && !deadline)) { if(block) block.style.display="none"; return; }
-    block.style.display = "";
+    if(!enabled || (!evergreen && !deadline)) { hide(block); return; }
+    show(block);
     const label = document.getElementById("countdown");
     const hint = document.getElementById("timer-hint");
-    let end = null;
-    if (deadline) end = new Date(deadline).getTime();
-    else end = Date.now() + (Number(evergreen)*60*1000);
+    let end = deadline ? new Date(deadline).getTime() : Date.now() + (Number(evergreen)*60*1000);
     hint.textContent = deadline ? `Fin le ${new Date(end).toLocaleString()}` : `Compteur ${evergreen} minutes`;
     const tick = ()=>{
       const rest = Math.max(0, end - Date.now());
@@ -164,7 +191,6 @@
 
   async function resolveNextUrl(userId, nextSlug){
     if(!nextSlug) return "";
-    // essaie de lire le JSON de la page suivante pour déterminer le fichier
     const repo = (location.pathname.split("/")[1] || "");
     const rootPath = repo ? `/${repo}/` : "/";
     const base = `${location.origin}${rootPath}`;
@@ -176,7 +202,6 @@
       const file = map[type] || "sales";
       return `${file}.html?slug=${encodeURIComponent(nextSlug)}&userId=${encodeURIComponent(userId)}`;
     } catch {
-      // fallback sales
       return `sales.html?slug=${encodeURIComponent(nextSlug)}&userId=${encodeURIComponent(userId)}`;
     }
   }
@@ -186,18 +211,7 @@
     const slug = qs.get("slug");
     const cfg = await injectSlots({ slug, page: "optin" });
 
-    // Texte supplémentaires
-    setText('[data-slot="subtitle"]', cfg.subtitle || "");
-    setText('[data-slot="problem"]', cfg.copy?.problem || "");
-    setText('[data-slot="solution"]', cfg.copy?.solution || "");
-    setBullets('[data-slot="benefits"]', Array.isArray(cfg.copy?.benefits) ? cfg.copy.benefits : []);
-    setText('[data-slot="guarantee"]', cfg.copy?.guarantee || "");
-    renderBadges(cfg.components?.badges || []);
-    renderTestimonials(cfg.testimonials || []);
-    renderFaqs(cfg.faqs || []);
-    startTimer(cfg);
-
-    // Form dynamiques
+    // Champs dynamiques du formulaire
     const f = document.getElementById("optin-form");
     const host = document.getElementById("dynamic-fields");
     const fields = cfg.formFields || cfg.components?.formFields || { firstname:true, email:true };
@@ -210,9 +224,14 @@
     `;
     f.userId.value = cfg.userId;
     f.slug.value = cfg.slug;
-
     const nextSlug = cfg.flow?.nextSlug || (cfg.slug?.replace(/-p(\d+)$/, (_,n)=>`-p${(+n+1)}`));
     f.nextUrl.value = await resolveNextUrl(cfg.userId, nextSlug);
+
+    // Extras
+    renderBadges(cfg.components?.badges || []);
+    renderTestimonials(cfg.testimonials || []);
+    renderFaqs(cfg.faqs || []);
+    startTimer(cfg);
   })().catch(e => console.error("[optin] inject error", e));
 </script>
 </body>
