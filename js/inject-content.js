@@ -81,57 +81,68 @@ function applyThemeColors(cfg) {
 
 // Gère les médias (image / vidéo mp4 / embed)
 function applyMedia(cfg) {
-  // LOGO (brand.logoUrl normalisé ; fallback ancien champs si besoin)
+  // LOGO
   const logoEl = document.getElementById("logo");
-  const logoUrl =
-    cfg.brand?.logoUrl || // normalisé
-    cfg.logoUrl ||        // anciens exports
-    "";                   // pas de logo → on laisse vide
-  if (logoEl) {
-    if (logoUrl) {
-      logoEl.src = logoUrl;
-      show(logoEl);
-    } else {
-      hide(logoEl);
-    }
-  }
+  const logoUrl = cfg.brand?.logoUrl || cfg.logoUrl || "";
+  if (logoEl && logoUrl) { logoEl.src = logoUrl; logoEl.style.display = ""; }
+  else if (logoEl) logoEl.style.display = "none";
 
-  // HERO IMAGE
+  // IMAGE (affiche si on a une URL, peu importe ui.showImage)
   const imgWrap = document.querySelector('[data-optional="image"]');
-  const hasImage = cfg.ui?.showImage && cfg.media?.imageUrl;
-  if (hasImage) {
-    const img = document.getElementById("hero-img");
-    if (img) img.src = cfg.media.imageUrl;
-    show(imgWrap);
-  } else {
-    hide(imgWrap);
+  const img = document.getElementById("hero-img");
+  const imgUrl = cfg.media?.imageUrl || cfg.heroImage || "";
+  if (imgWrap && img) {
+    if (imgUrl) { img.src = imgUrl; imgWrap.style.display = ""; }
+    else { img.removeAttribute("src"); imgWrap.style.display = "none"; }
   }
 
-  // VIDEO (mp4 ou embed)
+  // VIDEO — heuristique :
+  // - Si emb contient <iframe> ou un host "embed" => iframe
+  // - Sinon, on joue la vidéo dans <video> (mp4/webm/ogg), parfait pour Firebase Storage
   const vidWrap = document.querySelector('[data-optional="video"]');
-  const mp4 = cfg.media?.videoMp4;
-  const emb = cfg.media?.videoEmbed;
-  const allowVideo = cfg.ui?.showVideo && (mp4 || emb);
-
   const vid = document.getElementById("hero-mp4");
   const iframeHost = document.getElementById("hero-embed");
 
-  if (allowVideo) {
-    if (mp4 && vid) {
-      vid.src = mp4; show(vid); hide(iframeHost);
-    } else if (emb && iframeHost) {
-      if (emb.startsWith("<iframe")) {
-        iframeHost.innerHTML = emb;
-      } else {
-        iframeHost.innerHTML = `<iframe src="${emb}" frameborder="0" allow="autoplay; fullscreen" allowfullscreen style="width:100%;height:100%"></iframe>`;
-      }
-      show(iframeHost); hide(vid);
-    }
-    show(vidWrap);
-  } else {
-    hide(vidWrap);
+  const raw = (cfg.videoUrl || "").trim(); // legacy éventuel
+  let mp4 = (cfg.media?.videoMp4 || "").trim();
+  let emb = (cfg.media?.videoEmbed || "").trim();
+
+  const candidate = mp4 || emb || raw;
+
+  const isEmbedHost = (u) => {
+    try {
+      const h = new URL(u).hostname;
+      return /(youtube\.com|youtu\.be|vimeo\.com|player\.vimeo\.com|loom\.com|dailymotion\.com|twitch\.tv)/i.test(h);
+    } catch { return false; }
+  };
+
+  // Reclassement tolérant si besoin
+  if (!mp4 && candidate && !isEmbedHost(candidate) && !candidate.startsWith("<iframe")) {
+    mp4 = candidate;   // Firebase/Storage → <video>
+    emb = "";
+  } else if (!emb && candidate && (isEmbedHost(candidate) || candidate.startsWith("<iframe"))) {
+    emb = candidate;   // YouTube/Vimeo → <iframe>
+    mp4 = "";
+  }
+
+  if (!vidWrap || (!mp4 && !emb)) {
+    if (vidWrap) vidWrap.style.display = "none";
     if (vid) vid.removeAttribute("src");
     if (iframeHost) iframeHost.innerHTML = "";
+    return;
+  }
+
+  if (mp4 && vid) {
+    vid.src = mp4;
+    vid.style.display = "";
+    if (iframeHost) { iframeHost.innerHTML = ""; iframeHost.style.display = "none"; }
+    vidWrap.style.display = "";
+  } else if (emb && iframeHost) {
+    if (emb.startsWith("<iframe")) iframeHost.innerHTML = emb;
+    else iframeHost.innerHTML = `<iframe src="${emb}" frameborder="0" allow="autoplay; fullscreen" allowfullscreen style="width:100%;height:100%"></iframe>`;
+    iframeHost.style.display = "";
+    if (vid) { vid.removeAttribute("src"); vid.style.display = "none"; }
+    vidWrap.style.display = "";
   }
 }
 
