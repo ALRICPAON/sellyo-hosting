@@ -1,0 +1,20 @@
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test</title>
+    <style>
+        body { background-color: #00ccff; color: #fff; font-family: Arial, sans-serif; }
+        a, button { background-color: #00ccff; border: none; color: #fff; padding: 10px 20px; text-decoration: none; font-size: 16px; cursor: pointer; }
+        button:disabled { background-color: #888; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+    <h1>test</h1>
+
+    <button disabled>etst</button>
+</body>
+</html>
+```
