@@ -2,8 +2,8 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <title>{{seo.metaTitle}}</title>
-  <meta name="description" content="{{seo.metaDescription}}" />
+  <title>{{133.seo.metaTitle}}</title>
+  <meta name="description" content="{{133.seo.metaDescription}}" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root { --bg:#0b1220; --btn:#3b82f6; }
@@ -11,26 +11,29 @@
     main { max-width:900px; margin:0 auto; padding:24px; text-align:center; }
     header { display:flex; justify-content:center; padding:16px 0; }
     header img { max-height:56px; display:block; }
-    .media img { max-width:80%; max-height:300px; display:block; margin:16px auto; border-radius:12px; }
+    .media img, .media video { max-width:80%; max-height:300px; display:block; margin:16px auto; border-radius:12px; }
     h1 { font-size:clamp(26px,3.2vw,38px); margin:8px 0 6px; }
     p.sub { opacity:.9; margin:0 0 14px; }
     .btn-secondary { background:transparent; color:#fff; border:2px solid #fff; border-radius:12px; padding:10px 16px; text-decoration:none; display:inline-block; margin-top:8px; }
   </style>
 </head>
 <body>
-  <header><img src="{{brand.logoUrl}}" alt="" /></header>
+  <header><img src="{{133.logoUrl}}" alt="" /></header>
 
   <main>
-    <div class="media"><img src="{{media.imageUrl}}" alt="" /></div>
+    <div class="media">
+      <video src="{{133.media.videoMp4}}" controls></video>
+      <img src="{{133.media.imageUrl}}" alt="" />
+    </div>
 
-    <h1>{{copy.title}}</h1>
-    <p class="sub">{{copy.subtitle}}</p>
+    <h1>{{133.title}}</h1>
+    <p class="sub">{{133.subtitle}}</p>
 
-    <p>{{copy.productDescription}}</p>
-    <p>{{copy.guarantee}}</p>
+    <p>{{133.productDescription}}</p>
+    <p>{{133.copy.guarantee}}</p>
 
     <!-- bouton de livraison (affiché si URL présente) -->
-    <a href="{{download.url}}" class="btn-secondary">Télécharger</a>
+    <a href="{{133.productUrl}}" class="btn-secondary">Télécharger</a>
   </main>
 </body>
 </html>
