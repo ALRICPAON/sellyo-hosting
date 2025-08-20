@@ -2,38 +2,34 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <title>{{133.seo.metaTitle}}</title>
-  <meta name="description" content="{{133.seo.metaDescription}}" />
+  <title>{{seo.metaTitle}}</title>
+  <meta name="description" content="{{seo.metaDescription}}" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root { --bg:#0b1220; --btn:#3b82f6; }
-    body { margin:0; background:var(--bg); color:#fff; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; }
-    main { max-width:900px; margin:0 auto; padding:24px; text-align:center; }
-    header { display:flex; justify-content:center; padding:16px 0; }
-    header img { max-height:56px; display:block; }
-    .media img, .media video { max-width:80%; max-height:300px; display:block; margin:16px auto; border-radius:12px; }
-    h1 { font-size:clamp(26px,3.2vw,38px); margin:8px 0 6px; }
-    p.sub { opacity:.9; margin:0 0 14px; }
-    .btn-secondary { background:transparent; color:#fff; border:2px solid #fff; border-radius:12px; padding:10px 16px; text-decoration:none; display:inline-block; margin-top:8px; }
+    :root{ --bg:#0b1220; --btn: {{ui.buttonColor}}; --text:#fff }
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui}
+    main{max-width:900px;margin:0 auto;padding:24px;text-align:center}
+    header{display:flex;justify-content:center;padding:16px 0}
+    header img{max-height:56px}
+    .btn{display:inline-block;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-decoration:none}
+    .btn-ghost{display:inline-block;padding:12px 16px;border-radius:12px;background:transparent;color:#fff;border:2px solid #fff;text-decoration:none;margin-left:8px}
+    .media img,.media video{max-width:90%;max-height:320px;margin:12px auto;border-radius:14px;display:block}
   </style>
 </head>
 <body>
-  <header><img src="{{133.logoUrl}}" alt="" /></header>
-
+  <header><img src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'"></header>
   <main>
     <div class="media">
-      <video src="{{133.media.videoMp4}}" controls></video>
-      <img src="{{133.media.imageUrl}}" alt="" />
+      <video src="{{media.videoMp4}}" controls playsinline onerror="this.style.display='none'"></video>
+      <img src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
     </div>
-
-    <h1>{{133.title}}</h1>
-    <p class="sub">{{133.subtitle}}</p>
-
-    <p>{{133.productDescription}}</p>
-    <p>{{133.copy.guarantee}}</p>
-
-    <!-- bouton de livraison (affiché si URL présente) -->
-    <a href="{{133.productUrl}}" class="btn-secondary">Télécharger</a>
+    <h1>Merci 🎉</h1>
+    <p>{{thankyouText}}</p>
+    <div style="margin-top:12px">
+      <a class="btn" href="{{download.url}}">Télécharger</a>
+      <a class="btn-ghost" href="{{flow.nextHref}}">Continuer</a>
+    </div>
+    <div style="margin-top:18px"><em>{{copy.guarantee}}</em></div>
   </main>
 </body>
 </html>
