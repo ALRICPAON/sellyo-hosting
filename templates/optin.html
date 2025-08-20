@@ -2,65 +2,172 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <title>{{133.seo.metaTitle}}</title>
-  <meta name="description" content="{{133.seo.metaDescription}}" />
+  <title>{{seo.metaTitle}}</title>
+  <meta name="description" content="{{seo.metaDescription}}" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root { --bg:#0b1220; --btn:#3b82f6; }
-    body { margin:0; background:var(--bg); color:#fff; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; }
-    main { max-width:1100px; margin:0 auto; padding:24px; }
-    header { display:flex; justify-content:center; padding:16px 0; }
-    header img { max-height:56px; display:block; }
-    .media img, .media video { max-width:80%; max-height:320px; display:block; margin:16px auto; border-radius:12px; }
-    h1 { font-size:clamp(26px,3.3vw,40px); margin:8px 0 6px; text-align:center; }
-    p.sub { opacity:.85; text-align:center; margin:0 0 14px; }
-    .cols { display:grid; gap:18px; grid-template-columns:1fr; }
-    @media(min-width:880px){ .cols { grid-template-columns:1.1fr .9fr; align-items:start; } }
-    .card { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); border-radius:14px; padding:18px; }
-    .btn-primary { background:var(--btn); color:#fff; font-weight:700; border:0; border-radius:12px; padding:12px 18px; cursor:pointer; width:100%; }
-    form input, form textarea { width:100%; padding:12px; border-radius:10px; border:0; margin:8px 0; }
-    ul { margin:10px 0; padding-left:22px; }
+    :root {
+      --bg: {{ui.mainColor}};
+      --btn: {{ui.buttonColor}};
+      --text: #fff;
+    }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+    main { max-width: 1100px; margin: 0 auto; padding: 24px; }
+    header { display: flex; justify-content: center; padding: 16px 0; }
+    header img { max-height: 56px; display: block; }
+
+    .hero-top {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .hero-top h1 { font-size: clamp(28px, 3.5vw, 42px); margin: 8px 0; }
+    .hero-top p { opacity: .85; margin: 0; }
+
+    .cols {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: 1fr;
+    }
+    @media(min-width: 880px) {
+      .cols { grid-template-columns: 1.1fr .9fr; align-items: start; }
+    }
+
+    .card {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 14px;
+      padding: 18px;
+    }
+    .media img, .media video {
+      max-width: 100%;
+      max-height: 340px;
+      display: block;
+      margin: 0 auto 12px;
+      border-radius: 12px;
+    }
+    .btn-primary {
+      background: var(--btn);
+      color: #fff;
+      font-weight: 700;
+      border: 0;
+      border-radius: 12px;
+      padding: 12px 18px;
+      cursor: pointer;
+      width: 100%;
+    }
+    form input, form textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 0;
+      margin: 8px 0;
+    }
+    ul { margin: 10px 0; padding-left: 22px; }
+    .hidden { display: none; }
+    .timer {
+      font-weight: bold;
+      text-align: center;
+      margin: 12px 0;
+      font-size: 20px;
+      color: #facc15;
+    }
+    .faq, .testimonials {
+      margin-top: 18px;
+    }
+    .faq h3, .testimonials h3 {
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+    .faq-item, .testimonial-item {
+      margin-bottom: 8px;
+      padding: 10px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+    }
   </style>
 </head>
 <body>
   <header>
-    <img src="{{133.logoUrl}}" alt="" />
+    <img src="{{brand.logoUrl}}" alt="Logo" />
   </header>
 
   <main>
-    <div class="media">
-      <video src="{{133.media.videoMp4}}" controls></video>
-      <img src="{{133.media.imageUrl}}" alt="" />
+    <div class="hero-top">
+      <h1>{{copy.title}}</h1>
+      <p>{{copy.subtitle}}</p>
     </div>
 
-    <h1>{{133.title}}</h1>
-    <p class="sub">{{133.subtitle}}</p>
-
     <div class="cols">
+      <!-- Colonne gauche : image/vidéo + description -->
       <section class="card">
-        <div>{{133.productDescription}}</div>
-        <div>{{133.copy.bullets}}</div>
-        <div>{{133.copy.benefits}}</div>
-        <div>{{133.copy.guarantee}}</div>
+        <div class="media">
+          {{#if media.videoMp4}}
+            <video src="{{media.videoMp4}}" controls></video>
+          {{/if}}
+          {{#if media.imageUrl}}
+            <img src="{{media.imageUrl}}" alt="Visuel" />
+          {{/if}}
+        </div>
+
+        <!-- Description principale -->
+        <div class="description">{{copy.productDescription}}</div>
+
+        <!-- Problème -->
+        <div class="hidden" id="bloc-problem">{{copy.problem}}</div>
+
+        <!-- Solution -->
+        <div class="hidden" id="bloc-solution">{{copy.solution}}</div>
+
+        <!-- Bénéfices clés -->
+        <ul class="hidden" id="bloc-benefits">
+          {{#each copy.benefits}}
+            <li>{{this}}</li>
+          {{/each}}
+        </ul>
+
+        <!-- Garantie -->
+        <div class="hidden" id="bloc-guarantee">{{copy.guarantee}}</div>
+
+        <!-- Témoignages -->
+        <div class="testimonials hidden" id="bloc-testimonials">
+          <h3>Témoignages</h3>
+          {{#each testimonials}}
+            <div class="testimonial-item">{{this}}</div>
+          {{/each}}
+        </div>
+
+        <!-- FAQ -->
+        <div class="faq hidden" id="bloc-faq">
+          <h3>FAQ</h3>
+          {{#each faqs}}
+            <div class="faq-item">{{this}}</div>
+          {{/each}}
+        </div>
       </section>
 
+      <!-- Colonne droite : formulaire + timer -->
       <aside class="card">
-        <!-- Formulaire optin (save-lead-tunnel.js gère la soumission) -->
-        <form id="lead-form" data-role="capture" data-next="{{133.flow.nextSlug}}.html">
+        <!-- Timer -->
+        <div class="timer hidden" id="offer-timer"></div>
+
+        <!-- Formulaire optin -->
+        <form id="lead-form" data-role="capture" data-next="{{flow.nextSlug}}.html">
           <input name="firstName" placeholder="Prénom" />
           <input name="lastName" placeholder="Nom" />
           <input name="email" type="email" placeholder="Email" required />
           <input name="phone" placeholder="Téléphone" />
           <input name="address" placeholder="Adresse" />
-
-          <!-- champs cachés (seront surchargés par le script ci-dessous) -->
-          <input type="hidden" name="userId" value="{{1.userId}}" />
-          <input type="hidden" name="pageSlug" value="{{133.slug}}" />
-          <input type="hidden" name="slug" value="{{1.slug}}" />
+          <input type="hidden" name="userId" value="{{userId}}" />
+          <input type="hidden" name="pageSlug" value="{{slug}}" />
+          <input type="hidden" name="slug" value="{{slug}}" />
           <input type="hidden" name="type" value="tunnel" />
-          <input type="hidden" name="nextUrl" value="{{133.flow.nextSlug}}.html" />
-
-          <button type="submit" class="btn-primary">{{133.ctaText}}</button>
+          <input type="hidden" name="nextUrl" value="{{flow.nextSlug}}.html" />
+          <button type="submit" class="btn-primary">{{copy.ctaText}}</button>
         </form>
       </aside>
     </div>
@@ -69,64 +176,26 @@
   <!-- scripts optin requis -->
   <script type="module" src="https://alricpaon.github.io/sellyo-hosting/js/firebase-init.js"></script>
   <script type="module" src="https://alricpaon.github.io/sellyo-hosting/js/save-lead-tunnel.js"></script>
+  <script>
+    // Masquer les sections vides
+    ["bloc-problem","bloc-solution","bloc-benefits","bloc-guarantee","bloc-testimonials","bloc-faq"]
+      .forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.innerText.trim() !== "") el.classList.remove("hidden");
+      });
 
-  <!-- Masquer médias vides + auto-remplissage UID/slug/pageSlug -->
-  <script type="module">
-    // Masque image/vidéo si src vide
-    (function(){
-      const v=document.querySelector(".media video");
-      const i=document.querySelector(".media img");
-      if(v && (!v.getAttribute("src") || v.getAttribute("src")==="")) v.style.display="none";
-      if(i && (!i.getAttribute("src") || i.getAttribute("src")==="")) i.style.display="none";
-    })();
-  </script>
-
-  <script type="module">
-    import { app } from "https://alricpaon.github.io/sellyo-hosting/js/firebase-init.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-    const form = document.getElementById("lead-form");
-    if (!form) {
-      console.warn("lead-form introuvable");
-    } else {
-      // URL attendue: /tunnels/<uid>/<slug>/<page>.html (sur GitHub Pages avec prefix /sellyo-hosting/…)
-      const parts = location.pathname.split("/").filter(Boolean);
-      const pageFile = parts.pop() || "";              // <page>.html
-      const tunnelSlug = parts.pop() || "";            // <slug>
-      const uidFromPath = parts.pop() || "";           // <uid> (si la structure est respectée)
-      const pageSlug = pageFile.replace(/\.html$/,""); // <page> sans .html
-
-      const isTemplate = (val) => !val || /\{\{.*\}\}/.test(String(val));
-      const setField = (name, val) => {
-        const el = form.querySelector(`input[name="${name}"]`);
-        if (!el) return;
-        if (isTemplate(el.value) || !el.value) el.value = val || "";
+    // Timer Evergreen
+    const evergreenMinutes = {{timers.evergreenMinutes}};
+    if (evergreenMinutes && evergreenMinutes > 0) {
+      const el = document.getElementById("offer-timer");
+      el.classList.remove("hidden");
+      let remaining = evergreenMinutes * 60;
+      const format = s => `${Math.floor(s/60)}:${("0"+(s%60)).slice(-2)}`;
+      const tick = () => {
+        el.innerText = "Offre expire dans " + format(remaining);
+        if (remaining > 0) { remaining--; setTimeout(tick,1000); }
       };
-
-      // Remplir slug + pageSlug depuis le chemin
-      setField("slug", tunnelSlug);
-      setField("pageSlug", pageSlug);
-
-      // Pré-remplir userId depuis l'URL si présent
-      if (uidFromPath) setField("userId", uidFromPath);
-
-      // Surclassement par Firebase Auth si connecté
-      const auth = getAuth(app);
-      onAuthStateChanged(auth, (user) => {
-        if (user && user.uid) {
-          setField("userId", user.uid);
-        }
-      });
-
-      // Filet de sécurité au submit
-      form.addEventListener("submit", (e) => {
-        const userId = (form.querySelector('input[name="userId"]')?.value || "").trim();
-        if (!userId) {
-          e.preventDefault();
-          alert("Veuillez vous connecter pour enregistrer le lead.");
-          window.location.href = "index.html";
-        }
-      });
+      tick();
     }
   </script>
 </body>
