@@ -2,9 +2,10 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <title>{{seo.metaTitle}}</title>
+  <title>{{copy.title}}</title>
   <meta name="description" content="{{seo.metaDescription}}" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <style>
     :root {
       --bg: {{ui.mainColor}};
@@ -17,14 +18,12 @@
       color: var(--text);
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
+
     main { max-width: 1100px; margin: 0 auto; padding: 24px; }
     header { display: flex; justify-content: center; padding: 16px 0; }
     header img { max-height: 56px; display: block; }
 
-    .hero-top {
-      text-align: center;
-      margin-bottom: 16px;
-    }
+    .hero-top { text-align: center; margin-bottom: 16px; }
     .hero-top h1 { font-size: clamp(28px, 3.5vw, 42px); margin: 8px 0; }
     .hero-top p { opacity: .85; margin: 0; }
 
@@ -43,6 +42,7 @@
       border-radius: 14px;
       padding: 18px;
     }
+
     .media img, .media video {
       max-width: 100%;
       max-height: 340px;
@@ -50,6 +50,7 @@
       margin: 0 auto 12px;
       border-radius: 12px;
     }
+
     .btn-primary {
       background: var(--btn);
       color: #fff;
@@ -60,6 +61,7 @@
       cursor: pointer;
       width: 100%;
     }
+
     form input, form textarea {
       width: 100%;
       padding: 12px;
@@ -67,8 +69,11 @@
       border: 0;
       margin: 8px 0;
     }
+
     ul { margin: 10px 0; padding-left: 22px; }
+
     .hidden { display: none; }
+
     .timer {
       font-weight: bold;
       text-align: center;
@@ -76,13 +81,9 @@
       font-size: 20px;
       color: #facc15;
     }
-    .faq, .testimonials {
-      margin-top: 18px;
-    }
-    .faq h3, .testimonials h3 {
-      margin-bottom: 8px;
-      font-size: 18px;
-    }
+
+    .faq, .testimonials { margin-top: 18px; }
+    .faq h3, .testimonials h3 { margin-bottom: 8px; font-size: 18px; }
     .faq-item, .testimonial-item {
       margin-bottom: 8px;
       padding: 10px;
@@ -93,7 +94,7 @@
 </head>
 <body>
   <header>
-    <img src="{{brand.logoUrl}}" alt="Logo" />
+    <img src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'" />
   </header>
 
   <main>
@@ -108,9 +109,10 @@
         <div class="media">
           {{#if media.videoMp4}}
             <video src="{{media.videoMp4}}" controls></video>
-          {{/if}}
-          {{#if media.imageUrl}}
-            <img src="{{media.imageUrl}}" alt="Visuel" />
+          {{else if media.videoEmbed}}
+            <iframe src="{{media.videoEmbed}}" width="100%" height="340" style="border:none;border-radius:12px" allowfullscreen></iframe>
+          {{else if media.imageUrl}}
+            <img src="{{media.imageUrl}}" alt="Image" />
           {{/if}}
         </div>
 
@@ -137,7 +139,7 @@
         <div class="testimonials hidden" id="bloc-testimonials">
           <h3>Témoignages</h3>
           {{#each testimonials}}
-            <div class="testimonial-item">{{this}}</div>
+            <div class="testimonial-item">"{{this}}"</div>
           {{/each}}
         </div>
 
@@ -145,7 +147,7 @@
         <div class="faq hidden" id="bloc-faq">
           <h3>FAQ</h3>
           {{#each faqs}}
-            <div class="faq-item">{{this}}</div>
+            <div class="faq-item"><strong>{{this.q}}</strong><br/>{{this.a}}</div>
           {{/each}}
         </div>
       </section>
@@ -162,11 +164,13 @@
           <input name="email" type="email" placeholder="Email" required />
           <input name="phone" placeholder="Téléphone" />
           <input name="address" placeholder="Adresse" />
+
           <input type="hidden" name="userId" value="{{userId}}" />
           <input type="hidden" name="pageSlug" value="{{slug}}" />
           <input type="hidden" name="slug" value="{{slug}}" />
           <input type="hidden" name="type" value="tunnel" />
           <input type="hidden" name="nextUrl" value="{{flow.nextSlug}}.html" />
+
           <button type="submit" class="btn-primary">{{copy.ctaText}}</button>
         </form>
       </aside>
