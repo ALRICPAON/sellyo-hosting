@@ -2,205 +2,107 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <title>{{copy.title}}</title>
+  <title>{{seo.metaTitle}}</title>
   <meta name="description" content="{{seo.metaDescription}}" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
   <style>
-    :root {
-      --bg: {{ui.mainColor}};
-      --btn: {{ui.buttonColor}};
-      --text: #fff;
-    }
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    }
-
-    main { max-width: 1100px; margin: 0 auto; padding: 24px; }
-    header { display: flex; justify-content: center; padding: 16px 0; }
-    header img { max-height: 56px; display: block; }
-
-    .hero-top { text-align: center; margin-bottom: 16px; }
-    .hero-top h1 { font-size: clamp(28px, 3.5vw, 42px); margin: 8px 0; }
-    .hero-top p { opacity: .85; margin: 0; }
-
-    .cols {
-      display: grid;
-      gap: 18px;
-      grid-template-columns: 1fr;
-    }
-    @media(min-width: 880px) {
-      .cols { grid-template-columns: 1.1fr .9fr; align-items: start; }
-    }
-
-    .card {
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 14px;
-      padding: 18px;
-    }
-
-    .media img, .media video {
-      max-width: 100%;
-      max-height: 340px;
-      display: block;
-      margin: 0 auto 12px;
-      border-radius: 12px;
-    }
-
-    .btn-primary {
-      background: var(--btn);
-      color: #fff;
-      font-weight: 700;
-      border: 0;
-      border-radius: 12px;
-      padding: 12px 18px;
-      cursor: pointer;
-      width: 100%;
-    }
-
-    form input, form textarea {
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
-      border: 0;
-      margin: 8px 0;
-    }
-
-    ul { margin: 10px 0; padding-left: 22px; }
-
-    .hidden { display: none; }
-
-    .timer {
-      font-weight: bold;
-      text-align: center;
-      margin: 12px 0;
-      font-size: 20px;
-      color: #facc15;
-    }
-
-    .faq, .testimonials { margin-top: 18px; }
-    .faq h3, .testimonials h3 { margin-bottom: 8px; font-size: 18px; }
-    .faq-item, .testimonial-item {
-      margin-bottom: 8px;
-      padding: 10px;
-      background: rgba(255,255,255,0.05);
-      border-radius: 10px;
-    }
+    :root{ --bg:#0b1220; --main: {{ui.mainColor}}; --btn: {{ui.buttonColor}}; --text:#fff }
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    main{max-width:1100px;margin:0 auto;padding:24px}
+    header{display:flex;justify-content:center;padding:16px 0}
+    header img{max-height:56px;display:block}
+    .cols{display:grid;gap:18px;grid-template-columns:1fr} @media(min-width:880px){.cols{grid-template-columns:1.1fr .9fr;align-items:start}}
+    .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
+    .media img,.media video{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block}
+    h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0} .sub{opacity:.9;margin:0 0 14px}
+    .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
+    form input,form textarea{width:100%;padding:12px;border-radius:10px;border:0;margin:8px 0;background:#ffffff12;color:#fff}
+    .badge{display:inline-block;background:#ffffff1a;padding:6px 10px;border-radius:999px;margin:6px 6px 0 0}
+    .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
+    .hide{display:none}
   </style>
 </head>
 <body>
-  <header>
-    <img src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'" />
-  </header>
-
+  <header><img src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'"></header>
   <main>
-    <div class="hero-top">
+    <section class="card">
+      <div class="media">
+        <video src="{{media.videoMp4}}" controls playsinline onerror="this.style.display='none'"></video>
+        <img src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
+      </div>
       <h1>{{copy.title}}</h1>
-      <p>{{copy.subtitle}}</p>
-    </div>
+      <p class="sub">{{copy.subtitle}}</p>
+      <div id="badges" class="hide">{{components.badges}}</div>
+    </section>
 
     <div class="cols">
-      <!-- Colonne gauche : image/vidéo + description -->
       <section class="card">
-        <div class="media">
-          {{#if media.videoMp4}}
-            <video src="{{media.videoMp4}}" controls></video>
-          {{else if media.videoEmbed}}
-            <iframe src="{{media.videoEmbed}}" width="100%" height="340" style="border:none;border-radius:12px" allowfullscreen></iframe>
-          {{else if media.imageUrl}}
-            <img src="{{media.imageUrl}}" alt="Image" />
-          {{/if}}
-        </div>
+        <div id="desc">{{copy.productDescription}}</div>
+        <h3 id="h-prob" class="hide">Le problème</h3><div id="prob">{{copy.problem}}</div>
+        <h3 id="h-sol" class="hide">La solution</h3><div id="sol">{{copy.solution}}</div>
+        <h3 id="h-ben" class="hide">Bénéfices</h3><div id="ben">{{copy.benefits}}</div>
+        <h3 id="h-bul" class="hide">Ce que vous obtenez</h3><div id="bul">{{copy.bullets}}</div>
+        <div id="gua" class="hide" style="margin-top:8px"><em>{{copy.guarantee}}</em></div>
 
-        <!-- Description principale -->
-        <div class="description">{{copy.productDescription}}</div>
-
-        <!-- Problème -->
-        <div class="hidden" id="bloc-problem">{{copy.problem}}</div>
-
-        <!-- Solution -->
-        <div class="hidden" id="bloc-solution">{{copy.solution}}</div>
-
-        <!-- Bénéfices clés -->
-        <ul class="hidden" id="bloc-benefits">
-          {{#each copy.benefits}}
-            <li>{{this}}</li>
-          {{/each}}
-        </ul>
-
-        <!-- Garantie -->
-        <div class="hidden" id="bloc-guarantee">{{copy.guarantee}}</div>
-
-        <!-- Témoignages -->
-        <div class="testimonials hidden" id="bloc-testimonials">
+        <div id="testi" class="hide" style="margin-top:12px">
           <h3>Témoignages</h3>
-          {{#each testimonials}}
-            <div class="testimonial-item">"{{this}}"</div>
-          {{/each}}
+          <div>{{testimonials}}</div>
         </div>
 
-        <!-- FAQ -->
-        <div class="faq hidden" id="bloc-faq">
+        <div id="faq" class="hide" style="margin-top:12px">
           <h3>FAQ</h3>
-          {{#each faqs}}
-            <div class="faq-item"><strong>{{this.q}}</strong><br/>{{this.a}}</div>
-          {{/each}}
+          <div>{{faqs}}</div>
         </div>
       </section>
 
-      <!-- Colonne droite : formulaire + timer -->
       <aside class="card">
-        <!-- Timer -->
-        <div class="timer hidden" id="offer-timer"></div>
-
-        <!-- Formulaire optin -->
-        <form id="lead-form" data-role="capture" data-next="{{flow.nextSlug}}.html">
-          <input name="firstName" placeholder="Prénom" />
-          <input name="lastName" placeholder="Nom" />
-          <input name="email" type="email" placeholder="Email" required />
-          <input name="phone" placeholder="Téléphone" />
-          <input name="address" placeholder="Adresse" />
-
+        <div id="timer" class="timer hide"></div>
+        <form id="lead-form" data-role="capture" data-next="{{flow.nextHref}}">
+          {{formFields}}
           <input type="hidden" name="userId" value="{{userId}}" />
           <input type="hidden" name="pageSlug" value="{{slug}}" />
           <input type="hidden" name="slug" value="{{slug}}" />
           <input type="hidden" name="type" value="tunnel" />
-          <input type="hidden" name="nextUrl" value="{{flow.nextSlug}}.html" />
-
-          <button type="submit" class="btn-primary">{{copy.ctaText}}</button>
+          <input type="hidden" name="nextUrl" value="{{flow.nextHref}}" />
+          <button type="submit" class="btn">{{copy.ctaText}}</button>
         </form>
+        <div id="progress" class="hide" style="margin-top:10px">{{components.progressBar}}</div>
       </aside>
     </div>
   </main>
 
-  <!-- scripts optin requis -->
+  <!-- scripts capture requis -->
   <script type="module" src="https://alricpaon.github.io/sellyo-hosting/js/firebase-init.js"></script>
   <script type="module" src="https://alricpaon.github.io/sellyo-hosting/js/save-lead-tunnel.js"></script>
-  <script>
-    // Masquer les sections vides
-    ["bloc-problem","bloc-solution","bloc-benefits","bloc-guarantee","bloc-testimonials","bloc-faq"]
-      .forEach(id => {
-        const el = document.getElementById(id);
-        if (el && el.innerText.trim() !== "") el.classList.remove("hidden");
-      });
 
-    // Timer Evergreen
-    const evergreenMinutes = {{timers.evergreenMinutes}};
-    if (evergreenMinutes && evergreenMinutes > 0) {
-      const el = document.getElementById("offer-timer");
-      el.classList.remove("hidden");
-      let remaining = evergreenMinutes * 60;
-      const format = s => `${Math.floor(s/60)}:${("0"+(s%60)).slice(-2)}`;
-      const tick = () => {
-        el.innerText = "Offre expire dans " + format(remaining);
-        if (remaining > 0) { remaining--; setTimeout(tick,1000); }
-      };
-      tick();
-    }
+  <script>
+    // Affiche/masque les blocs vides
+    (function(){
+      const showIf = (id) => { const el = document.getElementById(id); if(!el) return; if((el.textContent||'').trim()) el.classList.remove('hide'); };
+      ['badges','h-prob','prob','h-sol','sol','h-ben','ben','h-bul','bul','gua','testi','faq','progress'].forEach(showIf);
+      // Timer
+      const evergreen = parseInt('{{timers.evergreenMinutes}}',10)||0;
+      const deadlineISO = '{{timers.deadlineISO}}';
+      const t = document.getElementById('timer');
+      function renderTimer(sec){
+        if(sec<=0){ t.textContent = 'Offre expirée'; return; }
+        const m = Math.floor(sec/60), s = sec%60;
+        t.textContent = 'Offre expire dans ' + m + 'm ' + ('0'+s).slice(-2) + 's';
+      }
+      let total = 0;
+      if(evergreen>0) total = evergreen*60;
+      else if(deadlineISO && !isNaN(Date.parse(deadlineISO))) total = Math.max(0, Math.floor((new Date(deadlineISO)-new Date())/1000));
+      if(total>0){ t.classList.remove('hide'); const tick=()=>{renderTimer(total--); if(total>=0) setTimeout(tick,1000)}; tick(); }
+    })();
+    // Pixels
+    (function(){
+      var fb='{{analytics.fbPixelId}}'.trim(); if(fb){!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
+      s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script');
+      fbq('init', fb); fbq('track','PageView');}
+      var gtm='{{analytics.gtmId}}'.trim(); if(gtm){var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+gtm;document.head.appendChild(s)}
+    })();
   </script>
 </body>
 </html>
