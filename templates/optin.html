@@ -52,11 +52,14 @@
           <input name="email" type="email" placeholder="Email" required />
           <input name="phone" placeholder="Téléphone" />
           <input name="address" placeholder="Adresse" />
+
+          <!-- champs cachés (seront surchargés par le script ci-dessous) -->
           <input type="hidden" name="userId" value="{{1.userId}}" />
           <input type="hidden" name="pageSlug" value="{{133.slug}}" />
           <input type="hidden" name="slug" value="{{1.slug}}" />
           <input type="hidden" name="type" value="tunnel" />
           <input type="hidden" name="nextUrl" value="{{133.flow.nextSlug}}.html" />
+
           <button type="submit" class="btn-primary">{{133.ctaText}}</button>
         </form>
       </aside>
@@ -66,5 +69,65 @@
   <!-- scripts optin requis -->
   <script type="module" src="https://alricpaon.github.io/sellyo-hosting/js/firebase-init.js"></script>
   <script type="module" src="https://alricpaon.github.io/sellyo-hosting/js/save-lead-tunnel.js"></script>
+
+  <!-- Masquer médias vides + auto-remplissage UID/slug/pageSlug -->
+  <script type="module">
+    // Masque image/vidéo si src vide
+    (function(){
+      const v=document.querySelector(".media video");
+      const i=document.querySelector(".media img");
+      if(v && (!v.getAttribute("src") || v.getAttribute("src")==="")) v.style.display="none";
+      if(i && (!i.getAttribute("src") || i.getAttribute("src")==="")) i.style.display="none";
+    })();
+  </script>
+
+  <script type="module">
+    import { app } from "https://alricpaon.github.io/sellyo-hosting/js/firebase-init.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    const form = document.getElementById("lead-form");
+    if (!form) {
+      console.warn("lead-form introuvable");
+    } else {
+      // URL attendue: /tunnels/<uid>/<slug>/<page>.html (sur GitHub Pages avec prefix /sellyo-hosting/…)
+      const parts = location.pathname.split("/").filter(Boolean);
+      const pageFile = parts.pop() || "";              // <page>.html
+      const tunnelSlug = parts.pop() || "";            // <slug>
+      const uidFromPath = parts.pop() || "";           // <uid> (si la structure est respectée)
+      const pageSlug = pageFile.replace(/\.html$/,""); // <page> sans .html
+
+      const isTemplate = (val) => !val || /\{\{.*\}\}/.test(String(val));
+      const setField = (name, val) => {
+        const el = form.querySelector(`input[name="${name}"]`);
+        if (!el) return;
+        if (isTemplate(el.value) || !el.value) el.value = val || "";
+      };
+
+      // Remplir slug + pageSlug depuis le chemin
+      setField("slug", tunnelSlug);
+      setField("pageSlug", pageSlug);
+
+      // Pré-remplir userId depuis l'URL si présent
+      if (uidFromPath) setField("userId", uidFromPath);
+
+      // Surclassement par Firebase Auth si connecté
+      const auth = getAuth(app);
+      onAuthStateChanged(auth, (user) => {
+        if (user && user.uid) {
+          setField("userId", user.uid);
+        }
+      });
+
+      // Filet de sécurité au submit
+      form.addEventListener("submit", (e) => {
+        const userId = (form.querySelector('input[name="userId"]')?.value || "").trim();
+        if (!userId) {
+          e.preventDefault();
+          alert("Veuillez vous connecter pour enregistrer le lead.");
+          window.location.href = "index.html";
+        }
+      });
+    }
+  </script>
 </body>
 </html>
