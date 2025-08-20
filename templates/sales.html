@@ -2,49 +2,84 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <title>{{133.seo.metaTitle}}</title>
-  <meta name="description" content="{{133.seo.metaDescription}}" />
+  <title>{{seo.metaTitle}}</title>
+  <meta name="description" content="{{seo.metaDescription}}" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root { --bg:#0b1220; --btn:#3b82f6; }
-    body { margin:0; background:var(--bg); color:#fff; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; }
-    main { max-width:1100px; margin:0 auto; padding:24px; }
-    header { display:flex; justify-content:center; padding:16px 0; }
-    header img { max-height:56px; display:block; }
-    .media img, .media video { max-width:80%; max-height:340px; display:block; margin:18px auto; border-radius:12px; }
-    h1 { font-size:clamp(26px,3.3vw,40px); margin:8px 0 6px; text-align:center; }
-    p.sub { opacity:.85; text-align:center; margin:0 0 16px; }
-    .grid { display:grid; gap:18px; grid-template-columns:1fr; }
-    @media(min-width:900px){ .grid { grid-template-columns:1.1fr .9fr; } }
-    .card { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); border-radius:14px; padding:18px; }
-    .btn-primary { background:var(--btn); color:#fff; font-weight:700; border:0; border-radius:12px; padding:12px 18px; cursor:pointer; text-decoration:none; display:inline-block; }
-    ul { margin:10px 0; padding-left:22px; }
+    :root{ --bg:#0b1220; --main: {{ui.mainColor}}; --btn: {{ui.buttonColor}}; --text:#fff }
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    main{max-width:1100px;margin:0 auto;padding:24px}
+    header{display:flex;justify-content:center;padding:16px 0}
+    header img{max-height:56px;display:block}
+    .media img,.media video{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
+    h1{font-size:clamp(28px,3.5vw,44px);margin:8px 0} .sub{opacity:.9;margin:0 0 16px}
+    .grid{display:grid;gap:18px;grid-template-columns:1fr} @media(min-width:900px){.grid{grid-template-columns:1.1fr .9fr}}
+    .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
+    .btn{display:inline-block;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
+    .price{font-size:28px;font-weight:900;margin:6px 0}
+    .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
+    .hide{display:none}
+    ul{margin:10px 0 0 18px}
   </style>
 </head>
 <body>
-  <header><img src="{{133.logoUrl}}" alt="" /></header>
-
+  <header><img src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'"></header>
   <main>
-    <div class="media">
-      <video src="{{133.media.videoMp4}}" controls></video>
-      <img src="{{133.media.imageUrl}}" alt="" />
-    </div>
-
-    <h1>{{133.title}}</h1>
-    <p class="sub">{{133.subtitle}}</p>
+    <section class="card">
+      <div class="media">
+        <video src="{{media.videoMp4}}" controls playsinline onerror="this.style.display='none'"></video>
+        <img src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
+      </div>
+      <h1>{{copy.title}}</h1>
+      <p class="sub">{{copy.subtitle}}</p>
+    </section>
 
     <div class="grid">
       <section class="card">
-        <div>{{133.productDescription}}</div>
-        <div>{{133.copy.bullets}}</div>
-        <div>{{133.copy.benefits}}</div>
-        <div>{{133.copy.guarantee}}</div>
+        <div id="desc">{{copy.productDescription}}</div>
+        <h3 id="h-prob" class="hide">Le problème</h3><div id="prob">{{copy.problem}}</div>
+        <h3 id="h-sol" class="hide">La solution</h3><div id="sol">{{copy.solution}}</div>
+        <h3 id="h-ben" class="hide">Bénéfices</h3><div id="ben">{{copy.benefits}}</div>
+        <h3 id="h-bul" class="hide">Ce que vous obtenez</h3><div id="bul">{{copy.bullets}}</div>
+        <div id="gua" class="hide" style="margin-top:8px"><em>{{copy.guarantee}}</em></div>
+
+        <div id="testi" class="hide" style="margin-top:12px">
+          <h3>Témoignages</h3>
+          <div>{{testimonials}}</div>
+        </div>
+
+        <div id="faq" class="hide" style="margin-top:12px">
+          <h3>FAQ</h3>
+          <div>{{faqs}}</div>
+        </div>
       </section>
 
-      <aside class="card" style="display:flex;flex-direction:column;gap:12px;align-items:flex-start">
-        <a href="{{1.payment.paymentLink}}" class="btn-primary">{{133.ctaText}}</a>
+      <aside class="card" style="display:flex;flex-direction:column;gap:12px;align-items:stretch">
+        <div id="timer" class="timer hide"></div>
+        <div id="price" class="price hide">{{payment.price}} {{payment.currency}}</div>
+        <a class="btn" href="{{payment.paymentLink}}">{{copy.ctaText}}</a>
+        <a class="btn" style="background:#ffffff22" href="{{flow.nextHref}}">Découvrir avant d’acheter</a>
+        <div id="progress" class="hide">{{components.progressBar}}</div>
       </aside>
     </div>
   </main>
+
+  <script>
+    (function(){
+      const showIf = (id) => { const el = document.getElementById(id); if(!el) return; if((el.textContent||'').trim()) el.classList.remove('hide'); };
+      ['h-prob','prob','h-sol','sol','h-ben','ben','h-bul','bul','gua','testi','faq','price','progress'].forEach(showIf);
+      const evergreen = parseInt('{{timers.evergreenMinutes}}',10)||0;
+      const deadlineISO = '{{timers.deadlineISO}}';
+      const t = document.getElementById('timer');
+      function renderTimer(sec){ if(sec<=0){ t.textContent='Offre expirée'; return; } const m=Math.floor(sec/60), s=sec%60; t.textContent='Offre expire dans '+m+'m '+('0'+s).slice(-2)+'s';}
+      let total=0; if(evergreen>0) total=evergreen*60; else if(deadlineISO && !isNaN(Date.parse(deadlineISO))) total=Math.max(0,Math.floor((new Date(deadlineISO)-new Date())/1000));
+      if(total>0){ t.classList.remove('hide'); const tick=()=>{renderTimer(total--); if(total>=0) setTimeout(tick,1000)}; tick(); }
+    })();
+    (function(){var fb='{{analytics.fbPixelId}}'.trim(); if(fb){!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
+    s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script'); fbq('init',fb); fbq('track','PageView');}
+    var gtm='{{analytics.gtmId}}'.trim(); if(gtm){var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+gtm;document.head.appendChild(s)}})();
+  </script>
 </body>
 </html>
