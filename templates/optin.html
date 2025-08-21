@@ -25,18 +25,27 @@
     .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
     form input,form textarea,form select{width:100%;padding:12px;border-radius:10px;border:0;margin:8px 0;background:#ffffff12;color:#fff}
 
-    /* Grilles */
-    .grid{display:grid;gap:18px}
-    .two-cols{grid-template-columns:1fr}
-    @media(min-width:880px){.two-cols{grid-template-columns:1.1fr .9fr}}
+    /* ===== Grille adaptative formulaire | média ===== */
+    #main-zone{
+      display:grid;
+      gap:18px;
+      grid-template-columns:1fr; /* défaut = une colonne */
+    }
+    @media(min-width:880px){
+      #main-zone.has-media{ grid-template-columns:1fr 1fr; } /* si média => 2 colonnes */
+    }
 
-    .pair{display:grid;grid-template-columns:1fr;gap:12px}
-    @media(min-width:880px){.pair{grid-template-columns:1fr 1fr}}
+    /* Formulaire centré verticalement quand seul */
+    #left-col{ display:flex; flex-direction:column; justify-content:center; }
+
+    /* Média responsive */
+    #right-media img, #right-media video{
+      width:100%; max-height:420px; object-fit:cover; border-radius:12px; display:block;
+    }
 
     .argu-grid{display:grid;gap:14px;grid-template-columns:1fr}
     @media(min-width:880px){.argu-grid{grid-template-columns:1fr 0.9fr}}
 
-    .media img,.media video{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
     .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
     .hide{display:none}
     .text-center{text-align:center}
@@ -60,39 +69,39 @@
       <div id="desc">{{copy.productDescription}}</div>
     </section>
 
-    <!-- 3) Zone principale : G = image + formulaire -->
-    <section class="grid two-cols" id="main-zone">
-      <!-- Colonne gauche -->
+    <!-- 3) Zone principale : Formulaire | Média -->
+    <section id="main-zone">
+      <!-- Colonne gauche : FORM -->
       <div class="card" id="left-col">
-        <div class="pair" id="left-pair">
-          <div class="media" id="left-media">
-            <img id="img-left" src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
-          </div>
+        <div>
+          <div id="timer" class="timer hide"></div>
 
-          <div>
-            <div id="timer" class="timer hide"></div>
+          <!-- Spécification des champs (JSON) -->
+          <script id="form-fields-json" type="application/json">{{formFields}}</script>
 
-            <!-- Spécification des champs (JSON) -->
-            <script id="form-fields-json" type="application/json">{{formFields}}</script>
+          <!-- Form -->
+          <form id="lead-form" data-role="capture" data-next="{{flow.nextHref}}">
+            <div id="form-visible"></div>
 
-            <!-- Form -->
-            <form id="lead-form" data-role="capture" data-next="{{flow.nextHref}}">
-              <div id="form-visible"></div>
+            <!-- requis pour save-lead-tunnel.js -->
+            <input type="hidden" name="userId" value="{{userId}}" />
+            <input type="hidden" name="pageSlug" value="{{slug}}" />
+            <input type="hidden" name="slug" value="{{slug}}" />
+            <input type="hidden" name="type" value="tunnel" />
+            <input type="hidden" name="nextUrl" value="{{flow.nextHref}}" />
 
-              <!-- requis pour save-lead-tunnel.js -->
-              <input type="hidden" name="userId" value="{{userId}}" />
-              <input type="hidden" name="pageSlug" value="{{slug}}" />
-              <input type="hidden" name="slug" value="{{slug}}" />
-              <input type="hidden" name="type" value="tunnel" />
-              <input type="hidden" name="nextUrl" value="{{flow.nextHref}}" />
+            <button type="submit" class="btn">{{copy.ctaText}}</button>
 
-              <button type="submit" class="btn">{{copy.ctaText}}</button>
-
-              <!-- Garantie sous le formulaire -->
-              <div id="gua" class="hide" style="margin-top:10px"><em>{{copy.guarantee}}</em></div>
-            </form>
-          </div>
+            <!-- Garantie sous le formulaire -->
+            <div id="gua" class="hide" style="margin-top:10px"><em>{{copy.guarantee}}</em></div>
+          </form>
         </div>
+      </div>
+
+      <!-- Colonne droite : MEDIA (image ou vidéo) -->
+      <div class="card" id="right-media">
+        <img id="img-media" src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
+        <video id="vid-media" src="{{media.videoMp4}}" controls playsinline onerror="this.style.display='none'"></video>
       </div>
     </section>
 
@@ -185,29 +194,32 @@
 
     // 2) Logique médias/form & argumentaire
     (function(){
-      // Haut : image + form
-      const mainZone = document.getElementById('main-zone');
-      const leftCol = document.getElementById('left-col');
-      const leftPair = document.getElementById('left-pair');
-      const leftMedia = document.getElementById('left-media');
-      const imgLeft = document.getElementById('img-left');
+      const mainZone   = document.getElementById('main-zone');
+      const leftCol    = document.getElementById('left-col');
+      const rightMedia = document.getElementById('right-media');
+      const img        = document.getElementById('img-media');
+      const vid        = document.getElementById('vid-media');
 
-      const hasImg = !!cleanText(imgLeft.getAttribute('src'));
-      if (!hasImg) {
-        leftMedia.style.display = 'none';
-        leftPair.style.gridTemplateColumns = '1fr';
-        mainZone.classList.remove('two-cols');
+      const hasImg = !!cleanText(img.getAttribute('src'));
+      const hasVid = !!cleanText(vid.getAttribute('src'));
+
+      if (hasImg || hasVid) {
+        // 2 colonnes
+        mainZone.classList.add('has-media');
+      } else {
+        // 1 colonne centrée
+        if (rightMedia) rightMedia.style.display = 'none';
+        mainZone.classList.remove('has-media');
         leftCol.classList.add('fun');
       }
 
       // Bas : argumentaire + vidéo
       const arguZone = document.getElementById('argu-zone');
       const vidWrap  = document.getElementById('argu-video');
-      const vid      = document.getElementById('vid-argu');
-      const hasVid   = !!cleanText(vid.getAttribute('src'));
+      const vidArgu  = document.getElementById('vid-argu');
+      const hasVidArgu = !!cleanText(vidArgu.getAttribute('src'));
 
-      if (!hasVid) {
-        // pas de vidéo -> une seule colonne + centrage du texte
+      if (!hasVidArgu) {
         arguZone.style.gridTemplateColumns = '1fr';
         document.getElementById('argu-left').classList.add('text-center');
         vidWrap.style.display = 'none';
