@@ -6,28 +6,109 @@
   <meta name="description" content="{{seo.metaDescription}}" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root{ --bg:#0b1220; --btn: {{ui.buttonColor}}; --text:#fff }
-    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui}
-    main{max-width:820px;margin:0 auto;padding:24px}
+    :root{--bg:{{ui.mainColor}};--btn:{{ui.buttonColor}};--text:#fff}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    main{max-width:900px;margin:0 auto;padding:24px}
     header{display:flex;justify-content:center;padding:16px 0}
-    header img{max-height:56px}
+    header img{max-height:56px;display:block}
     .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
-    .btn{display:block;width:100%;padding:16px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:900;text-align:center;text-decoration:none}
-    .price{font-size:28px;font-weight:900;margin:6px 0;text-align:center}
-    .small{opacity:.85}
+    .hero{text-align:center;margin-bottom:16px}
+    .hero h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0}
+    .sub{opacity:.9;margin:0}
+    .grid{display:grid;gap:18px}
+    .two{grid-template-columns:1fr}
+    @media(min-width:880px){.two{grid-template-columns:1.1fr .9fr}}
+    .media img,.media video{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
+    .price{font-size:28px;font-weight:900;margin:6px 0}
+    .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
+    .btn-alt{background:#ffffff22}
+    .hide{display:none}
   </style>
 </head>
 <body>
   <header><img src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'"></header>
+
   <main>
-    <section class="card">
+    <section class="card hero">
       <h1>{{copy.title}}</h1>
-      <p class="small">{{copy.subtitle}}</p>
-      <div style="margin:12px 0">{{copy.productDescription}}</div>
-      <div class="price">{{payment.price}} {{payment.currency}}</div>
-      <a class="btn" href="{{payment.paymentLink}}">Payer maintenant</a>
-      <p class="small" style="margin-top:12px"><em>{{copy.guarantee}}</em></p>
+      <p class="sub">{{copy.subtitle}}</p>
+    </section>
+
+    <section class="grid two">
+      <div class="card">
+        <div class="media" id="mwrap">
+          <img id="img" src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
+          <video id="vid" src="{{media.videoMp4}}" controls playsinline onerror="this.style.display='none'"></video>
+        </div>
+
+        <div class="price hide" id="price">{{payment.price}} {{payment.currency}}</div>
+        <a id="paybtn" class="btn" href="{{payment.paymentLink}}">Payer maintenant</a>
+        <a class="btn btn-alt" href="{{flow.nextHref}}">Voir plus d’infos</a>
+      </div>
+
+      <aside class="card">
+        <div id="desc">{{copy.productDescription}}</div>
+        <hr style="border:0;border-top:1px solid #ffffff22;margin:16px 0">
+        <div id="bul">{{copy.bullets}}</div>
+        <div id="ben">{{copy.benefits}}</div>
+      </aside>
+    </section>
+
+    <section class="card hide" id="testi">
+      <h3>Témoignages</h3>
+      <div>{{testimonials}}</div>
+    </section>
+
+    <section class="card hide" id="faq">
+      <h3>FAQ</h3>
+      <div>{{faqs}}</div>
     </section>
   </main>
+
+  <script>
+    // Clean ``` wrappers
+    (function(){const kill=s=>s.replace(/```html?/gi,'').replace(/```/g,'');
+      ['desc','bul','ben','testi','faq'].forEach(id=>{const el=document.getElementById(id); if(el) el.innerHTML=kill(el.innerHTML||'')});
+    })();
+
+    const clean=(s)=> (s||'').trim();
+
+    // Media preference: video > image; hide empty
+    (function(){
+      const img=document.getElementById('img');
+      const vid=document.getElementById('vid');
+      const hasImg=!!clean(img.getAttribute('src'));
+      const hasVid=!!clean(vid.getAttribute('src'));
+      if(!hasVid && !hasImg){ document.getElementById('mwrap').style.display='none'; }
+      if(hasVid && hasImg){ img.style.display='none'; } // garde la vidéo si les deux existent
+    })();
+
+    // Show/Hide conditionals
+    (function(){
+      const price=document.getElementById('price');
+      if(clean(price.textContent)) price.classList.remove('hide');
+
+      ['testi','faq'].forEach(id=>{
+        const el=document.getElementById(id); if(!el) return;
+        const inner=el.querySelector('div'); if(inner && clean(inner.textContent)) el.classList.remove('hide');
+      });
+
+      // Sécurité : si pas de paymentLink, on masque le bouton
+      var href='{{payment.paymentLink}}'.trim();
+      if(!href || href==='{{payment.paymentLink}}'){ document.getElementById('paybtn').classList.add('hide'); }
+    })();
+
+    // Pixels
+    (function(){
+      const fb='{{analytics.fbPixelId}}'.trim();
+      if(fb){!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
+      s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script'); fbq('init',fb); fbq('track','PageView');}
+      const gtm='{{analytics.gtmId}}'.trim();
+      if(gtm){var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+gtm;document.head.appendChild(s)}
+    })();
+  </script>
 </body>
 </html>
