@@ -7,16 +7,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root{ --bg:#0b1220; --main: {{ui.mainColor}}; --btn: {{ui.buttonColor}}; --text:#fff }
-    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
     main{max-width:1100px;margin:0 auto;padding:24px}
     header{display:flex;justify-content:center;padding:16px 0}
     header img{max-height:56px;display:block}
-    .cols{display:grid;gap:18px;grid-template-columns:1fr} @media(min-width:880px){.cols{grid-template-columns:1.1fr .9fr;align-items:start}}
+
     .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
+    .hero{text-align:center;margin-bottom:16px}
+    .hero h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0}
+    .hero .sub{opacity:.9;margin:0}
+
+    .cols{display:grid;gap:18px;grid-template-columns:1fr}
+    @media(min-width:880px){.cols{grid-template-columns:1.1fr .9fr;align-items:start}}
+
     .media img,.media video{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block}
-    h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0} .sub{opacity:.9;margin:0 0 14px}
     .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
-    form input,form textarea{width:100%;padding:12px;border-radius:10px;border:0;margin:8px 0;background:#ffffff12;color:#fff}
+    form input,form textarea,form select{width:100%;padding:12px;border-radius:10px;border:0;margin:8px 0;background:#ffffff12;color:#fff}
     .badge{display:inline-block;background:#ffffff1a;padding:6px 10px;border-radius:999px;margin:6px 6px 0 0}
     .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
     .hide{display:none}
@@ -24,51 +31,69 @@
 </head>
 <body>
   <header><img src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'"></header>
+
   <main>
-    <section class="card">
-      <div class="media">
-        <video src="{{media.videoMp4}}" controls playsinline onerror="this.style.display='none'"></video>
-        <img src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
-      </div>
+    <!-- bloc titre -->
+    <section class="card hero">
       <h1>{{copy.title}}</h1>
       <p class="sub">{{copy.subtitle}}</p>
-      <div id="badges" class="hide">{{components.badges}}</div>
     </section>
 
+    <!-- media + formulaire -->
     <div class="cols">
       <section class="card">
-        <div id="desc">{{copy.productDescription}}</div>
-        <h3 id="h-prob" class="hide">Le problème</h3><div id="prob">{{copy.problem}}</div>
-        <h3 id="h-sol" class="hide">La solution</h3><div id="sol">{{copy.solution}}</div>
-        <h3 id="h-ben" class="hide">Bénéfices</h3><div id="ben">{{copy.benefits}}</div>
-        <h3 id="h-bul" class="hide">Ce que vous obtenez</h3><div id="bul">{{copy.bullets}}</div>
-        <div id="gua" class="hide" style="margin-top:8px"><em>{{copy.guarantee}}</em></div>
-
-        <div id="testi" class="hide" style="margin-top:12px">
-          <h3>Témoignages</h3>
-          <div>{{testimonials}}</div>
+        <div class="media">
+          <video src="{{media.videoMp4}}" controls playsinline onerror="this.style.display='none'"></video>
+          <img src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
         </div>
-
-        <div id="faq" class="hide" style="margin-top:12px">
-          <h3>FAQ</h3>
-          <div>{{faqs}}</div>
-        </div>
+        <div id="badges" class="hide">{{components.badges}}</div>
       </section>
 
       <aside class="card">
         <div id="timer" class="timer hide"></div>
+
+        <!-- On isole le JSON de champs pour éviter tout affichage parasite -->
+        <script id="form-fields-json" type="application/json">{{formFields}}</script>
+
+        <!-- Le vrai formulaire (inputs générés dynamiquement en JS) -->
         <form id="lead-form" data-role="capture" data-next="{{flow.nextHref}}">
-          {{formFields}}
+          <!-- Les inputs visibles seront injectés ici -->
+          <div id="form-visible"></div>
+
+          <!-- Champs requis par save-lead-tunnel.js -->
           <input type="hidden" name="userId" value="{{userId}}" />
           <input type="hidden" name="pageSlug" value="{{slug}}" />
           <input type="hidden" name="slug" value="{{slug}}" />
           <input type="hidden" name="type" value="tunnel" />
           <input type="hidden" name="nextUrl" value="{{flow.nextHref}}" />
+
           <button type="submit" class="btn">{{copy.ctaText}}</button>
         </form>
+
         <div id="progress" class="hide" style="margin-top:10px">{{components.progressBar}}</div>
       </aside>
     </div>
+
+    <!-- contenu détaillé -->
+    <section class="card">
+      <div id="desc">{{copy.productDescription}}</div>
+
+      <h3 id="h-prob" class="hide">Le problème</h3><div id="prob">{{copy.problem}}</div>
+      <h3 id="h-sol" class="hide">La solution</h3><div id="sol">{{copy.solution}}</div>
+      <h3 id="h-ben" class="hide">Bénéfices</h3><div id="ben">{{copy.benefits}}</div>
+      <h3 id="h-bul" class="hide">Ce que vous obtenez</h3><div id="bul">{{copy.bullets}}</div>
+      <div id="gua" class="hide" style="margin-top:8px"><em>{{copy.guarantee}}</em></div>
+
+      <div id="testi" class="hide" style="margin-top:12px">
+        <h3>Témoignages</h3>
+        <div>{{testimonials}}</div>
+      </div>
+
+      <div id="faq" class="hide" style="margin-top:12px">
+        <h3>FAQ</h3>
+        <div>{{faqs}}</div>
+      </div>
+    </section>
   </main>
 
   <!-- scripts capture requis -->
@@ -76,13 +101,93 @@
   <script type="module" src="https://alricpaon.github.io/sellyo-hosting/js/save-lead-tunnel.js"></script>
 
   <script>
+    // Helpers anti-parasites (trim, quotes)
+    const cleanText = (s) => (s||"").replace(/^['"\s]+|['"\s]+$/g,'').trim();
+
+    // Génère les inputs visibles à partir du JSON (clé → bool ou objet)
+    (function(){
+      const holder = document.getElementById('form-visible');
+      const blob = document.getElementById('form-fields-json');
+      let spec = {};
+      if (blob) {
+        let raw = blob.textContent || '';
+        raw = raw.trim();
+        // tolérance : si le JSON est encadré de quotes, on retire
+        if ((raw.startsWith('"') && raw.endsWith('"')) || (raw.startsWith("'") && raw.endsWith("'"))) {
+          raw = raw.slice(1, -1)
+                   .replace(/\\"/g,'"')
+                   .replace(/\\n/g,'')
+                   .replace(/\\t/g,'');
+        }
+        try { spec = JSON.parse(raw); } catch(e){ spec = {}; }
+      }
+
+      // mapping simple: { name:true, firstname:true, email:true, phone:true, address:true, ... }
+      const fieldsOrder = ['firstname','name','email','phone','company','jobTitle','website','address','address2','city','state','zip','country','age','gender','notes'];
+      const labels = {
+        firstname:'Prénom', name:'Nom', email:'Email', phone:'Téléphone',
+        company:'Société', jobTitle:'Poste', website:'Site web',
+        address:'Adresse', address2:"Complément d'adresse", city:'Ville', state:'État / Région', zip:'Code postal', country:'Pays',
+        age:'Âge', gender:'Genre', notes:'Message'
+      };
+
+      const makeInput = (key, cfg) => {
+        const type = (cfg && cfg.type) || (key==='email' ? 'email' : key==='phone' ? 'tel' : 'text');
+        const req  = (cfg && cfg.required) || (key==='email');
+        if (key === 'notes') {
+          const ta = document.createElement('textarea');
+          ta.name = key; ta.placeholder = labels[key] || key;
+          ta.required = !!req;
+          return ta;
+        }
+        if (key === 'gender') {
+          const sel = document.createElement('select');
+          sel.name = key;
+          ['','Femme','Homme','Autre','Ne se prononce pas'].forEach((t,i)=>{
+            const opt = document.createElement('option');
+            opt.value = i? t.toLowerCase() : '';
+            opt.textContent = i? t : 'Genre (optionnel)';
+            sel.appendChild(opt);
+          });
+          return sel;
+        }
+        const input = document.createElement('input');
+        input.name = key; input.type = type;
+        input.placeholder = labels[key] || key;
+        if (req) input.required = true;
+        return input;
+      };
+
+      if (holder) {
+        fieldsOrder.forEach(key=>{
+          const val = spec && (spec[key] || (spec.fields && spec.fields[key]));
+          if (val) {
+            const cfg = (typeof val === 'object') ? val : {};
+            holder.appendChild(makeInput(key, cfg));
+          }
+        });
+      }
+    })();
+
     // Affiche/masque les blocs vides
     (function(){
-      const showIf = (id) => { const el = document.getElementById(id); if(!el) return; if((el.textContent||'').trim()) el.classList.remove('hide'); };
+      const showIf = (id) => {
+        const el = document.getElementById(id);
+        if(!el) return;
+        const txt = cleanText(el.textContent);
+        if (txt) el.classList.remove('hide');
+      };
       ['badges','h-prob','prob','h-sol','sol','h-ben','ben','h-bul','bul','gua','testi','faq','progress'].forEach(showIf);
+
+      // Masquer media si vide
+      const vid = document.querySelector('.media video');
+      const img = document.querySelector('.media img');
+      if (vid && !cleanText(vid.getAttribute('src'))) vid.style.display='none';
+      if (img && !cleanText(img.getAttribute('src'))) img.style.display='none';
+
       // Timer
       const evergreen = parseInt('{{timers.evergreenMinutes}}',10)||0;
-      const deadlineISO = '{{timers.deadlineISO}}';
+      const deadlineISO = cleanText('{{timers.deadlineISO}}');
       const t = document.getElementById('timer');
       function renderTimer(sec){
         if(sec<=0){ t.textContent = 'Offre expirée'; return; }
@@ -94,14 +199,15 @@
       else if(deadlineISO && !isNaN(Date.parse(deadlineISO))) total = Math.max(0, Math.floor((new Date(deadlineISO)-new Date())/1000));
       if(total>0){ t.classList.remove('hide'); const tick=()=>{renderTimer(total--); if(total>=0) setTimeout(tick,1000)}; tick(); }
     })();
-    // Pixels
+
+    // Pixels (laisse vide = pas d’injection)
     (function(){
-      var fb='{{analytics.fbPixelId}}'.trim(); if(fb){!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      var fb=cleanText('{{analytics.fbPixelId}}'); if(fb){!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
       n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
       n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
       s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script');
       fbq('init', fb); fbq('track','PageView');}
-      var gtm='{{analytics.gtmId}}'.trim(); if(gtm){var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+gtm;document.head.appendChild(s)}
+      var gtm=cleanText('{{analytics.gtmId}}'); if(gtm){var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+gtm;document.head.appendChild(s)}
     })();
   </script>
 </body>
