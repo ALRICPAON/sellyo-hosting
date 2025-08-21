@@ -1,0 +1,99 @@
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>Méta | test optin3</title>
+  <meta name="description" content="Méta | " />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { --bg:#0b1220; --main: #fffc41; --btn: #96d35f; --text:#fff }
+    *{box-sizing:border-box} 
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    main{max-width:1100px;margin:0 auto;padding:24px}
+    header{display:flex;justify-content:center;padding:16px 0}
+    header img{max-height:56px;display:block}
+    .media img,.media video{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
+    h1{font-size:clamp(28px,3.5vw,44px);margin:8px 0} 
+    h2{margin:24px 0 12px;font-size:clamp(22px,2.5vw,32px);}
+    .sub{opacity:.9;margin:0 0 16px}
+    .grid{display:grid;gap:18px;grid-template-columns:1fr} 
+    @media(min-width:900px){.grid{grid-template-columns:1.1fr .9fr}}
+    .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
+    .btn{display:inline-block;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
+    .btn-alt{background:#ffffff22;color:#fff}
+    .price{font-size:28px;font-weight:900;margin:6px 0}
+    .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
+    .hide{display:none}
+    ul{margin:10px 0 0 18px}
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-optin3-alekt%2Flogo-1755774147341?alt=media&token=7b9509f4-8321-4f5c-8c57-d44f78a823a0" alt="Logo" onerror="this.style.display='none'">
+  </header>
+  <main>
+    <!-- Bloc media + titre -->
+    <section class="card">
+      <div class="media">
+        <video src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-optin3-alekt%2Fpage2-video-1755774153510?alt=media&token=478e5d1a-c1c4-4821-9ec2-ea6f9ab4ee1e" controls playsinline onerror="this.style.display='none'"></video>
+        <img src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-optin3-alekt%2Fpage2-hero-1755774152587?alt=media&token=dc475ed4-e69d-4e32-be16-0400252d1b96" alt="" onerror="this.style.display='none'">
+      </div>
+      <h1>test page de vente</h1>
+      <p class="sub">pour vendre</p>
+    </section>
+
+    <div class="grid">
+      <!-- Bloc texte principal -->
+      <section class="card">
+        <h2 id="h-prob" class="hide">Le problème</h2><div id="prob">un gros probleme</div>
+        <h2 id="h-sol" class="hide">La solution</h2><div id="sol">une petite solution</div>
+        <h2 id="h-ben" class="hide">Bénéfices</h2><div id="ben">1 test, 2test, 3test</div>
+        <h2 id="h-bul" class="hide">Ce que vous obtenez</h2><div id="bul"><ul><li>3test</li><li>2test</li><li>1test</li></ul></div>
+        <div id="gua" class="hide" style="margin-top:8px"><em>satisfait</em></div>
+
+        <!-- Témoignages -->
+        <div id="testi" class="hide" style="margin-top:12px">
+          <h2>Témoignages</h2>
+          <div></div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="hide" style="margin-top:12px">
+          <h2>FAQ</h2>
+          <div></div>
+        </div>
+      </section>
+
+      <!-- Bloc offre et paiement -->
+      <aside class="card" style="display:flex;flex-direction:column;gap:12px;align-items:stretch">
+        <div id="timer" class="timer hide"></div>
+        <div id="price" class="price hide">49 EUR</div>
+        <a class="btn" href="https://buy.stripe.com/test_aFa4gs1EO5jHbCe8aM6kg00">j'achète</a>
+        <a class="btn btn-alt" href=".html">Découvrir avant d’acheter</a>
+        <div id="progress" class="hide">true</div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Scripts : timers + tracking -->
+  <script>
+    (function(){
+      const showIf = (id) => { const el = document.getElementById(id); if(!el) return; if((el.textContent||'').trim()) el.classList.remove('hide'); };
+      ['h-prob','prob','h-sol','sol','h-ben','ben','h-bul','bul','gua','testi','faq','price','progress'].forEach(showIf);
+      const evergreen = parseInt('{{timers.evergreenMinutes}}',10)||0;
+      const deadlineISO = '{{timers.deadlineISO}}';
+      const t = document.getElementById('timer');
+      function renderTimer(sec){ if(sec<=0){ t.textContent='Offre expirée'; return; } const m=Math.floor(sec/60), s=sec%60; t.textContent='Offre expire dans '+m+'m '+('0'+s).slice(-2)+'s';}
+      let total=0; if(evergreen>0) total=evergreen*60; else if(deadlineISO && !isNaN(Date.parse(deadlineISO))) total=Math.max(0,Math.floor((new Date(deadlineISO)-new Date())/1000));
+      if(total>0){ t.classList.remove('hide'); const tick=()=>{renderTimer(total--); if(total>=0) setTimeout(tick,1000)}; tick(); }
+    })();
+    (function(){var fb='123456789'.trim(); if(fb){!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
+    s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script'); fbq('init',fb); fbq('track','PageView');}
+    var gtm='GTM'.trim(); if(gtm){var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+gtm;document.head.appendChild(s)}})();
+  </script>
+</body>
+</html>
+```
