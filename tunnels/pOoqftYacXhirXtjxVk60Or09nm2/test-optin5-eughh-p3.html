@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>test optin5</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{--bg:;--btn:;--text:#fff}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    main{max-width:900px;margin:0 auto;padding:24px}
+    header{display:flex;justify-content:center;padding:16px 0}
+    header img{max-height:56px;display:block}
+    .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
+    .hero{text-align:center;margin-bottom:16px}
+    .hero h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0}
+    .sub{opacity:.9;margin:0}
+    .grid{display:grid;gap:18px}
+    .two{grid-template-columns:1fr}
+    @media(min-width:880px){.two{grid-template-columns:1.1fr .9fr}}
+    .media img,.media video{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
+    .price{font-size:28px;font-weight:900;margin:6px 0}
+    .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
+    .btn-alt{background:#ffffff22}
+    .hide{display:none}
+  </style>
+</head>
+<body>
+  <header><img src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-optin5-eughh%2Flogo-1755781288181?alt=media&token=951c95e0-aff8-4fe9-a4f1-0016e15ad462" alt="Logo" onerror="this.style.display='none'"></header>
+
+  <main>
+    <section class="card hero">
+      <h1>TEST PAIEMENT</h1>
+      <p class="sub">paye</p>
+    </section>
+
+    <section class="grid two">
+      <div class="card">
+        <div class="media" id="mwrap">
+          <img id="img" src="" alt="" onerror="this.style.display='none'">
+          <video id="vid" src="" controls playsinline onerror="this.style.display='none'"></video>
+        </div>
+
+        <div class="price hide" id="price">60 EUR</div>
+        <a id="paybtn" class="btn" href="https://buy.stripe.com/test_aFa4gs1EO5jHbCe8aM6kg00">Payer maintenant</a>
+        <a class="btn btn-alt" href="">Voir plus d’infos</a>
+      </div>
+
+      <aside class="card">
+        <div id="desc">je test le payement</div>
+        <hr style="border:0;border-top:1px solid #ffffff22;margin:16px 0">
+        <div id="bul"></div>
+        <div id="ben"></div>
+      </aside>
+    </section>
+
+    <section class="card hide" id="testi">
+      <h3>Témoignages</h3>
+      <div></div>
+    </section>
+
+    <section class="card hide" id="faq">
+      <h3>FAQ</h3>
+      <div></div>
+    </section>
+  </main>
+
+  <script>
+    // Clean ``` wrappers
+    (function(){const kill=s=>s.replace(/```html?/gi,'').replace(/```/g,'');
+      ['desc','bul','ben','testi','faq'].forEach(id=>{const el=document.getElementById(id); if(el) el.innerHTML=kill(el.innerHTML||'')});
+    })();
+
+    const clean=(s)=> (s||'').trim();
+
+    // Media preference: video > image; hide empty
+    (function(){
+      const img=document.getElementById('img');
+      const vid=document.getElementById('vid');
+      const hasImg=!!clean(img.getAttribute('src'));
+      const hasVid=!!clean(vid.getAttribute('src'));
+      if(!hasVid && !hasImg){ document.getElementById('mwrap').style.display='none'; }
+      if(hasVid && hasImg){ img.style.display='none'; } // garde la vidéo si les deux existent
+    })();
+
+    // Show/Hide conditionals
+    (function(){
+      const price=document.getElementById('price');
+      if(clean(price.textContent)) price.classList.remove('hide');
+
+      ['testi','faq'].forEach(id=>{
+        const el=document.getElementById(id); if(!el) return;
+        const inner=el.querySelector('div'); if(inner && clean(inner.textContent)) el.classList.remove('hide');
+      });
+
+      // Sécurité : si pas de paymentLink, on masque le bouton
+      var href='https://buy.stripe.com/test_aFa4gs1EO5jHbCe8aM6kg00'.trim();
+      if(!href || href==='https://buy.stripe.com/test_aFa4gs1EO5jHbCe8aM6kg00'){ document.getElementById('paybtn').classList.add('hide'); }
+    })();
+
+    // Pixels
+    (function(){
+      const fb='123456'.trim();
+      if(fb){!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
+      s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script'); fbq('init',fb); fbq('track','PageView');}
+      const gtm='GTM'.trim();
+      if(gtm){var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+gtm;document.head.appendChild(s)}
+    })();
+  </script>
+</body>
+</html>
