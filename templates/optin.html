@@ -25,7 +25,7 @@
     .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
     form input,form textarea,form select{width:100%;padding:12px;border-radius:10px;border:0;margin:8px 0;background:#ffffff12;color:#fff}
 
-    /* Grilles adaptatives */
+    /* Grilles */
     .grid{display:grid;gap:18px}
     .two-cols{grid-template-columns:1fr}
     @media(min-width:880px){.two-cols{grid-template-columns:1.1fr .9fr}}
@@ -33,11 +33,15 @@
     .pair{display:grid;grid-template-columns:1fr;gap:12px}
     @media(min-width:880px){.pair{grid-template-columns:1fr 1fr}}
 
+    .argu-grid{display:grid;gap:14px;grid-template-columns:1fr}
+    @media(min-width:880px){.argu-grid{grid-template-columns:1fr 0.9fr}}
+
     .media img,.media video{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
     .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
     .hide{display:none}
+    .text-center{text-align:center}
 
-    /* Petit effet "fun" si pas de média */
+    /* Effet si pas de média */
     .fun{background:linear-gradient(135deg,#ffffff12,#ffffff08)}
   </style>
 </head>
@@ -56,7 +60,7 @@
       <div id="desc">{{copy.productDescription}}</div>
     </section>
 
-    <!-- 3) Zone centrale : G = image + formulaire / D = textes + vidéo -->
+    <!-- 3) Zone principale : G = image + formulaire -->
     <section class="grid two-cols" id="main-zone">
       <!-- Colonne gauche -->
       <div class="card" id="left-col">
@@ -68,12 +72,14 @@
           <div>
             <div id="timer" class="timer hide"></div>
 
-            <!-- JSON des champs (anti-parasite) -->
+            <!-- Spécification des champs (JSON) -->
             <script id="form-fields-json" type="application/json">{{formFields}}</script>
 
+            <!-- Form -->
             <form id="lead-form" data-role="capture" data-next="{{flow.nextHref}}">
               <div id="form-visible"></div>
 
+              <!-- requis pour save-lead-tunnel.js -->
               <input type="hidden" name="userId" value="{{userId}}" />
               <input type="hidden" name="pageSlug" value="{{slug}}" />
               <input type="hidden" name="slug" value="{{slug}}" />
@@ -88,23 +94,25 @@
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- Colonne droite -->
-      <div class="card" id="right-col">
-        <!-- On affiche UNIQUEMENT le contenu, pas les titres -->
+    <!-- 4) Bloc argumentaire SOUS le formulaire : gauche = textes, droite = vidéo -->
+    <section class="card argu-grid" id="argu-zone">
+      <!-- Argumentaire (gauche) : uniquement contenu -->
+      <div id="argu-left">
         <div id="prob">{{copy.problem}}</div>
         <div id="sol">{{copy.solution}}</div>
         <div id="ben">{{copy.benefits}}</div>
         <div id="bul">{{copy.bullets}}</div>
+      </div>
 
-        <!-- Vidéo en bas de la colonne droite -->
-        <div class="media" id="right-video">
-          <video id="vid-right" src="{{media.videoMp4}}" controls playsinline onerror="this.style.display='none'"></video>
-        </div>
+      <!-- Vidéo (droite) -->
+      <div class="media" id="argu-video">
+        <video id="vid-argu" src="{{media.videoMp4}}" controls playsinline onerror="this.style.display='none'"></video>
       </div>
     </section>
 
-    <!-- 4) Témoignages + FAQ en bas -->
+    <!-- 5) Témoignages + FAQ en bas -->
     <section class="card hide" id="testi">
       <h3>Témoignages</h3>
       <div>{{testimonials}}</div>
@@ -124,16 +132,16 @@
   <script type="module" src="https://alricpaon.github.io/sellyo-hosting/js/save-lead-tunnel.js"></script>
 
   <script>
-    // Anti-parasites simples (retire d'éventuels ```html ... ```)
+    // Anti-parasites (supprime d'éventuels ```html ... ```)
     (function(){
       const kill = (s)=>s.replace(/```html?/gi,'').replace(/```/g,'');
       ['desc','prob','sol','ben','bul','testi','faq'].forEach(id=>{
         const el=document.getElementById(id); if(!el) return;
-        const t=el.innerHTML||''; el.innerHTML=kill(t);
+        el.innerHTML = kill(el.innerHTML||'');
       });
     })();
 
-    // Helper trim/quotes
+    // Helper
     const cleanText = (s) => (s||"").replace(/^['"\\s]+|['"\\s]+$/g,'').trim();
 
     // 1) Génération des inputs visibles depuis {{formFields}} (JSON)
@@ -175,46 +183,38 @@
       }
     })();
 
-    // 2) Logique d'agencement médias/texte selon disponibilités
+    // 2) Logique médias/form & argumentaire
     (function(){
+      // Haut : image + form
       const mainZone = document.getElementById('main-zone');
       const leftCol = document.getElementById('left-col');
       const leftPair = document.getElementById('left-pair');
       const leftMedia = document.getElementById('left-media');
       const imgLeft = document.getElementById('img-left');
 
-      const rightCol = document.getElementById('right-col');
-      const rightVideoWrap = document.getElementById('right-video');
-      const vidRight = document.getElementById('vid-right');
-
       const hasImg = !!cleanText(imgLeft.getAttribute('src'));
-      const hasVid = !!cleanText(vidRight.getAttribute('src'));
-
-      if (hasImg && hasVid) {
-        // (a) 2 médias -> layout par défaut : image à gauche du formulaire, vidéo à droite en bas.
-      } else if (hasImg && !hasVid) {
-        // (b) Uniquement image -> on met image à gauche du form (déjà fait) + on passe en 1 colonne, textes en-dessous
-        mainZone.classList.remove('two-cols');
-      } else if (!hasImg && hasVid) {
-        // (b) Uniquement vidéo -> déplace la vidéo à gauche à la place de l'image
-        rightVideoWrap.parentNode.removeChild(rightVideoWrap);
-        const holder = document.createElement('div');
-        holder.className = 'media';
-        holder.appendChild(vidRight);
-        leftMedia.innerHTML = '';
-        leftMedia.appendChild(holder);
-        // on passe en 1 colonne pour mettre les textes en-dessous
-        mainZone.classList.remove('two-cols');
-      } else {
-        // (c) Pas de média -> form bien centré et carte "fun"
+      if (!hasImg) {
         leftMedia.style.display = 'none';
         leftPair.style.gridTemplateColumns = '1fr';
         mainZone.classList.remove('two-cols');
         leftCol.classList.add('fun');
       }
+
+      // Bas : argumentaire + vidéo
+      const arguZone = document.getElementById('argu-zone');
+      const vidWrap  = document.getElementById('argu-video');
+      const vid      = document.getElementById('vid-argu');
+      const hasVid   = !!cleanText(vid.getAttribute('src'));
+
+      if (!hasVid) {
+        // pas de vidéo -> une seule colonne + centrage du texte
+        arguZone.style.gridTemplateColumns = '1fr';
+        document.getElementById('argu-left').classList.add('text-center');
+        vidWrap.style.display = 'none';
+      }
     })();
 
-    // 3) Affichages conditionnels et timer
+    // 3) Affichages conditionnels + timer
     (function(){
       // Garantie visible si contenu
       const gua = document.getElementById('gua');
@@ -226,6 +226,10 @@
         const inner=el.querySelector('div'); const txt=cleanText(inner? inner.textContent: '');
         if (txt) el.classList.remove('hide');
       });
+
+      // Progress bar
+      const prog = document.getElementById('progress');
+      if (prog && cleanText(prog.textContent)) prog.classList.remove('hide');
 
       // Timer
       const evergreen = parseInt('{{timers.evergreenMinutes}}',10)||0;
