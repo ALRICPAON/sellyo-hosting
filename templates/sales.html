@@ -6,16 +6,21 @@
   <meta name="description" content="{{seo.metaDescription}}" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root{ --bg:#0b1220; --main: {{ui.mainColor}}; --btn: {{ui.buttonColor}}; --text:#fff }
-    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    :root { --bg:#0b1220; --main: {{ui.mainColor}}; --btn: {{ui.buttonColor}}; --text:#fff }
+    *{box-sizing:border-box} 
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
     main{max-width:1100px;margin:0 auto;padding:24px}
     header{display:flex;justify-content:center;padding:16px 0}
     header img{max-height:56px;display:block}
     .media img,.media video{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
-    h1{font-size:clamp(28px,3.5vw,44px);margin:8px 0} .sub{opacity:.9;margin:0 0 16px}
-    .grid{display:grid;gap:18px;grid-template-columns:1fr} @media(min-width:900px){.grid{grid-template-columns:1.1fr .9fr}}
+    h1{font-size:clamp(28px,3.5vw,44px);margin:8px 0} 
+    h2{margin:24px 0 12px;font-size:clamp(22px,2.5vw,32px);}
+    .sub{opacity:.9;margin:0 0 16px}
+    .grid{display:grid;gap:18px;grid-template-columns:1fr} 
+    @media(min-width:900px){.grid{grid-template-columns:1.1fr .9fr}}
     .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
     .btn{display:inline-block;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
+    .btn-alt{background:#ffffff22;color:#fff}
     .price{font-size:28px;font-weight:900;margin:6px 0}
     .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
     .hide{display:none}
@@ -23,8 +28,11 @@
   </style>
 </head>
 <body>
-  <header><img src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'"></header>
+  <header>
+    <img src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'">
+  </header>
   <main>
+    <!-- Bloc media + titre -->
     <section class="card">
       <div class="media">
         <video src="{{media.videoMp4}}" controls playsinline onerror="this.style.display='none'"></video>
@@ -35,35 +43,39 @@
     </section>
 
     <div class="grid">
+      <!-- Bloc texte principal -->
       <section class="card">
-        <div id="desc">{{copy.productDescription}}</div>
-        <h3 id="h-prob" class="hide">Le problème</h3><div id="prob">{{copy.problem}}</div>
-        <h3 id="h-sol" class="hide">La solution</h3><div id="sol">{{copy.solution}}</div>
-        <h3 id="h-ben" class="hide">Bénéfices</h3><div id="ben">{{copy.benefits}}</div>
-        <h3 id="h-bul" class="hide">Ce que vous obtenez</h3><div id="bul">{{copy.bullets}}</div>
+        <h2 id="h-prob" class="hide">Le problème</h2><div id="prob">{{copy.problem}}</div>
+        <h2 id="h-sol" class="hide">La solution</h2><div id="sol">{{copy.solution}}</div>
+        <h2 id="h-ben" class="hide">Bénéfices</h2><div id="ben">{{copy.benefits}}</div>
+        <h2 id="h-bul" class="hide">Ce que vous obtenez</h2><div id="bul">{{copy.bullets}}</div>
         <div id="gua" class="hide" style="margin-top:8px"><em>{{copy.guarantee}}</em></div>
 
+        <!-- Témoignages -->
         <div id="testi" class="hide" style="margin-top:12px">
-          <h3>Témoignages</h3>
+          <h2>Témoignages</h2>
           <div>{{testimonials}}</div>
         </div>
 
+        <!-- FAQ -->
         <div id="faq" class="hide" style="margin-top:12px">
-          <h3>FAQ</h3>
+          <h2>FAQ</h2>
           <div>{{faqs}}</div>
         </div>
       </section>
 
+      <!-- Bloc offre et paiement -->
       <aside class="card" style="display:flex;flex-direction:column;gap:12px;align-items:stretch">
         <div id="timer" class="timer hide"></div>
         <div id="price" class="price hide">{{payment.price}} {{payment.currency}}</div>
         <a class="btn" href="{{payment.paymentLink}}">{{copy.ctaText}}</a>
-        <a class="btn" style="background:#ffffff22" href="{{flow.nextHref}}">Découvrir avant d’acheter</a>
+        <a class="btn btn-alt" href="{{flow.nextHref}}">Découvrir avant d’acheter</a>
         <div id="progress" class="hide">{{components.progressBar}}</div>
       </aside>
     </div>
   </main>
 
+  <!-- Scripts : timers + tracking -->
   <script>
     (function(){
       const showIf = (id) => { const el = document.getElementById(id); if(!el) return; if((el.textContent||'').trim()) el.classList.remove('hide'); };
