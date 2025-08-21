@@ -1,0 +1,86 @@
+<!DOCTYPE html><html lang="fr"><head>
+<meta charset="utf-8"/><title>test optin5</title>
+<meta name="description" content=""/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<style>
+:root{--bg:#00364a;--btn:#0061ff;--text:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+main{max-width:1100px;margin:0 auto;padding:24px}
+header{display:flex;justify-content:center;padding:16px 0}header img{max-height:56px;display:block}
+.card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
+.hero{text-align:center;margin-bottom:16px}.hero h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0}.sub{opacity:.9;margin:0}
+.grid{display:grid;gap:18px}.two-cols{grid-template-columns:1fr}@media(min-width:880px){.two-cols{grid-template-columns:1.1fr .9fr}}
+.pair{display:grid;gap:12px;grid-template-columns:1fr}@media(min-width:880px){.pair{grid-template-columns:1fr 1fr}}
+.media img,.media video{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
+.btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
+form input,form select{width:100%;padding:12px;border-radius:10px;border:0;margin:8px 0;background:#ffffff12;color:#fff}
+.timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
+.hide{display:none}
+</style></head><body>
+<header><img src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-optin5-eughh%2Flogo-1755781288181?alt=media&token=951c95e0-aff8-4fe9-a4f1-0016e15ad462" alt="Logo" onerror="this.style.display='none'"></header>
+<main>
+  <section class="card hero"><h1>page webinaire</h1><p class="sub">test page webinaire</p></section>
+  <section class="grid two-cols">
+    <div class="card">
+      <div class="pair">
+        <div class="media">
+          <img id="img" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-optin5-eughh%2Fpage7-hero-1755781302880?alt=media&token=5faa43b0-d808-49df-8116-22c7d94a260f" alt="" onerror="this.style.display='none'">
+        </div>
+        <div>
+          <div id="timer" class="timer hide"></div>
+          <form id="lead-form" data-role="capture" data-next="test-optin5-eughh-p8.html">
+            <input type="text" name="firstname" placeholder="Prénom" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <!-- requis pour save-lead-tunnel.js -->
+            <input type="hidden" name="userId" value="pOoqftYacXhirXtjxVk60Or09nm2"/>
+            <input type="hidden" name="pageSlug" value="test-optin5-eughh-p7"/>
+            <input type="hidden" name="slug" value="test-optin5-eughh-p7"/>
+            <input type="hidden" name="type" value="tunnel"/>
+            <input type="hidden" name="nextUrl" value="test-optin5-eughh-p8.html"/>
+            <button type="submit" class="btn">je test</button>
+          </form>
+          <div class="hide" id="gua"><em></em></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div id="desc">test page</div>
+      <div id="bul"></div>
+      <div id="ben"></div>
+      <div class="media"><video id="vid" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-optin5-eughh%2Fpage7-video-1755781303849?alt=media&token=bbfb8620-3fdb-4b41-93ba-fcdcc7d27627" controls playsinline onerror="this.style.display='none'"></video></div>
+    </div>
+  </section>
+
+  <section class="card hide" id="testi"><h3>Témoignages</h3><div></div></section>
+  <section class="card hide" id="faq"><h3>FAQ</h3><div></div></section>
+</main>
+
+<script type="module" src="https://alricpaon.github.io/sellyo-hosting/js/firebase-init.js"></script>
+<script type="module" src="https://alricpaon.github.io/sellyo-hosting/js/save-lead-tunnel.js"></script>
+<script>
+const clean=s=>(s||"").trim();
+
+// Timer (evergreen ou deadlineISO)
+(function(){
+  const t=document.getElementById('timer'); const ever=parseInt('30',10)||0; const iso=''.trim();
+  let total=0; if(ever>0) total=ever*60; else if(iso && !isNaN(Date.parse(iso))) total=Math.max(0,Math.floor((new Date(iso)-new Date())/1000));
+  function render(sec){ if(sec<=0){ t.textContent='Le webinaire commence'; return; } const m=Math.floor(sec/60), s=sec%60; t.textContent='Démarre dans '+m+'m '+('0'+s).slice(-2)+'s'; }
+  if(total>0){ t.classList.remove('hide'); (function tick(){ render(total--); if(total>=0) setTimeout(tick,1000); })(); }
+})();
+
+// Show optionals
+(function(){
+  const gua=document.getElementById('gua'); if(gua && clean(gua.textContent)) gua.classList.remove('hide');
+  ['testi','faq'].forEach(id=>{const el=document.getElementById(id); if(!el) return; const c=el.querySelector('div'); if(c && clean(c.textContent)) el.classList.remove('hide');});
+})();
+
+// Pixels
+(function(){
+  const fb='123456'.trim(); if(fb){!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
+  s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script'); fbq('init',fb); fbq('track','PageView');}
+  const gtm='GTM'.trim(); if(gtm){var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+gtm;document.head.appendChild(s)}
+})();
+</script>
+</body></html>
