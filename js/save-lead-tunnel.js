@@ -42,18 +42,21 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!email && !phone) { alert("Merci d’indiquer un email ou un téléphone."); return; }
 
     const payload = {
-      userId,
-      slug,
-      name: val("name") || null,
-      prenom: val("prenom") || null,
-      nom: val("nom") || null,
-      email: email || null,
-      telephone: phone || null,
-      adresse: val("adresse") || null,
-      type: val("type") || "tunnel",
-      createdAt: serverTimestamp(),
-      meta: { href: location.href, ua: navigator.userAgent, ref: document.referrer || null }
-    };
+  userId,
+  slug,
+  email: email || null,
+  telephone: phone || null,
+  type: val("type") || "tunnel",
+  createdAt: serverTimestamp(),
+  meta: { href: location.href, ua: navigator.userAgent, ref: document.referrer || null }
+};
+
+// Capture tous les champs du formulaire automatiquement
+form.querySelectorAll("input, textarea, select").forEach(el => {
+  const name = el.name?.trim();
+  if (!name || ["userId","slug","type","nextUrl"].includes(name)) return; // ignore champs techniques
+  payload[name] = el.value?.trim() || null;
+});
 
     try {
       await addDoc(collection(db, "leads"), payload);
