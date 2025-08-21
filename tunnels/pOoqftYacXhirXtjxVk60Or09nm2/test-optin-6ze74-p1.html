@@ -1,0 +1,110 @@
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>Méta titre (SEO) | test optin</title>
+  <meta name="description" content="Méta description (SEO)" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{ --bg:#0b1220; --main: #669c35; --btn: #c3d117; --text:#fff }
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    main{max-width:1100px;margin:0 auto;padding:24px}
+    header{display:flex;justify-content:center;padding:16px 0}
+    header img{max-height:56px;display:block}
+    .cols{display:grid;gap:18px;grid-template-columns:1fr} @media(min-width:880px){.cols{grid-template-columns:1.1fr .9fr;align-items:start}}
+    .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
+    .media img,.media video{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block}
+    h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0} .sub{opacity:.9;margin:0 0 14px}
+    .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
+    form input,form textarea{width:100%;padding:12px;border-radius:10px;border:0;margin:8px 0;background:#ffffff12;color:#fff}
+    .badge{display:inline-block;background:#ffffff1a;padding:6px 10px;border-radius:999px;margin:6px 6px 0 0}
+    .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
+    .hide{display:none}
+  </style>
+</head>
+<body>
+  <header><img src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-optin-6ze74%2Flogo-1755768081568?alt=media&token=9e70a716-4718-4898-a01f-8dc3be5d77a8" alt="Logo" onerror="this.style.display='none'"></header>
+  <main>
+    <section class="card">
+      <div class="media">
+        <video src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-optin-6ze74%2Fpage1-video-1755768083850?alt=media&token=70ecd78e-7669-4960-b123-8113ecb487e5" controls playsinline onerror="this.style.display='none'"></video>
+        <img src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-optin-6ze74%2Fpage1-hero-1755768082970?alt=media&token=2b9ea595-cac2-4378-896b-835a7b96e0e1" alt="" onerror="this.style.display='none'">
+      </div>
+      <h1>test capture</h1>
+      <p class="sub">sous titre</p>
+      <div id="badges" class="hide"></div>
+    </section>
+
+    <div class="cols">
+      <section class="card">
+        <div id="desc">description du produits</div>
+        <h3 id="h-prob" class="hide">Le problème</h3><div id="prob">Problème</div>
+        <h3 id="h-sol" class="hide">La solution</h3><div id="sol">Solution</div>
+        <h3 id="h-ben" class="hide">Bénéfices</h3><div id="ben">Bénéfices</div>
+        <h3 id="h-bul" class="hide">Ce que vous obtenez</h3><div id="bul">Points</div>
+        <div id="gua" class="hide" style="margin-top:8px"><em>Garantie</em></div>
+
+        <div id="testi" class="hide" style="margin-top:12px">
+          <h3>Témoignages</h3>
+          <div></div>
+        </div>
+
+        <div id="faq" class="hide" style="margin-top:12px">
+          <h3>FAQ</h3>
+          <div></div>
+        </div>
+      </section>
+
+      <aside class="card">
+        <div id="timer" class="timer hide"></div>
+        <form id="lead-form" data-role="capture" data-next="test-optin-6ze74-p2.html">
+          {"name":true,"firstname":true,"email":true,"phone":true,"address":true}
+          <input type="hidden" name="userId" value="pOoqftYacXhirXtjxVk60Or09nm2" />
+          <input type="hidden" name="pageSlug" value="test-optin-6ze74-p1" />
+          <input type="hidden" name="slug" value="test-optin-6ze74-p1" />
+          <input type="hidden" name="type" value="tunnel" />
+          <input type="hidden" name="nextUrl" value="test-optin-6ze74-p2.html" />
+          <button type="submit" class="btn">CTA</button>
+        </form>
+        <div id="progress" class="hide" style="margin-top:10px"></div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- scripts capture requis -->
+  <script type="module" src="https://alricpaon.github.io/sellyo-hosting/js/firebase-init.js"></script>
+  <script type="module" src="https://alricpaon.github.io/sellyo-hosting/js/save-lead-tunnel.js"></script>
+
+  <script>
+    // Affiche/masque les blocs vides
+    (function(){
+      const showIf = (id) => { const el = document.getElementById(id); if(!el) return; if((el.textContent||'').trim()) el.classList.remove('hide'); };
+      ['badges','h-prob','prob','h-sol','sol','h-ben','ben','h-bul','bul','gua','testi','faq','progress'].forEach(showIf);
+      // Timer
+      const evergreen = parseInt('10',10)||0;
+      const deadlineISO = '';
+      const t = document.getElementById('timer');
+      function renderTimer(sec){
+        if(sec<=0){ t.textContent = 'Offre expirée'; return; }
+        const m = Math.floor(sec/60), s = sec%60;
+        t.textContent = 'Offre expire dans ' + m + 'm ' + ('0'+s).slice(-2) + 's';
+      }
+      let total = 0;
+      if(evergreen>0) total = evergreen*60;
+      else if(deadlineISO && !isNaN(Date.parse(deadlineISO))) total = Math.max(0, Math.floor((new Date(deadlineISO)-new Date())/1000));
+      if(total>0){ t.classList.remove('hide'); const tick=()=>{renderTimer(total--); if(total>=0) setTimeout(tick,1000)}; tick(); }
+    })();
+    // Pixels
+    (function(){
+      var fb='123456'.trim(); if(fb){!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
+      s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script');
+      fbq('init', fb); fbq('track','PageView');}
+      var gtm='gym'.trim(); if(gtm){var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+gtm;document.head.appendChild(s)}
+    })();
+  </script>
+</body>
+</html>
+```
