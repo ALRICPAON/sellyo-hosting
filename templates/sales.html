@@ -51,17 +51,17 @@
       <p class="sub">{{copy.subtitle}}</p>
     </section>
 
-    <!-- 2) Description -->
+    <!-- 2) Description principale -->
     <section class="card" id="desc-wrap">
       <div id="desc">{{copy.productDescription}}</div>
     </section>
 
-    <!-- 3) Main zone : G = (image ⟷ offre), D = textes + vidéo -->
+    <!-- 3) Zone principale : image/offre à gauche, argumentaire + vidéo à droite -->
     <section class="grid two-cols" id="main-zone">
-      <!-- Colonne gauche : image + offre (prix/CTA) -->
+      <!-- Colonne gauche : image + offre -->
       <div class="card" id="left-col">
         <div class="pair" id="left-pair">
-          <!-- Média (image par défaut côté gauche) -->
+          <!-- Média -->
           <div class="media" id="left-media">
             <img id="img-left" src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
           </div>
@@ -77,14 +77,14 @@
         </div>
       </div>
 
-      <!-- Colonne droite : contenus + vidéo en bas -->
+      <!-- Colonne droite : bloc argumentaire + vidéo -->
       <div class="card" id="right-col">
-        <!-- Affiche UNIQUEMENT le contenu (pas de titres “Problème/…”). -->
         <div id="prob">{{copy.problem}}</div>
         <div id="sol">{{copy.solution}}</div>
         <div id="ben">{{copy.benefits}}</div>
         <div id="bul">{{copy.bullets}}</div>
 
+        <!-- Vidéo à droite, centrée si seule -->
         <div class="media" id="right-video">
           <video id="vid-right" src="{{media.videoMp4}}" controls playsinline onerror="this.style.display='none'"></video>
         </div>
@@ -105,7 +105,7 @@
 
   <!-- Scripts : timers + tracking -->
   <script>
-    // Nettoyage soft (au cas où un moteur aurait injecté des ```html/```)
+    // Nettoyage soft
     (function(){
       const kill=(s)=>s.replace(/```html?/gi,'').replace(/```/g,'');
       ['desc','prob','sol','ben','bul','testi','faq'].forEach(id=>{
@@ -116,7 +116,7 @@
 
     const cleanText = (s) => (s||"").replace(/^['"\\s]+|['"\\s]+$/g,'').trim();
 
-    // Layout médias / offre : (degrade si 1 média / 0 média)
+    // Gestion dynamique des médias
     (function(){
       const mainZone = document.getElementById('main-zone');
       const leftCol = document.getElementById('left-col');
@@ -132,22 +132,21 @@
       const hasVid = !!cleanText(vidRight.getAttribute('src'));
 
       if (hasImg && hasVid) {
-        // (a) 2 médias -> image à gauche (déjà), vidéo à droite en bas (déjà)
+        // (a) Image à gauche, vidéo à droite → ok
       } else if (hasImg && !hasVid) {
-        // (b) uniquement image -> ok à gauche ; on passe en 1 colonne (textes sous le bloc)
+        // (b) Image seule → 1 colonne, contenu en dessous
         mainZone.classList.remove('two-cols');
       } else if (!hasImg && hasVid) {
-        // (b) uniquement vidéo -> bascule la vidéo à gauche à la place de l'image
+        // (c) Vidéo seule → vidéo à gauche, argumentaire centré
         rightVideoWrap.parentNode.removeChild(rightVideoWrap);
         const holder = document.createElement('div');
         holder.className='media';
         holder.appendChild(vidRight);
         leftMedia.innerHTML='';
         leftMedia.appendChild(holder);
-        // 1 colonne
         mainZone.classList.remove('two-cols');
       } else {
-        // (c) aucun média -> centrage de l’offre
+        // (d) Aucun média → centrage bloc gauche
         leftMedia.style.display='none';
         leftPair.style.gridTemplateColumns='1fr';
         mainZone.classList.remove('two-cols');
@@ -176,7 +175,7 @@
       if(total>0){ t.classList.remove('hide'); (function tick(){ renderTimer(total--); if(total>=0) setTimeout(tick,1000); })(); }
     })();
 
-    // Tracking (vides = pas d’injection)
+    // Tracking (vide = pas d’injection)
     (function(){
       var fb=cleanText('{{analytics.fbPixelId}}'); if(fb){!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
       n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
