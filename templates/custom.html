@@ -1,38 +1,65 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="utf-8" />
-  <title>{{seo.metaTitle}}</title>
-  <meta name="description" content="{{seo.metaDescription}}" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root{ --bg:#0b1220; --btn: {{ui.buttonColor}}; --text:#fff }
-    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui}
-    main{max-width:880px;margin:0 auto;padding:24px;text-align:center}
-    header{display:flex;justify-content:center;padding:16px 0}
-    header img{max-height:56px}
-    .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
-    .btn{display:inline-block;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-decoration:none}
-    .btn-ghost{display:inline-block;padding:12px 16px;border-radius:12px;background:transparent;border:2px solid #fff;color:#fff;text-decoration:none;margin-left:8px}
-    .media img,.media video{max-width:92%;max-height:360px;margin:12px auto;border-radius:14px;display:block}
-  </style>
-</head>
-<body>
-  <header><img src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'"></header>
-  <main>
-    <section class="card">
-      <div class="media">
-        <video src="{{media.videoMp4}}" controls playsinline onerror="this.style.display='none'"></video>
-        <img src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
-      </div>
-      <h1>{{copy.title}}</h1>
-      <p>{{copy.subtitle}}</p>
-      <div style="margin:10px 0">{{copy.productDescription}}</div>
-      <div style="margin-top:14px">
-        <a class="btn" href="{{flow.nextHref}}">Étape suivante</a>
-        <a class="btn-ghost" href="{{payment.paymentLink}}">{{copy.ctaText}}</a>
-      </div>
-    </section>
-  </main>
-</body>
-</html>
+<!DOCTYPE html><html lang="fr"><head>
+<meta charset="utf-8"/><title>{{seo.metaTitle}}</title>
+<meta name="description" content="{{seo.metaDescription}}"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<style>
+:root{--bg:{{ui.mainColor}};--btn:{{ui.buttonColor}};--text:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+main{max-width:1100px;margin:0 auto;padding:24px}
+header{display:flex;justify-content:center;padding:16px 0}header img{max-height:56px;display:block}
+.card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px;margin:0 0 16px}
+.hero{text-align:center}.hero h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0}.sub{opacity:.9;margin:0}
+.media img,.media video{width:100%;max-height:480px;object-fit:cover;border-radius:12px;display:block}
+.btn{display:inline-block;width:auto;padding:12px 16px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-decoration:none;border:0;cursor:pointer}
+.hide{display:none}
+.grid{display:grid;gap:18px}
+</style></head><body>
+<header><img src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'"></header>
+<main>
+  <section class="card hero hide" id="hero"><h1 id="ttl">{{copy.title}}</h1><p class="sub" id="sub">{{copy.subtitle}}</p></section>
+  <section class="card hide" id="media">
+    <img id="img" src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
+    <video id="vid" src="{{media.videoMp4}}" controls playsinline onerror="this.style.display='none'"></video>
+  </section>
+  <section class="card hide" id="desc"><div>{{copy.productDescription}}</div></section>
+  <section class="card hide" id="copy"><div id="prob">{{copy.problem}}</div><div id="sol">{{copy.solution}}</div><div id="ben">{{copy.benefits}}</div><div id="bul">{{copy.bullets}}</div></section>
+  <section class="card hide" id="cta">
+    <a id="primary" class="btn" href="{{payment.paymentLink}}">{{copy.ctaText}}</a>
+    <a id="next" class="btn" style="background:#ffffff22" href="{{flow.nextHref}}">Continuer</a>
+  </section>
+  <section class="card hide" id="testi"><h3>Témoignages</h3><div>{{testimonials}}</div></section>
+  <section class="card hide" id="faq"><h3>FAQ</h3><div>{{faqs}}</div></section>
+</main>
+
+<script>
+const clean=s=>(s||'').trim();
+(function(){
+  if(clean(document.getElementById('ttl').textContent) || clean(document.getElementById('sub').textContent))
+    document.getElementById('hero').classList.remove('hide');
+
+  const img=document.getElementById('img'), vid=document.getElementById('vid'); const hasImg=!!clean(img.getAttribute('src')), hasVid=!!clean(vid.getAttribute('src'));
+  if(hasImg || hasVid) document.getElementById('media').classList.remove('hide');
+  if(hasVid && hasImg) img.style.display='none';
+
+  if(clean(document.querySelector('#desc > div').textContent)) document.getElementById('desc').classList.remove('hide');
+
+  const hasCopy = ['prob','sol','ben','bul'].some(id=>clean(document.getElementById(id).textContent));
+  if(hasCopy) document.getElementById('copy').classList.remove('hide');
+
+  const pl='{{payment.paymentLink}}'.trim(); const nx='{{flow.nextHref}}'.trim();
+  if((pl && pl!=='{{payment.paymentLink}}') || (nx && nx!=='{{flow.nextHref}}')) document.getElementById('cta').classList.remove('hide');
+  if(!pl || pl==='{{payment.paymentLink}}') document.getElementById('primary').classList.add('hide');
+
+  ['testi','faq'].forEach(id=>{const el=document.getElementById(id); if(!el) return; const c=el.querySelector('div'); if(c && clean(c.textContent)) el.classList.remove('hide');});
+})();
+
+// Pixels
+(function(){
+  const fb='{{analytics.fbPixelId}}'.trim(); if(fb){!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
+  s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script'); fbq('init',fb); fbq('track','PageView');}
+  const gtm='{{analytics.gtmId}}'.trim(); if(gtm){var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+gtm;document.head.appendChild(s)}
+})();
+</script>
+</body></html>
