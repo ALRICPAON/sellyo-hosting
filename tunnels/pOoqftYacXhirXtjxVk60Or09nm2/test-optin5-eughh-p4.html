@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>test optin5</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{--bg:;--btn:;--text:#fff}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    main{max-width:820px;margin:0 auto;padding:24px}
+    header{display:flex;justify-content:center;padding:16px 0}
+    header img{max-height:56px;display:block}
+    .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:22px}
+    h1{font-size:clamp(28px,3.5vw,40px);margin:8px 0;text-align:center}
+    p.lead{opacity:.9;text-align:center;margin:0 0 12px}
+    .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
+    .btn-alt{background:#ffffff22}
+    .grid{display:grid;gap:18px}
+    .hide{display:none}
+  </style>
+</head>
+<body>
+  <header><img src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-optin5-eughh%2Flogo-1755781288181?alt=media&token=951c95e0-aff8-4fe9-a4f1-0016e15ad462" alt="Logo" onerror="this.style.display='none'"></header>
+
+  <main>
+    <section class="card">
+      <h1>Merci 🎉</h1>
+      <p class="lead">Votre commande est confirmée. Vous trouverez ci-dessous l’accès à votre produit.</p>
+
+      <!-- Bouton de téléchargement si présent -->
+      <div id="dl-wrap" style="margin:14px 0 6px">
+        <a id="dl" class="btn" href="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-optin5-eughh%2Fdelivery-product-1755781289351?alt=media&token=b12c4adb-4074-4532-a1d7-2a26e039f4bc" target="_blank" rel="noopener">📥 Télécharger</a>
+      </div>
+
+      <!-- Lien de suite éventuel -->
+      <div id="next-wrap" class="hide">
+        <a class="btn btn-alt" href="">Continuer</a>
+      </div>
+    </section>
+
+    <!-- Récap produit / contenu additionnel -->
+    <section class="card hide" id="desc-wrap">
+      <h3>Contenu</h3>
+      <div id="desc"></div>
+      <div id="bul"></div>
+      <div id="ben"></div>
+      <div id="faq" class="hide">
+        <h3>FAQ</h3>
+        <div></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Clean wrappers
+    (function(){const kill=s=>s.replace(/```html?/gi,'').replace(/```/g,'');
+      ['desc','bul','ben','faq'].forEach(id=>{const el=document.getElementById(id); if(el) el.innerHTML=kill(el.innerHTML||'')})
+    })();
+
+    const clean=(s)=> (s||'').trim();
+
+    // Conditionnels
+    (function(){
+      const dl='https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-optin5-eughh%2Fdelivery-product-1755781289351?alt=media&token=b12c4adb-4074-4532-a1d7-2a26e039f4bc'.trim();
+      if(dl && dl!=='{{download.url}}'){ document.getElementById('dl-wrap').classList.remove('hide'); }
+
+      const next=''.trim();
+      if(next && next!=='{{flow.nextHref}}'){ document.getElementById('next-wrap').classList.remove('hide'); }
+
+      const hasDesc = !!clean(document.getElementById('desc').textContent);
+      const hasBul  = !!clean(document.getElementById('bul').textContent);
+      const hasBen  = !!clean(document.getElementById('ben').textContent);
+      const hasFaq  = !!clean(document.querySelector('#faq > div').textContent);
+      if(hasDesc || hasBul || hasBen || hasFaq){
+        document.getElementById('desc-wrap').classList.remove('hide');
+        if(hasFaq) document.getElementById('faq').classList.remove('hide');
+      }
+    })();
+
+    // Pixels
+    (function(){
+      const fb='123456'.trim();
+      if(fb){!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
+      s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script'); fbq('init',fb); fbq('track','PageView');}
+      const gtm='GTM'.trim();
+      if(gtm){var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+gtm;document.head.appendChild(s)}
+    })();
+  </script>
+</body>
+</html>
