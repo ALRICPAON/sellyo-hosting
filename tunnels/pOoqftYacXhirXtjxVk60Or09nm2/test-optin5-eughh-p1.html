@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>meta | test optin5</title>
+  <meta name="description" content="meta desc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      --bg: #00364a;
+      --btn: #0061ff;
+      --text:#fff;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    main{max-width:1100px;margin:0 auto;padding:24px}
+    header{display:flex;justify-content:center;padding:16px 0}
+    header img{max-height:56px;display:block}
+
+    .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
+    .hero{text-align:center;margin-bottom:16px}
+    .hero h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0}
+    .hero .sub{opacity:.9;margin:0}
+
+    .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
+    form input,form textarea,form select{width:100%;padding:12px;border-radius:10px;border:0;margin:8px 0;background:#ffffff12;color:#fff}
+
+    /* Grilles */
+    .grid{display:grid;gap:18px}
+    .two-cols{grid-template-columns:1fr}
+    @media(min-width:880px){.two-cols{grid-template-columns:1.1fr .9fr}}
+
+    .pair{display:grid;grid-template-columns:1fr;gap:12px}
+    @media(min-width:880px){.pair{grid-template-columns:1fr 1fr}}
+
+    .argu-grid{display:grid;gap:14px;grid-template-columns:1fr}
+    @media(min-width:880px){.argu-grid{grid-template-columns:1fr 0.9fr}}
+
+    .media img,.media video{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
+    .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
+    .hide{display:none}
+    .text-center{text-align:center}
+
+    /* Effet si pas de média */
+    .fun{background:linear-gradient(135deg,#ffffff12,#ffffff08)}
+  </style>
+</head>
+<body>
+  <header><img src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-optin5-eughh%2Flogo-1755781288181?alt=media&token=951c95e0-aff8-4fe9-a4f1-0016e15ad462" alt="Logo" onerror="this.style.display='none'"></header>
+
+  <main>
+    <!-- 1) Titre + Sous-titre -->
+    <section class="card hero">
+      <h1>test capture</h1>
+      <p class="sub">capture</p>
+    </section>
+
+    <!-- 2) Description avant le formulaire -->
+    <section class="card" id="desc-wrap">
+      <div id="desc">test d'une capture</div>
+    </section>
+
+    <!-- 3) Zone principale : G = image + formulaire -->
+    <section class="grid two-cols" id="main-zone">
+      <!-- Colonne gauche -->
+      <div class="card" id="left-col">
+        <div class="pair" id="left-pair">
+          <div class="media" id="left-media">
+            <img id="img-left" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-optin5-eughh%2Fpage1-hero-1755781290464?alt=media&token=93af98d9-bfaf-4abb-b6b5-8e61b71f0fa4" alt="" onerror="this.style.display='none'">
+          </div>
+
+          <div>
+            <div id="timer" class="timer hide"></div>
+
+            <!-- Spécification des champs (JSON) -->
+            <script id="form-fields-json" type="application/json">{"name":true,"firstname":true,"email":true,"phone":true,"address":true}</script>
+
+            <!-- Form -->
+            <form id="lead-form" data-role="capture" data-next="test-optin5-eughh-p2.html">
+              <div id="form-visible"></div>
+
+              <!-- requis pour save-lead-tunnel.js -->
+              <input type="hidden" name="userId" value="pOoqftYacXhirXtjxVk60Or09nm2" />
+              <input type="hidden" name="pageSlug" value="test-optin5-eughh-p1" />
+              <input type="hidden" name="slug" value="test-optin5-eughh-p1" />
+              <input type="hidden" name="type" value="tunnel" />
+              <input type="hidden" name="nextUrl" value="test-optin5-eughh-p2.html" />
+
+              <button type="submit" class="btn">je test</button>
+
+              <!-- Garantie sous le formulaire -->
+              <div id="gua" class="hide" style="margin-top:10px"><em>satisfait</em></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4) Bloc argumentaire SOUS le formulaire : gauche = textes, droite = vidéo -->
+    <section class="card argu-grid" id="argu-zone">
+      <!-- Argumentaire (gauche) : uniquement contenu -->
+      <div id="argu-left">
+        <div id="prob">un probleme</div>
+        <div id="sol">une solution</div>
+        <div id="ben">1, 2, 3</div>
+        <div id="bul">3, 2, 1</div>
+      </div>
+
+      <!-- Vidéo (droite) -->
+      <div class="media" id="argu-video">
+        <video id="vid-argu" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-optin5-eughh%2Fpage1-video-1755781291516?alt=media&token=e8b47b3e-a6fb-4ee6-bd83-13dcbabb8a64" controls playsinline onerror="this.style.display='none'"></video>
+      </div>
+    </section>
+
+    <!-- 5) Témoignages + FAQ en bas -->
+    <section class="card hide" id="testi">
+      <h3>Témoignages</h3>
+      <div></div>
+    </section>
+
+    <section class="card hide" id="faq">
+      <h3>FAQ</h3>
+      <div></div>
+    </section>
+
+    <!-- Progress (si fourni) -->
+    <section class="card hide" id="progress"></section>
+  </main>
+
+  <!-- scripts capture requis -->
+  <script type="module" src="https://alricpaon.github.io/sellyo-hosting/js/firebase-init.js"></script>
+  <script type="module" src="https://alricpaon.github.io/sellyo-hosting/js/save-lead-tunnel.js"></script>
+
+  <script>
+    // Anti-parasites (supprime d'éventuels ```html ... ```)
+    (function(){
+      const kill = (s)=>s.replace(/```html?/gi,'').replace(/```/g,'');
+      ['desc','prob','sol','ben','bul','testi','faq'].forEach(id=>{
+        const el=document.getElementById(id); if(!el) return;
+        el.innerHTML = kill(el.innerHTML||'');
+      });
+    })();
+
+    // Helper
+    const cleanText = (s) => (s||"").replace(/^['"\\s]+|['"\\s]+$/g,'').trim();
+
+    // 1) Génération des inputs visibles depuis {{formFields}} (JSON)
+    (function(){
+      const holder = document.getElementById('form-visible');
+      const blob = document.getElementById('form-fields-json');
+      let spec = {};
+      if (blob) {
+        let raw = (blob.textContent || '').trim();
+        if ((raw.startsWith('"') && raw.endsWith('"')) || (raw.startsWith("'") && raw.endsWith("'"))) {
+          raw = raw.slice(1,-1).replace(/\\"/g,'"').replace(/\\n/g,'').replace(/\\t/g,'');
+        }
+        try { spec = JSON.parse(raw); } catch(e){ spec = {}; }
+      }
+      const order = ['firstname','name','email','phone','company','jobTitle','website','address','address2','city','state','zip','country','age','gender','notes'];
+      const labels = { firstname:'Prénom', name:'Nom', email:'Email', phone:'Téléphone',
+        company:'Société', jobTitle:'Poste', website:'Site web', address:'Adresse', address2:"Complément d'adresse",
+        city:'Ville', state:'État / Région', zip:'Code postal', country:'Pays', age:'Âge', gender:'Genre', notes:'Message' };
+
+      const makeInput = (key, cfg) => {
+        const type = (cfg && cfg.type) || (key==='email'?'email': key==='phone'?'tel':'text');
+        const req = (cfg && cfg.required) || (key==='email');
+        if (key==='notes') { const ta=document.createElement('textarea'); ta.name=key; ta.placeholder=labels[key]||key; ta.required=!!req; return ta; }
+        if (key==='gender') {
+          const sel=document.createElement('select'); sel.name=key;
+          ['','Femme','Homme','Autre','Ne se prononce pas'].forEach((t,i)=>{
+            const o=document.createElement('option'); o.value=i? t.toLowerCase() : ''; o.textContent=i? t:'Genre (optionnel)'; sel.appendChild(o);
+          });
+          return sel;
+        }
+        const input=document.createElement('input'); input.name=key; input.type=type; input.placeholder=labels[key]||key; if(req) input.required=true; return input;
+      };
+
+      if (holder) {
+        order.forEach(k=>{
+          const v = spec && (spec[k] || (spec.fields && spec.fields[k]));
+          if (v) holder.appendChild(makeInput(k, typeof v==='object'? v : {}));
+        });
+      }
+    })();
+
+    // 2) Logique médias/form & argumentaire
+    (function(){
+      // Haut : image + form
+      const mainZone = document.getElementById('main-zone');
+      const leftCol = document.getElementById('left-col');
+      const leftPair = document.getElementById('left-pair');
+      const leftMedia = document.getElementById('left-media');
+      const imgLeft = document.getElementById('img-left');
+
+      const hasImg = !!cleanText(imgLeft.getAttribute('src'));
+      if (!hasImg) {
+        leftMedia.style.display = 'none';
+        leftPair.style.gridTemplateColumns = '1fr';
+        mainZone.classList.remove('two-cols');
+        leftCol.classList.add('fun');
+      }
+
+      // Bas : argumentaire + vidéo
+      const arguZone = document.getElementById('argu-zone');
+      const vidWrap  = document.getElementById('argu-video');
+      const vid      = document.getElementById('vid-argu');
+      const hasVid   = !!cleanText(vid.getAttribute('src'));
+
+      if (!hasVid) {
+        // pas de vidéo -> une seule colonne + centrage du texte
+        arguZone.style.gridTemplateColumns = '1fr';
+        document.getElementById('argu-left').classList.add('text-center');
+        vidWrap.style.display = 'none';
+      }
+    })();
+
+    // 3) Affichages conditionnels + timer
+    (function(){
+      // Garantie visible si contenu
+      const gua = document.getElementById('gua');
+      if (gua && cleanText(gua.textContent)) { gua.classList.remove('hide'); }
+
+      // Témoignages & FAQ (en bas)
+      ['testi','faq'].forEach(id=>{
+        const el=document.getElementById(id); if(!el) return;
+        const inner=el.querySelector('div'); const txt=cleanText(inner? inner.textContent: '');
+        if (txt) el.classList.remove('hide');
+      });
+
+      // Progress bar
+      const prog = document.getElementById('progress');
+      if (prog && cleanText(prog.textContent)) prog.classList.remove('hide');
+
+      // Timer
+      const evergreen = parseInt('30',10)||0;
+      const deadlineISO = cleanText('');
+      const t = document.getElementById('timer');
+      function render(sec){ if(sec<=0){ t.textContent='Offre expirée'; return; } const m=Math.floor(sec/60), s=sec%60; t.textContent='Offre expire dans '+m+'m '+('0'+s).slice(-2)+'s'; }
+      let total=0;
+      if(evergreen>0) total=evergreen*60;
+      else if(deadlineISO && !isNaN(Date.parse(deadlineISO))) total=Math.max(0,Math.floor((new Date(deadlineISO)-new Date())/1000));
+      if(total>0){ t.classList.remove('hide'); (function tick(){ render(total--); if(total>=0) setTimeout(tick,1000); })(); }
+    })();
+
+    // 4) Pixels (vides = pas d’injection)
+    (function(){
+      const clean = cleanText;
+      var fb=clean('123456'); if(fb){!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
+      s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script'); fbq('init', fb); fbq('track','PageView');}
+      var gtm=clean('GTM'); if(gtm){var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+gtm;document.head.appendChild(s)}
+    })();
+  </script>
+</body>
+</html>
