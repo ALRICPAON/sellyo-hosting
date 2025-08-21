@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>test optin5</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { --bg: #00364a; --btn: #0061ff; --text:#fff }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    main{max-width:1100px;margin:0 auto;padding:24px}
+    header{display:flex;justify-content:center;padding:16px 0}
+    header img{max-height:56px;display:block}
+
+    .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
+    .hero{text-align:center;margin-bottom:16px}
+    .hero h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0}
+    .hero .sub{opacity:.9;margin:0}
+
+    .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
+    .btn-alt{background:#ffffff22;color:#fff}
+
+    /* Grilles */
+    .grid{display:grid;gap:18px}
+    .two-cols{grid-template-columns:1fr}
+    @media(min-width:880px){.two-cols{grid-template-columns:1.1fr .9fr}}
+
+    .pair{display:grid;gap:12px;grid-template-columns:1fr}
+    @media(min-width:880px){.pair{grid-template-columns:1fr 1fr}}
+
+    .media img,.media video{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
+
+    .price{font-size:28px;font-weight:900;margin:6px 0}
+    .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
+    .hide{display:none}
+
+    /* Légère variante si pas de média */
+    .fun{background:linear-gradient(135deg,#ffffff12,#ffffff08)}
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-optin5-eughh%2Flogo-1755781288181?alt=media&token=951c95e0-aff8-4fe9-a4f1-0016e15ad462" alt="Logo" onerror="this.style.display='none'">
+  </header>
+
+  <main>
+    <!-- 1) Titre + sous-titre -->
+    <section class="card hero">
+      <h1>test page vente</h1>
+      <p class="sub">vente</p>
+    </section>
+
+    <!-- 2) Description principale -->
+    <section class="card" id="desc-wrap">
+      <div id="desc">test ventes</div>
+    </section>
+
+    <!-- 3) Zone principale : image/offre à gauche, argumentaire + vidéo à droite -->
+    <section class="grid two-cols" id="main-zone">
+      <!-- Colonne gauche : image + offre -->
+      <div class="card" id="left-col">
+        <div class="pair" id="left-pair">
+          <!-- Média -->
+          <div class="media" id="left-media">
+            <img id="img-left" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-optin5-eughh%2Fpage2-hero-1755781292732?alt=media&token=540f7ba1-d845-44c1-b88c-43cebaa5834d" alt="" onerror="this.style.display='none'">
+          </div>
+
+          <!-- Offre -->
+          <aside style="display:flex;flex-direction:column;gap:12px;align-items:stretch">
+            <div id="timer" class="timer hide"></div>
+            <div id="price" class="price hide">60 EUR</div>
+            <a class="btn" href="https://buy.stripe.com/test_aFa4gs1EO5jHbCe8aM6kg00">je paye</a>
+            <a class="btn btn-alt" href="test-optin5-eughh-p3.html">Découvrir avant d’acheter</a>
+            <div id="progress" class="hide">true</div>
+          </aside>
+        </div>
+      </div>
+
+      <!-- Colonne droite : bloc argumentaire + vidéo -->
+      <div class="card" id="right-col">
+        <div id="prob">un probleme</div>
+        <div id="sol">une solution</div>
+        <div id="ben">un benefic, 2, 3, 4</div>
+        <div id="bul">clés, 4, 3, 2</div>
+
+        <!-- Vidéo à droite, centrée si seule -->
+        <div class="media" id="right-video">
+          <video id="vid-right" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-optin5-eughh%2Fpage2-video-1755781293816?alt=media&token=44e2af2a-49d7-4707-891c-b29e6a3433b3" controls playsinline onerror="this.style.display='none'"></video>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4) Témoignages + FAQ en bas -->
+    <section class="card hide" id="testi">
+      <h3>Témoignages</h3>
+      <div></div>
+    </section>
+
+    <section class="card hide" id="faq">
+      <h3>FAQ</h3>
+      <div></div>
+    </section>
+  </main>
+
+  <!-- Scripts : timers + tracking -->
+  <script>
+    // Nettoyage soft
+    (function(){
+      const kill=(s)=>s.replace(/```html?/gi,'').replace(/```/g,'');
+      ['desc','prob','sol','ben','bul','testi','faq'].forEach(id=>{
+        const el=document.getElementById(id); if(!el) return;
+        const t=el.innerHTML||''; el.innerHTML=kill(t);
+      });
+    })();
+
+    const cleanText = (s) => (s||"").replace(/^['"\\s]+|['"\\s]+$/g,'').trim();
+
+    // Gestion dynamique des médias
+    (function(){
+      const mainZone = document.getElementById('main-zone');
+      const leftCol = document.getElementById('left-col');
+      const leftPair = document.getElementById('left-pair');
+      const leftMedia = document.getElementById('left-media');
+      const imgLeft = document.getElementById('img-left');
+
+      const rightCol = document.getElementById('right-col');
+      const rightVideoWrap = document.getElementById('right-video');
+      const vidRight = document.getElementById('vid-right');
+
+      const hasImg = !!cleanText(imgLeft.getAttribute('src'));
+      const hasVid = !!cleanText(vidRight.getAttribute('src'));
+
+      if (hasImg && hasVid) {
+        // (a) Image à gauche, vidéo à droite → ok
+      } else if (hasImg && !hasVid) {
+        // (b) Image seule → 1 colonne, contenu en dessous
+        mainZone.classList.remove('two-cols');
+      } else if (!hasImg && hasVid) {
+        // (c) Vidéo seule → vidéo à gauche, argumentaire centré
+        rightVideoWrap.parentNode.removeChild(rightVideoWrap);
+        const holder = document.createElement('div');
+        holder.className='media';
+        holder.appendChild(vidRight);
+        leftMedia.innerHTML='';
+        leftMedia.appendChild(holder);
+        mainZone.classList.remove('two-cols');
+      } else {
+        // (d) Aucun média → centrage bloc gauche
+        leftMedia.style.display='none';
+        leftPair.style.gridTemplateColumns='1fr';
+        mainZone.classList.remove('two-cols');
+        leftCol.classList.add('fun');
+      }
+    })();
+
+    // Affichages conditionnels + timer
+    (function(){
+      const showIf = (id) => { const el=document.getElementById(id); if(!el) return; if((el.textContent||'').trim()) el.classList.remove('hide'); };
+      ['price','progress'].forEach(showIf);
+
+      // Témoignages / FAQ
+      ['testi','faq'].forEach(id=>{
+        const el=document.getElementById(id); if(!el) return;
+        const inner=el.querySelector('div'); const txt=cleanText(inner? inner.textContent:'');
+        if (txt) el.classList.remove('hide');
+      });
+
+      // Timer
+      const evergreen = parseInt('',10)||0;
+      const deadlineISO = '';
+      const t = document.getElementById('timer');
+      function renderTimer(sec){ if(sec<=0){ t.textContent='Offre expirée'; return; } const m=Math.floor(sec/60), s=sec%60; t.textContent='Offre expire dans '+m+'m '+('0'+s).slice(-2)+'s';}
+      let total=0; if(evergreen>0) total=evergreen*60; else if(deadlineISO && !isNaN(Date.parse(deadlineISO))) total=Math.max(0,Math.floor((new Date(deadlineISO)-new Date())/1000));
+      if(total>0){ t.classList.remove('hide'); (function tick(){ renderTimer(total--); if(total>=0) setTimeout(tick,1000); })(); }
+    })();
+
+    // Tracking (vide = pas d’injection)
+    (function(){
+      var fb=cleanText('123456'); if(fb){!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
+      s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script'); fbq('init',fb); fbq('track','PageView');}
+      var gtm=cleanText('GTM'); if(gtm){var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+gtm;document.head.appendChild(s)}
+    })();
+  </script>
+</body>
+</html>
