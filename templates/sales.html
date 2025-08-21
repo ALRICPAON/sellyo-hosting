@@ -70,7 +70,11 @@
           <aside style="display:flex;flex-direction:column;gap:12px;align-items:stretch">
             <div id="timer" class="timer hide"></div>
             <div id="price" class="price hide">{{payment.price}} {{payment.currency}}</div>
-            <a class="btn" href="{{payment.paymentLink}}">{{copy.ctaText}}</a>
+
+            <!-- Bouton principal dynamique -->
+            <a id="cta-btn" class="btn" target="_blank">{{copy.ctaText}}</a>
+
+            <!-- Bouton découvrir avant d’acheter -->
             <a class="btn btn-alt" href="{{flow.nextHref}}">Découvrir avant d’acheter</a>
             <div id="progress" class="hide">{{components.progressBar}}</div>
           </aside>
@@ -134,10 +138,8 @@
       if (hasImg && hasVid) {
         // (a) Image à gauche, vidéo à droite → ok
       } else if (hasImg && !hasVid) {
-        // (b) Image seule → 1 colonne, contenu en dessous
         mainZone.classList.remove('two-cols');
       } else if (!hasImg && hasVid) {
-        // (c) Vidéo seule → vidéo à gauche, argumentaire centré
         rightVideoWrap.parentNode.removeChild(rightVideoWrap);
         const holder = document.createElement('div');
         holder.className='media';
@@ -146,11 +148,29 @@
         leftMedia.appendChild(holder);
         mainZone.classList.remove('two-cols');
       } else {
-        // (d) Aucun média → centrage bloc gauche
         leftMedia.style.display='none';
         leftPair.style.gridTemplateColumns='1fr';
         mainZone.classList.remove('two-cols');
         leftCol.classList.add('fun');
+      }
+    })();
+
+    // Dynamique bouton principal selon action choisie
+    (function(){
+      const btn = document.getElementById("cta-btn");
+      const mode = "{{cta.mode}}".trim(); // "payment" | "next" | "url"
+      const pay = "{{payment.paymentLink}}".trim();
+      const next = "{{flow.nextHref}}".trim();
+      const url  = "{{custom.ctaUrl}}".trim();
+
+      if(mode === "payment" && pay){
+        btn.href = pay;
+      } else if(mode === "next" && next){
+        btn.href = next;
+      } else if(mode === "url" && url){
+        btn.href = url;
+      } else {
+        btn.style.display = "none";
       }
     })();
 
@@ -159,14 +179,12 @@
       const showIf = (id) => { const el=document.getElementById(id); if(!el) return; if((el.textContent||'').trim()) el.classList.remove('hide'); };
       ['price','progress'].forEach(showIf);
 
-      // Témoignages / FAQ
       ['testi','faq'].forEach(id=>{
         const el=document.getElementById(id); if(!el) return;
         const inner=el.querySelector('div'); const txt=cleanText(inner? inner.textContent:'');
         if (txt) el.classList.remove('hide');
       });
 
-      // Timer
       const evergreen = parseInt('{{timers.evergreenMinutes}}',10)||0;
       const deadlineISO = '{{timers.deadlineISO}}';
       const t = document.getElementById('timer');
