@@ -1,0 +1,83 @@
+<!DOCTYPE html><html lang="fr"><head>
+<meta charset="utf-8"/><title>test optin5</title>
+<meta name="description" content=""/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<style>
+:root{--bg:#00364a;--btn:#0061ff;--text:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+main{max-width:1100px;margin:0 auto;padding:24px}
+header{display:flex;justify-content:center;padding:16px 0}header img{max-height:56px;display:block}
+.card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
+.hero{text-align:center;margin-bottom:16px}.hero h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0}.sub{opacity:.9;margin:0}
+.grid{display:grid;gap:18px}.two{grid-template-columns:1fr}@media(min-width:880px){.two{grid-template-columns:1.1fr .9fr}}
+.media img,.media video{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
+.btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
+.btn-alt{background:#ffffff22}
+.price{font-size:28px;font-weight:900;margin:6px 0}
+.timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
+.hide{display:none}
+</style></head><body>
+<header><img src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-optin5-eughh%2Flogo-1755781288181?alt=media&token=951c95e0-aff8-4fe9-a4f1-0016e15ad462" alt="Logo" onerror="this.style.display='none'"></header>
+<main>
+  <section class="card hero"><h1>offre complémentaire</h1><p class="sub">upsell</p></section>
+
+  <section class="grid two">
+    <div class="card">
+      <div class="media" id="mwrap">
+        <img id="img" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-optin5-eughh%2Fpage5-hero-1755781298448?alt=media&token=2b396d62-39d7-44e8-862e-7c180fbad25f" alt="" onerror="this.style.display='none'">
+        <video id="vid" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-optin5-eughh%2Fpage5-video-1755781299354?alt=media&token=c10a0527-b724-47c0-83a2-b93a44bd93c0" controls playsinline onerror="this.style.display='none'"></video>
+      </div>
+      <div id="timer" class="timer hide"></div>
+      <div id="price" class="price hide">60 EUR</div>
+      <a id="buy" class="btn" href="https://buy.stripe.com/test_aFa4gs1EO5jHbCe8aM6kg00">je prend</a>
+      <a class="btn btn-alt" href="test-optin5-eughh-p6.html">Non merci, je passe</a>
+    </div>
+
+    <aside class="card">
+      <div id="prob">prob</div>
+      <div id="sol">solut</div>
+      <div id="ben">benef</div>
+      <div id="bul">clé</div>
+    </aside>
+  </section>
+
+  <section class="card hide" id="testi"><h3>Témoignages</h3><div></div></section>
+  <section class="card hide" id="faq"><h3>FAQ</h3><div></div></section>
+</main>
+
+<script>
+const clean=s=>(s||'').trim();
+
+// Media: show video priority
+(function(){
+  const img=document.getElementById('img'), vid=document.getElementById('vid'), wrap=document.getElementById('mwrap');
+  const hasImg=!!clean(img.getAttribute('src')), hasVid=!!clean(vid.getAttribute('src'));
+  if(!hasVid && !hasImg) wrap.style.display='none';
+  if(hasVid && hasImg) img.style.display='none';
+})();
+
+// Timer
+(function(){
+  const t=document.getElementById('timer'); const ever=parseInt('',10)||0; const iso=''.trim();
+  let total=0; if(ever>0) total=ever*60; else if(iso && !isNaN(Date.parse(iso))) total=Math.max(0,Math.floor((new Date(iso)-new Date())/1000));
+  function render(sec){ if(sec<=0){ t.textContent='Offre expirée'; return; } const m=Math.floor(sec/60), s=sec%60; t.textContent='Se termine dans '+m+'m '+('0'+s).slice(-2)+'s'; }
+  if(total>0){ t.classList.remove('hide'); (function tick(){ render(total--); if(total>=0) setTimeout(tick,1000); })(); }
+})();
+
+// Optionnels
+(function(){
+  const p=document.getElementById('price'); if(clean(p.textContent)) p.classList.remove('hide');
+  ['testi','faq'].forEach(id=>{const el=document.getElementById(id); if(!el) return; const c=el.querySelector('div'); if(c && clean(c.textContent)) el.classList.remove('hide');});
+  var href='https://buy.stripe.com/test_aFa4gs1EO5jHbCe8aM6kg00'.trim(); if(!href || href==='https://buy.stripe.com/test_aFa4gs1EO5jHbCe8aM6kg00'){ document.getElementById('buy').classList.add('hide'); }
+})();
+
+// Pixels
+(function(){
+  const fb='123456'.trim(); if(fb){!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
+  s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script'); fbq('init',fb); fbq('track','PageView');}
+  const gtm='GTM'.trim(); if(gtm){var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+gtm;document.head.appendChild(s)}
+})();
+</script>
+</body></html>
