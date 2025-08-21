@@ -6,92 +6,184 @@
   <meta name="description" content="{{seo.metaDescription}}" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root { --bg:#0b1220; --main: {{ui.mainColor}}; --btn: {{ui.buttonColor}}; --text:#fff }
-    *{box-sizing:border-box} 
+    :root { --bg: {{ui.mainColor}}; --btn: {{ui.buttonColor}}; --text:#fff }
+    *{box-sizing:border-box}
     body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
     main{max-width:1100px;margin:0 auto;padding:24px}
     header{display:flex;justify-content:center;padding:16px 0}
     header img{max-height:56px;display:block}
-    .media img,.media video{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
-    h1{font-size:clamp(28px,3.5vw,44px);margin:8px 0} 
-    h2{margin:24px 0 12px;font-size:clamp(22px,2.5vw,32px);}
-    .sub{opacity:.9;margin:0 0 16px}
-    .grid{display:grid;gap:18px;grid-template-columns:1fr} 
-    @media(min-width:900px){.grid{grid-template-columns:1.1fr .9fr}}
+
     .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
-    .btn{display:inline-block;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
+    .hero{text-align:center;margin-bottom:16px}
+    .hero h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0}
+    .hero .sub{opacity:.9;margin:0}
+
+    .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
     .btn-alt{background:#ffffff22;color:#fff}
+
+    /* Grilles */
+    .grid{display:grid;gap:18px}
+    .two-cols{grid-template-columns:1fr}
+    @media(min-width:880px){.two-cols{grid-template-columns:1.1fr .9fr}}
+
+    .pair{display:grid;gap:12px;grid-template-columns:1fr}
+    @media(min-width:880px){.pair{grid-template-columns:1fr 1fr}}
+
+    .media img,.media video{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
+
     .price{font-size:28px;font-weight:900;margin:6px 0}
     .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
     .hide{display:none}
-    ul{margin:10px 0 0 18px}
+
+    /* Légère variante si pas de média */
+    .fun{background:linear-gradient(135deg,#ffffff12,#ffffff08)}
   </style>
 </head>
 <body>
   <header>
     <img src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'">
   </header>
+
   <main>
-    <!-- Bloc media + titre -->
-    <section class="card">
-      <div class="media">
-        <video src="{{media.videoMp4}}" controls playsinline onerror="this.style.display='none'"></video>
-        <img src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
-      </div>
+    <!-- 1) Titre + sous-titre -->
+    <section class="card hero">
       <h1>{{copy.title}}</h1>
       <p class="sub">{{copy.subtitle}}</p>
     </section>
 
-    <div class="grid">
-      <!-- Bloc texte principal -->
-      <section class="card">
-        <h2 id="h-prob" class="hide">Le problème</h2><div id="prob">{{copy.problem}}</div>
-        <h2 id="h-sol" class="hide">La solution</h2><div id="sol">{{copy.solution}}</div>
-        <h2 id="h-ben" class="hide">Bénéfices</h2><div id="ben">{{copy.benefits}}</div>
-        <h2 id="h-bul" class="hide">Ce que vous obtenez</h2><div id="bul">{{copy.bullets}}</div>
-        <div id="gua" class="hide" style="margin-top:8px"><em>{{copy.guarantee}}</em></div>
+    <!-- 2) Description -->
+    <section class="card" id="desc-wrap">
+      <div id="desc">{{copy.productDescription}}</div>
+    </section>
 
-        <!-- Témoignages -->
-        <div id="testi" class="hide" style="margin-top:12px">
-          <h2>Témoignages</h2>
-          <div>{{testimonials}}</div>
+    <!-- 3) Main zone : G = (image ⟷ offre), D = textes + vidéo -->
+    <section class="grid two-cols" id="main-zone">
+      <!-- Colonne gauche : image + offre (prix/CTA) -->
+      <div class="card" id="left-col">
+        <div class="pair" id="left-pair">
+          <!-- Média (image par défaut côté gauche) -->
+          <div class="media" id="left-media">
+            <img id="img-left" src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
+          </div>
+
+          <!-- Offre -->
+          <aside style="display:flex;flex-direction:column;gap:12px;align-items:stretch">
+            <div id="timer" class="timer hide"></div>
+            <div id="price" class="price hide">{{payment.price}} {{payment.currency}}</div>
+            <a class="btn" href="{{payment.paymentLink}}">{{copy.ctaText}}</a>
+            <a class="btn btn-alt" href="{{flow.nextHref}}">Découvrir avant d’acheter</a>
+            <div id="progress" class="hide">{{components.progressBar}}</div>
+          </aside>
         </div>
+      </div>
 
-        <!-- FAQ -->
-        <div id="faq" class="hide" style="margin-top:12px">
-          <h2>FAQ</h2>
-          <div>{{faqs}}</div>
+      <!-- Colonne droite : contenus + vidéo en bas -->
+      <div class="card" id="right-col">
+        <!-- Affiche UNIQUEMENT le contenu (pas de titres “Problème/…”). -->
+        <div id="prob">{{copy.problem}}</div>
+        <div id="sol">{{copy.solution}}</div>
+        <div id="ben">{{copy.benefits}}</div>
+        <div id="bul">{{copy.bullets}}</div>
+
+        <div class="media" id="right-video">
+          <video id="vid-right" src="{{media.videoMp4}}" controls playsinline onerror="this.style.display='none'"></video>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- Bloc offre et paiement -->
-      <aside class="card" style="display:flex;flex-direction:column;gap:12px;align-items:stretch">
-        <div id="timer" class="timer hide"></div>
-        <div id="price" class="price hide">{{payment.price}} {{payment.currency}}</div>
-        <a class="btn" href="{{payment.paymentLink}}">{{copy.ctaText}}</a>
-        <a class="btn btn-alt" href="{{flow.nextHref}}">Découvrir avant d’acheter</a>
-        <div id="progress" class="hide">{{components.progressBar}}</div>
-      </aside>
-    </div>
+    <!-- 4) Témoignages + FAQ en bas -->
+    <section class="card hide" id="testi">
+      <h3>Témoignages</h3>
+      <div>{{testimonials}}</div>
+    </section>
+
+    <section class="card hide" id="faq">
+      <h3>FAQ</h3>
+      <div>{{faqs}}</div>
+    </section>
   </main>
 
   <!-- Scripts : timers + tracking -->
   <script>
+    // Nettoyage soft (au cas où un moteur aurait injecté des ```html/```)
     (function(){
-      const showIf = (id) => { const el = document.getElementById(id); if(!el) return; if((el.textContent||'').trim()) el.classList.remove('hide'); };
-      ['h-prob','prob','h-sol','sol','h-ben','ben','h-bul','bul','gua','testi','faq','price','progress'].forEach(showIf);
+      const kill=(s)=>s.replace(/```html?/gi,'').replace(/```/g,'');
+      ['desc','prob','sol','ben','bul','testi','faq'].forEach(id=>{
+        const el=document.getElementById(id); if(!el) return;
+        const t=el.innerHTML||''; el.innerHTML=kill(t);
+      });
+    })();
+
+    const cleanText = (s) => (s||"").replace(/^['"\\s]+|['"\\s]+$/g,'').trim();
+
+    // Layout médias / offre : (degrade si 1 média / 0 média)
+    (function(){
+      const mainZone = document.getElementById('main-zone');
+      const leftCol = document.getElementById('left-col');
+      const leftPair = document.getElementById('left-pair');
+      const leftMedia = document.getElementById('left-media');
+      const imgLeft = document.getElementById('img-left');
+
+      const rightCol = document.getElementById('right-col');
+      const rightVideoWrap = document.getElementById('right-video');
+      const vidRight = document.getElementById('vid-right');
+
+      const hasImg = !!cleanText(imgLeft.getAttribute('src'));
+      const hasVid = !!cleanText(vidRight.getAttribute('src'));
+
+      if (hasImg && hasVid) {
+        // (a) 2 médias -> image à gauche (déjà), vidéo à droite en bas (déjà)
+      } else if (hasImg && !hasVid) {
+        // (b) uniquement image -> ok à gauche ; on passe en 1 colonne (textes sous le bloc)
+        mainZone.classList.remove('two-cols');
+      } else if (!hasImg && hasVid) {
+        // (b) uniquement vidéo -> bascule la vidéo à gauche à la place de l'image
+        rightVideoWrap.parentNode.removeChild(rightVideoWrap);
+        const holder = document.createElement('div');
+        holder.className='media';
+        holder.appendChild(vidRight);
+        leftMedia.innerHTML='';
+        leftMedia.appendChild(holder);
+        // 1 colonne
+        mainZone.classList.remove('two-cols');
+      } else {
+        // (c) aucun média -> centrage de l’offre
+        leftMedia.style.display='none';
+        leftPair.style.gridTemplateColumns='1fr';
+        mainZone.classList.remove('two-cols');
+        leftCol.classList.add('fun');
+      }
+    })();
+
+    // Affichages conditionnels + timer
+    (function(){
+      const showIf = (id) => { const el=document.getElementById(id); if(!el) return; if((el.textContent||'').trim()) el.classList.remove('hide'); };
+      ['price','progress'].forEach(showIf);
+
+      // Témoignages / FAQ
+      ['testi','faq'].forEach(id=>{
+        const el=document.getElementById(id); if(!el) return;
+        const inner=el.querySelector('div'); const txt=cleanText(inner? inner.textContent:'');
+        if (txt) el.classList.remove('hide');
+      });
+
+      // Timer
       const evergreen = parseInt('{{timers.evergreenMinutes}}',10)||0;
       const deadlineISO = '{{timers.deadlineISO}}';
       const t = document.getElementById('timer');
       function renderTimer(sec){ if(sec<=0){ t.textContent='Offre expirée'; return; } const m=Math.floor(sec/60), s=sec%60; t.textContent='Offre expire dans '+m+'m '+('0'+s).slice(-2)+'s';}
       let total=0; if(evergreen>0) total=evergreen*60; else if(deadlineISO && !isNaN(Date.parse(deadlineISO))) total=Math.max(0,Math.floor((new Date(deadlineISO)-new Date())/1000));
-      if(total>0){ t.classList.remove('hide'); const tick=()=>{renderTimer(total--); if(total>=0) setTimeout(tick,1000)}; tick(); }
+      if(total>0){ t.classList.remove('hide'); (function tick(){ renderTimer(total--); if(total>=0) setTimeout(tick,1000); })(); }
     })();
-    (function(){var fb='{{analytics.fbPixelId}}'.trim(); if(fb){!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
-    s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script'); fbq('init',fb); fbq('track','PageView');}
-    var gtm='{{analytics.gtmId}}'.trim(); if(gtm){var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+gtm;document.head.appendChild(s)}})();
+
+    // Tracking (vides = pas d’injection)
+    (function(){
+      var fb=cleanText('{{analytics.fbPixelId}}'); if(fb){!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
+      s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script'); fbq('init',fb); fbq('track','PageView');}
+      var gtm=cleanText('{{analytics.gtmId}}'); if(gtm){var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+gtm;document.head.appendChild(s)}
+    })();
   </script>
 </body>
 </html>
