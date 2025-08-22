@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>test vend optin3</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      --bg: #0b1220;
+      --main: #6f7608;
+      --bg: #6f7608;
+      --btn: #fff76b;
+      --text:#fff;
+    }
+
+    .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
+    form input,form textarea,form select{width:100%;padding:12px;border-radius:10px;border:0;margin:8px 0;background:#ffffff12;color:#fff}
+
+    /* Grilles adaptatives */
+    .grid{display:grid;gap:18px}
+    .grid-2{grid-template-columns:1fr}
+    @media(min-width:880px){.grid-2{grid-template-columns:1.1fr .9fr}}
+    .two-cols{grid-template-columns:1fr}
+    @media(min-width:880px){.two-cols{grid-template-columns:1.1fr .9fr}}
+
+    .pair{display:grid;grid-template-columns:1fr;gap:12px}
+    @media(min-width:880px){.pair{grid-template-columns:1fr 1fr}}
+
+    .media img,.media video{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
+    .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
+    .hide{display:none}
+
+    /* Petit effet "fun" si pas de média */
+    .fun{background:linear-gradient(135deg,#ffffff12,#ffffff08)}
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-vend-optin3-r0ara%2Flogo-1755862182262?alt=media&token=2394d830-84bf-4be6-91f4-4e92b7b1bdf5" alt="Logo" />
+    <h1 class="title">test 3</h1>
+    <p class="sub">test</p>
+  </header>
+
+  <section class="card" id="desc-wrap">
+    <div id="desc">test descripotion</div>
+  </section>
+
+  <section class="card">
+    <div id="timer" class="timer hide"></div>
+
+    <section class="grid two-cols" id="main-zone">
+      <div class="card" id="left-col">
+        <div class="pair" id="left-pair">
+          <div class="media" id="left-media">
+            <img id="img-left" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-vend-optin3-r0ara%2Fpage1-hero-1755862183785?alt=media&token=bc0190b8-2cb8-451f-97d2-a159ec99e019" alt="" onerror="this.style.display='none'">
+          </div>
+
+      <script id="form-fields-json" type="application/json">{"name":true,"firstname":true,"email":true,"phone":true,"address":true}</script>
+          <div>
+            <div id="timer" class="timer hide"></div>
+
+      <form id="lead-form" data-role="capture" data-next=".html">
+        <div id="form-visible"></div>
+
+        <input type="hidden" name="userId" value="pOoqftYacXhirXtjxVk60Or09nm2" />
+        <input type="hidden" name="pageSlug" value="test-vend-optin3-r0ara-p1" />
+        <input type="hidden" name="slug" value="test-vend-optin3-r0ara-p1" />
+        <input type="hidden" name="type" value="tunnel" />
+        <input type="hidden" name="nextUrl" value=".html" />
+
+              <button type="submit" class="btn">je test</button>
+
+        <div id="gua" class="hide" style="margin-top:10px"><em>satisfait</em></div>
+      </form>
+    </section>
+
+    <section class="grid grid-2" id="bottom-zone">
+      <div class="card">
+        <div class="media">
+          <video src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-vend-optin3-r0ara%2Fpage1-video-1755862184905?alt=media&token=de8eee5f-e355-4847-ad03-4018cae002d4" controls playsinline onerror="this.style.display='none'"></video>
+          <img src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-vend-optin3-r0ara%2Fpage1-hero-1755862183785?alt=media&token=bc0190b8-2cb8-451f-97d2-a159ec99e019" alt="" onerror="this.style.display='none'">
+        </div>
+      </div>
+
+      <div class="card" id="right-col">
+        <div id="prob">probleme test</div>
+        <div id="sol">solut</div>
+        <div id="ben">benef</div>
+        <div id="bul">clé</div>
+
+        <div class="media" id="right-video">
+          <video id="vid-right" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-vend-optin3-r0ara%2Fpage1-video-1755862184905?alt=media&token=de8eee5f-e355-4847-ad03-4018cae002d4" controls playsinline onerror="this.style.display='none'"></video>
+        </div>
+      </div>
+    </section>
+
+    <section class="card hide" id="testi">
+      <h3>Témoignages</h3>
+      <div><div class="testimonial-item">témoignage test</div></div>
+    </section>
+
+    <section class="card hide" id="faq">
+      <h3>FAQ</h3>
+      <div><div class="faq-item"><strong>FAQ test</strong><br/></div></div>
+    </section>
+
+  <script type="module" src="https://alricpaon.github.io/sellyo-hosting/js/save-lead-tunnel.js"></script>
+
+  <script>
+    (function(){
+      const kill = (s)=>s.replace(/```html?/gi,'').replace(/```/g,'');
+      ['desc','prob','sol','ben','bul','testi','faq'].forEach(id=>{
+        const el=document.getElementById(id); if(!el) return;
+        const t=el.innerHTML||''; el.innerHTML=kill(t);
+      });
+    })();
+
+    const cleanText = (s) => (s||"").replace(/^['"\\s]+|['"\\s]+$/g,'').trim();
+
+    (function(){
+      const holder = document.getElementById('form-visible');
+      const blob = document.getElementById('form-fields-json');
+      const fields = blob && JSON.parse(blob.textContent || '{}');
+      const labels = { name: 'Nom', firstname: 'Prénom', email: 'Email', phone: 'Téléphone', address: 'Adresse' };
+
+      if (!fields) return;
+
+      Object.keys(fields).filter(key => fields[key]).forEach(key => {
+        const input = makeInput(key, fields[key]);
+        if (input) holder.appendChild(input);
+      });
+
+      function makeInput(key, cfg) {
+        const type = (cfg && cfg.type) || (key==='email'?'email': key==='phone'?'tel':'text');
+        const req = (cfg && cfg.required) || (key==='email');
+        if (key==='notes') { const ta=document.createElement('textarea'); ta.name=key; ta.placeholder=labels[key]||key; ta.required=!!req; return ta; }
+        if (key==='gender') {
+          const sel=document.createElement('select'); sel.name=key;
+          ['','Femme','Homme','Autre','Ne se prononce pas'].forEach((t,i)=>{
+            const opt=document.createElement('option'); opt.value=opt.textContent=t; sel.appendChild(opt);
+          });
+          return sel;
+        }
+        const input=document.createElement('input'); input.type=type; input.name=key; input.placeholder=labels[key]||key; input.required=!!req;
+        return input;
+      }
+    })();
+
+    (function(){
+      const showIf = (id) => { const el=document.getElementById(id); if(!el) return; const txt=cleanText(el.textContent); if(txt) el.classList.remove('hide'); };
+      ['gua','progress'].forEach(showIf);
+      const mainZone = document.getElementById('main-zone');
+      const leftCol = document.getElementById('left-col');
+      const leftPair = document.getElementById('left-pair');
+      const leftMedia = document.getElementById('left-media');
+      const imgLeft = document.getElementById('img-left');
+
+      const rightCol = document.getElementById('right-col');
+      const rightVideoWrap = document.getElementById('right-video');
+      const vidRight = document.getElementById('vid-right');
+
+      const hasImg = !!cleanText(imgLeft.getAttribute('src'));
+      const hasVid = !!cleanText(vidRight.getAttribute('src'));
+
+      if (hasImg && hasVid) {
+      } else if (hasImg && !hasVid) {
+        mainZone.classList.remove('two-cols');
+      } else if (!hasImg && hasVid) {
+        rightVideoWrap.parentNode.removeChild(rightVideoWrap);
+        const holder = document.createElement('div');
+        holder.className = 'media';
+        holder.appendChild(vidRight);
+        leftMedia.innerHTML = '';
+        leftMedia.appendChild(holder);
+        mainZone.classList.remove('two-cols');
+      } else {
+        leftMedia.style.display = 'none';
+        leftPair.style.gridTemplateColumns = '1fr';
+        mainZone.classList.remove('two-cols');
+        leftCol.classList.add('fun');
+      }
+    })();
+
+      [['h-prob','prob'],['h-sol','sol'],['h-ben','ben'],['h-bul','bul']].forEach(([h,c])=>{
+        const ce=document.getElementById(c), he=document.getElementById(h);
+        if (ce && cleanText(ce.textContent)) { if(he) he.classList.remove('hide'); }
+      });
+
+    (function(){
+      const gua = document.getElementById('gua');
+      if (gua && cleanText(gua.textContent)) { gua.classList.remove('hide'); }
+
+      ['testi','faq'].forEach(id=>{
+        const el=document.getElementById(id);
+        if(!el) return;
+        const inner=el.querySelector('div'); const txt=cleanText(inner? inner.textContent: '');
+        if (txt) el.classList.remove('hide');
+      });
+
+      const grid = document.getElementById('bottom-zone');
+      const vid = grid && grid.querySelector('.media video');
+      const img = grid && grid.querySelector('.media img');
+      const hasVid = !!(vid && cleanText(vid.getAttribute('src')));
+      const hasImg = !!(img && cleanText(img.getAttribute('src')));
+      if (vid && !hasVid) vid.style.display='none';
+      if (img && !hasImg) img.style.display='none';
+      if (grid && !(hasVid || hasImg)) {
+        grid.classList.remove('grid-2');
+      }
+    })();
+
+    (function(){
+      const evergreen = parseInt('30',10)||0;
+      const deadlineISO = cleanText('');
+      const t = document.getElementById('timer');
+      function render(sec){
+        if(sec<=0){ t.textContent='Offre expirée'; return; }
+        const m=Math.floor(sec/60), s=sec%60;
+        t.textContent='Offre expire dans '+m+'m '+('0'+s).slice(-2)+'s';
+      }
+      let total=0;
+      if(evergreen>0) total=evergreen*60;
+      else if(deadlineISO && !isNaN(Date.parse(deadlineISO))) total=Math.max(0,Math.floor((new Date(deadlineISO)-new Date())/1000));
+      if(total>0){ t.classList.remove('hide'); (function tick(){ render(total--); if(total>=0) setTimeout(tick,1000); })(); }
+    })();
+
+    (function(){
+      const clean = cleanText;
+      var fb=clean(''); if(fb){!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
+      s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script'); fbq('init', fb); fbq('track','PageView');}
+      var gtm=clean(''); if(gtm){var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+gtm;document.head.appendChild(s)}
+    })();
+  </script>
+</body>
+</html>
