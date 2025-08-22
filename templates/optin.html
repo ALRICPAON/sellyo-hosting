@@ -6,46 +6,48 @@
   <meta name="description" content="{{seo.metaDescription}}" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root{
-      --bg: {{ui.mainColor}};
-      --btn: {{ui.buttonColor}};
-      --text:#fff;
-    }
+    :root{ --bg: {{ui.mainColor}}; --btn: {{ui.buttonColor}}; --text:#fff }
     *{box-sizing:border-box}
     body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
     main{max-width:1100px;margin:0 auto;padding:24px}
-
     header{display:flex;justify-content:center;padding:16px 0}
-    #logo{max-height:56px;display:none}
-
+    header img{max-height:56px;display:block}
     .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
     .hero{text-align:center;margin-bottom:16px}
     .hero h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0}
     .hero .sub{opacity:.9;margin:0}
-
     .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
     form input,form textarea,form select{width:100%;padding:12px;border-radius:10px;border:0;margin:8px 0;background:#ffffff12;color:#fff}
 
+    /* Grilles */
     .grid{display:grid;gap:18px}
     .two-cols{grid-template-columns:1fr}
     @media(min-width:880px){.two-cols{grid-template-columns:1.1fr .9fr}}
 
-    /* Zone adaptative Form | Média */
+    /* ===== Grille adaptative formulaire | média ===== */
     #main-zone{ display:grid; gap:18px; grid-template-columns:1fr; }
     @media(min-width:880px){ #main-zone.has-media{ grid-template-columns:1fr 1fr; } }
 
+    /* Formulaire centré verticalement quand seul */
     #left-col{ display:flex; flex-direction:column; justify-content:center; }
 
-    /* Médias */
-    .media img,.media video,.media iframe{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
-    .media iframe{aspect-ratio:16/9;border:0}
+    .pair{display:grid;grid-template-columns:1fr;gap:12px}
+    @media(min-width:880px){.pair{grid-template-columns:1fr 1fr}}
+
+    /* Média responsive */
+    #right-media img, #right-media video, #right-media iframe{
+      width:100%; max-height:420px; object-fit:cover; border-radius:12px; display:block;
+    }
+    #right-media iframe{aspect-ratio:16 / 9; border:0;}
 
     .argu-grid{display:grid;gap:14px;grid-template-columns:1fr}
     @media(min-width:880px){.argu-grid{grid-template-columns:1fr 0.9fr}}
 
+    .media img,.media video{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
     .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
     .hide{display:none}
     .text-center{text-align:center}
+    .fun{background:linear-gradient(135deg,#ffffff12,#ffffff08)}
   </style>
 </head>
 <body>
@@ -55,26 +57,26 @@
     </header>
 
     <!-- 1) Hero -->
-    <section class="hero">
+    <section class="hero" id="hero">
       <h1 id="title">{{copy.title}}</h1>
       <p class="sub" id="subtitle">{{copy.subtitle}}</p>
     </section>
 
-    <!-- 2) Description (masquée si vide) -->
+    <!-- 2) Description -->
     <section class="card" id="desc-wrap">
       <div id="desc">{{copy.productDescription}}</div>
     </section>
 
-    <!-- 3) Zone principale : Form | Media -->
+    <!-- 3) Zone principale : Formulaire | Média -->
     <section id="main-zone">
-      <!-- Colonne gauche : FORM -->
+      <!-- Colonne gauche : FORM (toujours visible par défaut en optin) -->
       <div class="card" id="left-col">
         <div id="timer" class="timer hide"></div>
 
-        <!-- Champs dynamiques (JSON) -->
+        <!-- Spécification des champs (JSON brut) -->
         <script id="form-fields-json" type="application/json">{{formFields}}</script>
 
-        <!-- Form (capture par défaut sur optin) -->
+        <!-- FORM par défaut -->
         <form id="lead-form" data-role="capture">
           <div id="form-visible"></div>
 
@@ -83,40 +85,56 @@
           <input type="hidden" name="pageSlug" value="{{slug}}" />
           <input type="hidden" name="slug" value="{{slug}}" />
           <input type="hidden" name="type" value="tunnel" />
+
+          <!-- nextUrl résolu au chargement -->
           <input type="hidden" id="nextUrl-hidden" name="nextUrl" value="" />
 
           <button type="submit" class="btn" id="cta-btn">{{copy.ctaText}}</button>
 
-          <!-- Garantie sous le formulaire (si fournie) -->
+          <!-- Garantie sous le formulaire -->
           <div id="gua" class="hide" style="margin-top:10px"><em>{{copy.guarantee}}</em></div>
         </form>
 
-        <!-- Fallback si cta != capture -->
+        <!-- CTA lien (utilisé SEULEMENT si cta.action = 'paiement' ou 'lien') -->
         <a id="cta-link" class="btn hide" href="#" rel="nofollow noopener">{{copy.ctaText}}</a>
       </div>
 
-      <!-- Colonne droite : MEDIA (image, mp4, ou embed) -->
-      <div class="card media" id="right-media">
+      <!-- Colonne droite : MEDIA (image, vidéo mp4, ou embed) -->
+      <div class="card" id="right-media">
         <img id="img-media" src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
         <video id="vid-media" src="{{media.videoMp4}}" controls playsinline onerror="this.style.display='none'"></video>
-        <iframe id="embed-media" src="{{media.videoEmbed}}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen class="hide"></iframe>
+        <iframe id="emb-media" src="{{media.videoEmbed}}" class="hide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
       </div>
     </section>
 
-    <!-- 4) Argumentaire (texte + vidéo argumentaire optionnelle) -->
-    <section class="argu-grid" id="argu-zone">
-      <div class="card" id="argu-left">
-        <div id="bullets">{{copy.bullets}}</div>
-        <div id="benefits">{{copy.benefits}}</div>
-        <div id="testi" class="hide"><div>{{copy.testimonials}}</div></div>
-        <div id="faq" class="hide"><div>{{copy.faq}}</div></div>
+    <!-- 4) Bloc argumentaire SOUS le formulaire : gauche = textes, droite = vidéo -->
+    <section class="card argu-grid" id="argu-zone">
+      <!-- gauche : uniquement contenu (ne pas afficher de titres vides) -->
+      <div id="argu-left">
+        <div id="prob">{{copy.problem}}</div>
+        <div id="sol">{{copy.solution}}</div>
+        <div id="ben">{{copy.benefits}}</div>
+        <div id="bul">{{copy.bullets}}</div>
       </div>
-      <div class="card media" id="argu-video">
+
+      <!-- Vidéo -->
+      <div class="media" id="argu-video">
         <video id="vid-argu" src="{{media.videoMp4}}" controls playsinline onerror="this.style.display='none'"></video>
       </div>
     </section>
 
-    <!-- 5) Bonus/fichiers (affiché seulement si demandé) -->
+    <!-- 5) Témoignages + FAQ en bas -->
+    <section class="card hide" id="testi">
+      <h3>Témoignages</h3>
+      <div>{{copy.testimonials}}</div>
+    </section>
+
+    <section class="card hide" id="faq">
+      <h3>FAQ</h3>
+      <div>{{copy.faq}}</div>
+    </section>
+
+    <!-- 6) Bonus / Téléchargement -->
     <section class="card hide" id="bonus">
       <h3>Bonus</h3>
       <p id="bonus-desc">Votre ressource est prête.</p>
@@ -124,11 +142,23 @@
     </section>
   </main>
 
-  <!-- Scripts front -->
+  <!-- Firebase + capture leads -->
+  <script type="module" src="https://alricpaon.github.io/sellyo-hosting/firebase-init.js"></script>
+  <script type="module" src="https://alricpaon.github.io/sellyo-hosting/js/save-lead-tunnel.js"></script>
+
   <script>
-    /* Utils */
-    function cleanText(v){ return (v||"").toString().trim(); }
-    function isHttpUrl(u){ try{ const x=new URL(u); return x.protocol==="http:"||x.protocol==="https:"; }catch(e){return false;} }
+    // Anti-parasites (retire d'éventuels ```html ... ```)
+    (function(){
+      const kill = (s)=> (s||'').replace(/```html?/gi,'').replace(/```/g,'');
+      ['desc','prob','sol','ben','bul','testi','faq'].forEach(id=>{
+        const el=document.getElementById(id); if(!el) return;
+        el.innerHTML = kill(el.innerHTML||'');
+      });
+    })();
+
+    // Helper
+    const cleanText = (s) => (s||"").toString().replace(/^['"\\s]+|['"\\s]+$/g,'').trim();
+    const isHttp = (u)=>{ try{ const x=new URL(u); return x.protocol==='http:'||x.protocol==='https:'; }catch(e){ return false; } };
 
     // 0) Logo visible si présent
     (function(){
@@ -136,85 +166,114 @@
       if (logo && cleanText(logo.getAttribute('src'))) { logo.style.display='block'; }
     })();
 
-    // 1) Masquer blocs vides (titre/sous-titre/desc)
+    // 1) Masquer blocs vides sans tout faire disparaître
     (function(){
-      const t=document.getElementById('title'), s=document.getElementById('subtitle'), d=document.getElementById('desc-wrap');
-      if (!cleanText(t.textContent)) t.parentElement.style.display='none';
-      if (!cleanText(s.textContent)) s.style.display='none';
-      if (!cleanText(document.getElementById('desc').textContent)) d.style.display='none';
+      const title=document.getElementById('title');
+      const subtitle=document.getElementById('subtitle');
+      const descWrap=document.getElementById('desc-wrap');
+      if (!cleanText(title.textContent) && !cleanText(subtitle.textContent)) document.getElementById('hero').style.display='none';
+      if (!cleanText(subtitle.textContent)) subtitle.style.display='none';
+      if (!cleanText(document.getElementById('desc').textContent)) descWrap.style.display='none';
     })();
 
-    // 2) Media logic (image | mp4 | embed)
+    // 2) Génération inputs visibles depuis {{formFields}} (tolérant au JSON)
     (function(){
-      const zone   = document.getElementById('main-zone');
-      const right  = document.getElementById('right-media');
-      const img    = document.getElementById('img-media');
-      const vid    = document.getElementById('vid-media');
-      const iframe = document.getElementById('embed-media');
+      const host = document.getElementById('form-visible');
+      const raw  = document.getElementById('form-fields-json')?.textContent || '[]';
+      let fields = [];
+      try { fields = JSON.parse(raw || '[]'); } catch(e) { fields = []; }
+      if (!Array.isArray(fields)) fields = [];
+      if (fields.length === 0){
+        // fallback simple : email
+        host.innerHTML = '<input name="email" type="email" placeholder="Votre email" required />';
+        return;
+      }
+      host.innerHTML = fields.map(f=>{
+        const t=(f.type||'text'); const n=(f.name||'field'); const ph=f.placeholder||f.label||n;
+        const req = f.required ? 'required' : '';
+        if (t==='textarea') return `<textarea name="${n}" placeholder="${ph}" ${req}></textarea>`;
+        if (t==='select' && Array.isArray(f.options)){
+          const opts=f.options.map(o=>`<option value="${o.value||o}">${o.label||o}</option>`).join('');
+          return `<select name="${n}" ${req}>${opts}</select>`;
+        }
+        return `<input name="${n}" type="${t}" placeholder="${ph}" ${req} />`;
+      }).join('');
+    })();
 
-      const hasImg = isHttpUrl(cleanText(img.getAttribute('src')));
-      const hasVid = isHttpUrl(cleanText(vid.getAttribute('src')));
-      const embed  = cleanText(iframe.getAttribute('src'));
-      const hasEmb = isHttpUrl(embed) && !hasVid; // priorité mp4 si fourni
+    // 3) Logique médias/form & argumentaire
+    (function(){
+      const mainZone   = document.getElementById('main-zone');
+      const leftCol    = document.getElementById('left-col');
+      const rightMedia = document.getElementById('right-media');
+      const img        = document.getElementById('img-media');
+      const vid        = document.getElementById('vid-media');
+      const emb        = document.getElementById('emb-media');
 
-      if (hasEmb){ iframe.classList.remove('hide'); }
+      const hasImg = isHttp(cleanText(img.getAttribute('src')));
+      const hasVid = isHttp(cleanText(vid.getAttribute('src')));
+      const hasEmb = isHttp(cleanText(emb.getAttribute('src'))) && !hasVid; // priorité au mp4
+
+      if (hasEmb) emb.classList.remove('hide');
 
       if (hasImg || hasVid || hasEmb) {
-        zone.classList.add('has-media');
+        mainZone.classList.add('has-media');
       } else {
-        right.style.display='none';
-        zone.classList.remove('has-media');
+        if (rightMedia) rightMedia.style.display = 'none';
+        mainZone.classList.remove('has-media');
+        leftCol.classList.add('fun');
       }
 
-      // Argumentaire vidéo (réutilise media.videoMp4 par défaut)
-      const arguZone=document.getElementById('argu-zone');
-      const vidArgu=document.getElementById('vid-argu');
-      const hasVidArgu = isHttpUrl(cleanText(vidArgu.getAttribute('src')));
-      if (!hasVidArgu){
-        arguZone.style.gridTemplateColumns='1fr';
+      // Bas : argumentaire + vidéo
+      const arguZone = document.getElementById('argu-zone');
+      const vidWrap  = document.getElementById('argu-video');
+      const vidArgu  = document.getElementById('vid-argu');
+      const hasVidArgu = isHttp(cleanText(vidArgu.getAttribute('src')));
+      if (!hasVidArgu) {
+        arguZone.style.gridTemplateColumns = '1fr';
         document.getElementById('argu-left').classList.add('text-center');
-        document.getElementById('argu-video').style.display='none';
+        vidWrap.style.display = 'none';
       }
     })();
 
-    // 3) CTA / Form routing
+    // 4) CTA / nextHref résolution robuste
     (function(){
-      const ctaAction = cleanText('{{cta.action}}').toLowerCase() || 'capture';
+      const ctaAction = cleanText('{{cta.action}}').toLowerCase(); // '', 'capture', 'paiement', 'lien'
       const ctaLink   = cleanText('{{cta.paymentLink}}');
-      const nextSlug  = cleanText('{{cta.nextSlug}}') || cleanText('{{flow.nextSlug}}');
-      const explicitNextHref = cleanText('{{nextHref}}') || cleanText('{{flow.nextHref}}');
+      const ns1 = cleanText('{{nextHref}}');
+      const ns2 = cleanText('{{flow.nextHref}}');
+      const ns3 = cleanText('{{cta.nextSlug}}');
+      const ns4 = cleanText('{{flow.nextSlug}}');
 
-      // nextHref résolu
-      let nextHref = explicitNextHref;
-      if (!nextHref && nextSlug){ nextHref = nextSlug.endsWith('.html') ? nextSlug : (nextSlug + '.html'); }
+      let nextHref = ns1 || ns2 || '';
+      if (!nextHref){
+        const slug = ns3 || ns4;
+        if (slug) nextHref = slug.endsWith('.html') ? slug : (slug + '.html');
+      }
 
-      // Injecte dans le hidden nextUrl si form
-      const nextHidden = document.getElementById('nextUrl-hidden');
-      if (nextHidden) nextHidden.value = nextHref || '';
+      // injecte dans le formulaire (toujours visible par défaut)
+      const hidden = document.getElementById('nextUrl-hidden');
+      if (hidden) hidden.value = nextHref || '';
 
       const form = document.getElementById('lead-form');
       const link = document.getElementById('cta-link');
-      const btn  = document.getElementById('cta-btn');
 
-      if (ctaAction === 'capture') {
-        // OK: on laisse le form visible
-        link.classList.add('hide');
-      } else {
-        // Pas de capture → remplace par un lien
+      // Seules valeurs explicites remplacent le form :
+      if (ctaAction === 'paiement' || ctaAction === 'lien'){
         form.classList.add('hide');
         link.classList.remove('hide');
-        // cible = paiement ou lien simple
-        link.href = (ctaAction==='paiement' && isHttpUrl(ctaLink)) ? ctaLink : (nextHref || '#');
+        link.href = (ctaAction==='paiement' && isHttp(ctaLink)) ? ctaLink : (nextHref || '#');
+      } else {
+        // capture ou vide => form visible
+        form.classList.remove('hide');
+        link.classList.add('hide');
       }
     })();
 
-    // 4) Affichages conditionnels + timer
+    // 5) Affichages conditionnels + timer + témoignages/FAQ
     (function(){
-      // Garantie visible si contenu
       const gua = document.getElementById('gua');
       if (gua && cleanText(gua.textContent)) { gua.classList.remove('hide'); }
 
-      // Témoignages & FAQ
       ['testi','faq'].forEach(id=>{
         const el=document.getElementById(id); if(!el) return;
         const inner=el.querySelector('div'); const txt=cleanText(inner? inner.textContent: '');
@@ -232,42 +291,38 @@
       if(total>0){ t.classList.remove('hide'); (function tick(){ render(total--); if(total>=0) setTimeout(tick,1000); })(); }
     })();
 
-    // 5) Bonus / fichiers (pageDelivery*)
+    // 6) Bonus / fichiers (download.url | product.file) + pageDeliveryMode
     (function(){
       const mode = cleanText('{{pageDeliveryMode}}').toLowerCase(); // "direct" | "aucun" | ""
       const url  = cleanText('{{pageDeliveryUrl}}') || cleanText('{{download.url}}') || cleanText('{{delivery.productUrl}}');
-      const file = cleanText('{{pageDeliveryFile}}') || cleanText('{{delivery.productFile}}');
-      const link = document.getElementById('bonus-link');
-      const wrap = document.getElementById('bonus');
+      const file = cleanText('{{pageDeliveryFile}}') || cleanText('{{product.file}}') || cleanText('{{delivery.productFile}}');
 
-      const href = isHttpUrl(url) ? url : (isHttpUrl(file) ? file : '');
+      const wrap = document.getElementById('bonus');
+      const link = document.getElementById('bonus-link');
+
+      const href = isHttp(url) ? url : (isHttp(file) ? file : '');
       if (mode==='direct' && href){
         link.href = href;
         wrap.classList.remove('hide');
       }
     })();
 
-    // 6) Pixels (injection si présents)
+    // 7) Pixels
     (function(){
-      const fb = cleanText('{{analytics.fbPixelId}}');
+      const fb='{{analytics.fbPixelId}}'.trim();
       if (fb){
         !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-          n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-          n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];
-          t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
+          n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;
+          n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
           s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script');
         fbq('init', fb); fbq('track','PageView');
       }
-      const gtm = cleanText('{{analytics.gtmId}}');
+      const gtm='{{analytics.gtmId}}'.trim();
       if (gtm){
         var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+encodeURIComponent(gtm);
         document.head.appendChild(s);
       }
     })();
   </script>
-
-  <!-- Ces deux scripts doivent être en place côté optin -->
-  <script src="https://ALRICPAON.github.io/sellyo-hosting/firebase-init.js" defer></script>
-  <script src="https://ALRICPAON.github.io/sellyo-hosting/save-lead-tunnel.js" defer></script>
 </body>
 </html>
