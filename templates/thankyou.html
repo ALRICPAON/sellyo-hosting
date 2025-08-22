@@ -63,33 +63,64 @@
     <a href="/" class="btn" style="background:#666;margin-top:32px;">Retour à l'accueil</a>
   </main>
 
-  <script>
-    // 🟢 Utilitaire de nettoyage
-    function cleanText(str) {
-      return (str || '').trim();
-    }
-    function isHttp(url) {
-      return /^https?:\/\//.test(url || '');
-    }
+ <script>
+(function(){
+  const clean = (s)=> (s||"").toString().trim();
+  const isHttp = (u)=>{ try{ const x=new URL(u); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
 
-    (function() {
-      // ✅ On prend en priorité le produit principal livré
-      const url1 = cleanText('{{delivery.productUrl}}');      // URL principale fournie
-      const file1 = cleanText('{{delivery.productFile}}');    // Fichier principal uploadé
-      const url2 = cleanText('{{pageProductUrl}}');          // Fichier spécifique à la page
-      const href = isHttp(url1) ? url1 : (isHttp(file1) ? file1 : (isHttp(url2) ? url2 : ''));
+  // 1) Texte de remerciement + récap
+  const thx = clean('{{thankyouText}}');
+  const recap = clean('{{productRecap}}');
 
-      const wrap = document.getElementById('bonus');
-      const link = document.getElementById('bonus-link');
+  // Ajoute un bloc simple si tu n’en as pas déjà un dans le HTML
+  let host = document.getElementById('desc'); // recycle la zone #desc si elle existe
+  if (host){
+    const parts = [];
+    if (thx)   parts.push(thx);
+    if (recap) parts.push('<div class="fun" style="padding:12px;border-radius:10px;margin-top:8px;">'+recap+'</div>');
+    host.innerHTML = parts.join('') || "Merci pour votre confiance !";
+    document.getElementById('desc-wrap')?.classList.remove('hide');
+  }
 
-      if (href) {
-        link.href = href;
-        wrap.style.display = 'block';
-      } else {
-        // Pas de fichier à télécharger → masque le bloc
-        wrap.style.display = 'none';
-      }
-    })();
-  </script>
+  // 2) Lien de livraison (toujours sans pageDeliveryMode)
+  const pageFile   = clean('{{productUrl}}');           // fichier/page
+  const globalFile = clean('{{delivery.fileUrl}}');     // fichier global
+  const globalUrl  = clean('{{delivery.url}}');         // URL (ex: Stripe, Drive, etc.)
+
+  const href = [pageFile, globalFile, globalUrl].find(isHttp) || "";
+
+  // Si tu as déjà un bloc #bonus dans thankyou, on le réutilise :
+  let bonusWrap = document.getElementById('bonus');
+  let bonusLink = document.getElementById('bonus-link');
+
+  if (!bonusWrap || !bonusLink){
+    // fallback minimal si ton template thankyou n’a pas #bonus
+    const card = document.createElement('section');
+    card.className = 'card';
+    card.innerHTML = `
+      <h3>Votre accès</h3>
+      <a id="__tk_dl" class="btn" href="#" download>Télécharger / Ouvrir</a>
+    `;
+    document.querySelector('main')?.appendChild(card);
+    bonusWrap = card;
+    bonusLink = card.querySelector('#__tk_dl');
+  }
+
+  if (href){
+    bonusLink.href = href;
+    bonusWrap.classList.remove('hide');
+  } else {
+    // Pas de lien dispo → ne rien afficher, ou montrer un message
+    // bonusWrap.classList.add('hide');
+  }
+
+  // 3) Rendre visible le Hero si vide (facultatif)
+  const title = clean('{{copy.title}}');
+  const subtitle = clean('{{copy.subtitle}}');
+  if (!title && !subtitle){
+    document.getElementById('hero')?.classList.add('hide');
+  }
+})();
+</script>
 </body>
 </html>
