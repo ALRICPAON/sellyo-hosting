@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>test vend 2</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{ --bg: #450e59; --btn: #be38f3; --text:#fff }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    main{max-width:1100px;margin:0 auto;padding:24px}
+    header{display:flex;justify-content:center;padding:16px 0}
+    header img{max-height:56px;display:block}
+    .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
+    .hero{text-align:center;margin-bottom:16px}
+    .hero h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0}
+    .hero .sub{opacity:.9;margin:0}
+    .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
+    form input,form textarea,form select{width:100%;padding:12px;border-radius:10px;border:0;margin:8px 0;background:#ffffff12;color:#fff}
+
+    /* Grilles */
+    .grid{display:grid;gap:18px}
+    .two-cols{grid-template-columns:1fr}
+    @media(min-width:880px){.two-cols{grid-template-columns:1.1fr .9fr}}
+
+    /* ===== Grille adaptative formulaire | média ===== */
+    #main-zone{ display:grid; gap:18px; grid-template-columns:1fr; }
+    @media(min-width:880px){ #main-zone.has-media{ grid-template-columns:1fr 1fr; } }
+
+    /* Formulaire centré verticalement quand seul */
+    #left-col{ display:flex; flex-direction:column; justify-content:center; }
+
+    .pair{display:grid;grid-template-columns:1fr;gap:12px}
+    @media(min-width:880px){.pair{grid-template-columns:1fr 1fr}}
+
+    /* Média responsive */
+    #right-media img, #right-media video, #right-media iframe{
+      width:100%; max-height:420px; object-fit:cover; border-radius:12px; display:block;
+    }
+    #right-media iframe{aspect-ratio:16 / 9; border:0;}
+
+    .argu-grid{display:grid;gap:14px;grid-template-columns:1fr}
+    @media(min-width:880px){.argu-grid{grid-template-columns:1fr 0.9fr}}
+
+    .media img,.media video{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
+    .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
+    .hide{display:none}
+    .text-center{text-align:center}
+    .fun{background:linear-gradient(135deg,#ffffff12,#ffffff08)}
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <img id="logo" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-vend-2-mi76f%2Flogo-1755854619351?alt=media&token=c3b83799-402b-4b59-845d-0ed2a7569173" alt="Logo" onerror="this.style.display='none'">
+    </header>
+
+    <!-- 1) Hero -->
+    <section class="hero" id="hero">
+      <h1 id="title">test capture</h1>
+      <p class="sub" id="subtitle">test</p>
+    </section>
+
+    <!-- 2) Description -->
+    <section class="card" id="desc-wrap">
+      <div id="desc">test livre apres lead</div>
+    </section>
+
+    <!-- 3) Zone principale : Formulaire | Média -->
+    <section id="main-zone">
+      <!-- Colonne gauche : FORM (toujours visible par défaut en optin) -->
+      <div class="card" id="left-col">
+        <div id="timer" class="timer hide"></div>
+
+        <!-- Spécification des champs (JSON brut) -->
+        <script id="form-fields-json" type="application/json">{"name":true,"firstname":true,"email":true,"phone":true,"address":true}</script>
+
+        <!-- FORM par défaut -->
+        <form id="lead-form" data-role="capture">
+          <div id="form-visible"></div>
+
+          <!-- requis pour save-lead-tunnel.js -->
+          <input type="hidden" name="userId" value="pOoqftYacXhirXtjxVk60Or09nm2" />
+          <input type="hidden" name="pageSlug" value="test-vend-2-mi76f-p1" />
+          <input type="hidden" name="slug" value="test-vend-2-mi76f-p1" />
+          <input type="hidden" name="type" value="tunnel" />
+
+          <!-- nextUrl résolu au chargement -->
+          <input type="hidden" id="nextUrl-hidden" name="nextUrl" value=".html" />
+
+          <button type="submit" class="btn" id="cta-btn">je test</button>
+
+          <!-- Garantie sous le formulaire -->
+          <div id="gua" class="hide" style="margin-top:10px"><em>garantie</em></div>
+        </form>
+
+        <!-- CTA lien (utilisé SEULEMENT si cta.action = 'paiement' ou 'lien') -->
+        <a id="cta-link" class="btn hide" href="#" rel="nofollow noopener">je test</a>
+      </div>
+
+      <!-- Colonne droite : MEDIA (image, vidéo mp4, ou embed) -->
+      <div class="card" id="right-media">
+        <img id="img-media" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-vend-2-mi76f%2Fpage1-hero-1755854620877?alt=media&token=d33b701d-3030-4058-a5ad-cd984a0f0fd2" alt="" onerror="this.style.display='none'">
+        <video id="vid-media" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-vend-2-mi76f%2Fpage1-video-1755854621866?alt=media&token=b395d256-05ed-48d7-95e3-3abe06c36473" controls playsinline onerror="this.style.display='none'"></video>
+        <iframe id="emb-media" src="" class="hide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      </div>
+    </section>
+
+    <!-- 4) Bloc argumentaire SOUS le formulaire : gauche = textes, droite = vidéo -->
+    <section class="card argu-grid" id="argu-zone">
+      <!-- gauche : uniquement contenu (ne pas afficher de titres vides) -->
+      <div id="argu-left">
+        <div id="prob">probleme</div>
+        <div id="sol">solution</div>
+        <div id="ben">benef</div>
+        <div id="bul">clé</div>
+      </div>
+
+      <!-- Vidéo -->
+      <div class="media" id="argu-video">
+        <video id="vid-argu" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-vend-2-mi76f%2Fpage1-video-1755854621866?alt=media&token=b395d256-05ed-48d7-95e3-3abe06c36473" controls playsinline onerror="this.style.display='none'"></video>
+      </div>
+    </section>
+
+    <!-- 5) Témoignages + FAQ en bas -->
+    <section class="card hide" id="testi">
+      <h3>Témoignages</h3>
+      <div><div class="testimonial-item">"temoignage"</div></div>
+    </section>
+
+    <section class="card hide" id="faq">
+      <h3>FAQ</h3>
+      <div><div class="faq-item"><strong>FAQ</strong><br/></div></div>
+    </section>
+
+    <!-- 6) Bonus / Téléchargement -->
+    <section class="card hide" id="bonus">
+      <h3>Bonus</h3>
+      <p id="bonus-desc">Votre ressource est prête.</p>
+      <a id="bonus-link" class="btn" href="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-vend-2-mi76f%2Fpage1-product-1755854623087?alt=media&token=72b451f4-b479-4ae7-a738-cf3508e3f9fe" download>Télécharger</a>
+    </section>
+  </main>
+
+  <!-- Firebase + capture leads -->
+  <script type="module" src="https://alricpaon.github.io/sellyo-hosting/firebase-init.js"></script>
+  <script type="module" src="https://alricpaon.github.io/sellyo-hosting/js/save-lead-tunnel.js"></script>
+
+  <script>
+    // Anti-parasites (retire d'éventuels ```html ... ```)
+    (function(){
+      const kill = (s)=> (s||'').replace(/```html?/gi,'').replace(/```/g,'');
+      ['desc','prob','sol','ben','bul','testi','faq'].forEach(id=>{
+        const el=document.getElementById(id); if(!el) return;
+        el.innerHTML = kill(el.innerHTML||'');
+      });
+    })();
+
+    // Helper
+    const cleanText = (s) => (s||"").toString().replace(/^['"\\s]+|['"\\s]+$/g,'').trim();
+    const isHttp = (u)=>{ try{ const x=new URL(u); return x.protocol==='http:'||x.protocol==='https:'; }catch(e){ return false; } };
+
+    // 0) Logo visible si présent
+    (function(){
+      const logo=document.getElementById('logo');
+      if (logo && cleanText(logo.getAttribute('src'))) { logo.style.display='block'; }
+    })();
+
+    // 1) Masquer blocs vides sans tout faire disparaître
+    (function(){
+      const title=document.getElementById('title');
+      const subtitle=document.getElementById('subtitle');
+      const descWrap=document.getElementById('desc-wrap');
+      if (!cleanText(title.textContent) && !cleanText(subtitle.textContent)) document.getElementById('hero').style.display='none';
+      if (!cleanText(subtitle.textContent)) subtitle.style.display='none';
+      if (!cleanText(document.getElementById('desc').textContent)) descWrap.style.display='none';
+    })();
+
+    // 2) Génération inputs visibles depuis {{formFields}} (tolérant au JSON)
+    (function(){
+      const host = document.getElementById('form-visible');
+      const raw  = document.getElementById('form-fields-json')?.textContent || '[]';
+      let fields = [];
+      try { fields = JSON.parse(raw || '[]'); } catch(e) { fields = []; }
+      if (!Array.isArray(fields)) fields = [];
+      if (fields.length === 0){
+        // fallback simple : email
+        host.innerHTML = '<input name="email" type="email" placeholder="Votre email" required />';
+        return;
+      }
+      host.innerHTML = fields.map(f=>{
+        const t=(f.type||'text'); const n=(f.name||'field'); const ph=f.placeholder||f.label||n;
+        const req = f.required ? 'required' : '';
+        if (t==='textarea') return `<textarea name="${n}" placeholder="${ph}" ${req}></textarea>`;
+        if (t==='select' && Array.isArray(f.options)){
+          const opts=f.options.map(o=>`<option value="${o.value||o}">${o.label||o}</option>`).join('');
+          return `<select name="${n}" ${req}>${opts}</select>`;
+        }
+        return `<input name="${n}" type="${t}" placeholder="${ph}" ${req} />`;
+      }).join('');
+    })();
+
+    // 3) Logique médias/form & argumentaire
+    (function(){
+      const mainZone   = document.getElementById('main-zone');
+      const leftCol    = document.getElementById('left-col');
+      const rightMedia = document.getElementById('right-media');
+      const img        = document.getElementById('img-media');
+      const vid        = document.getElementById('vid-media');
+      const emb        = document.getElementById('emb-media');
+
+      const hasImg = isHttp(cleanText(img.getAttribute('src')));
+      const hasVid = isHttp(cleanText(vid.getAttribute('src')));
+      const hasEmb = isHttp(cleanText(emb.getAttribute('src'))) && !hasVid; // priorité au mp4
+
+      if (hasEmb) emb.classList.remove('hide');
+
+      if (hasImg || hasVid || hasEmb) {
+        mainZone.classList.add('has-media');
+      } else {
+        if (rightMedia) rightMedia.style.display = 'none';
+        mainZone.classList.remove('has-media');
+        leftCol.classList.add('fun');
+      }
+
+      // Bas : argumentaire + vidéo
+      const arguZone = document.getElementById('argu-zone');
+      const vidWrap  = document.getElementById('argu-video');
+      const vidArgu  = document.getElementById('vid-argu');
+      const hasVidArgu = isHttp(cleanText(vidArgu.getAttribute('src')));
+      if (!hasVidArgu) {
+        arguZone.style.gridTemplateColumns = '1fr';
+        document.getElementById('argu-left').classList.add('text-center');
+        vidWrap.style.display = 'none';
+      }
+    })();
+
+    // 4) CTA / nextHref résolution robuste
+    (function(){
+      const ctaAction = cleanText('').toLowerCase(); // '', 'capture', 'paiement', 'lien'
+      const ctaLink   = cleanText('');
+      const ns1 = cleanText('.html');
+      const ns2 = cleanText('');
+      const ns3 = cleanText('');
+      const ns4 = cleanText('');
+
+      let nextHref = ns1 || ns2 || '';
+      if (!nextHref){
+        const slug = ns3 || ns4;
+        if (slug) nextHref = slug.endsWith('.html') ? slug : (slug + '.html');
+      }
+
+      // injecte dans le formulaire (toujours visible par défaut)
+      const hidden = document.getElementById('nextUrl-hidden');
+      if (hidden) hidden.value = nextHref || '';
+
+      const form = document.getElementById('lead-form');
+      const link = document.getElementById('cta-link');
+
+      // Seules valeurs explicites remplacent le form :
+      if (ctaAction === 'paiement' || ctaAction === 'lien'){
+        form.classList.add('hide');
+        link.classList.remove('hide');
+        link.href = (ctaAction==='paiement' && isHttp(ctaLink)) ? ctaLink : (nextHref || '#');
+      } else {
+        // capture ou vide => form visible
+        form.classList.remove('hide');
+        link.classList.add('hide');
+      }
+    })();
+
+    // 5) Affichages conditionnels + timer + témoignages/FAQ
+    (function(){
+      const gua = document.getElementById('gua');
+      if (gua && cleanText(gua.textContent)) { gua.classList.remove('hide'); }
+
+      ['testi','faq'].forEach(id=>{
+        const el=document.getElementById(id); if(!el) return;
+        const inner=el.querySelector('div'); const txt=cleanText(inner? inner.textContent: '');
+        if (txt) el.classList.remove('hide');
+      });
+
+      // Timer
+      const evergreen = parseInt('20',10)||0;
+      const deadlineISO = cleanText('');
+      const t = document.getElementById('timer');
+      function render(sec){ if(sec<=0){ t.textContent='Offre expirée'; return; } const m=Math.floor(sec/60), s=sec%60; t.textContent='Offre expire dans '+m+'m '+('0'+s).slice(-2)+'s'; }
+      let total=0;
+      if(evergreen>0) total=evergreen*60;
+      else if(deadlineISO && !isNaN(Date.parse(deadlineISO))) total=Math.max(0,Math.floor((new Date(deadlineISO)-new Date())/1000));
+      if(total>0){ t.classList.remove('hide'); (function tick(){ render(total--); if(total>=0) setTimeout(tick,1000); })(); }
+    })();
+
+    // 6) Bonus / fichiers (download.url | product.file) + pageDeliveryMode
+    (function(){
+      const mode = cleanText('lead').toLowerCase(); // "direct" | "aucun" | ""
+      const url  = cleanText('https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-vend-2-mi76f%2Fpage1-product-1755854623087?alt=media&token=72b451f4-b479-4ae7-a738-cf3508e3f9fe');
+      const file = cleanText('');
+
+      const wrap = document.getElementById('bonus');
+      const link = document.getElementById('bonus-link');
+
+      const href = isHttp(url) ? url : (isHttp(file) ? file : '');
+      if (mode==='direct' && href){
+        link.href = href;
+        wrap.classList.remove('hide');
+      }
+    })();
+
+    // 7) Pixels
+    (function(){
+      const fb=''.trim();
+      if (fb){
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+          n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;
+          n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
+          s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script');
+        fbq('init', fb); fbq('track','PageView');
+      }
+      const gtm=''.trim();
+      if (gtm){
+        var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+encodeURIComponent(gtm);
+        document.head.appendChild(s);
+      }
+    })();
+  </script>
+</body>
+</html>
