@@ -2,176 +2,220 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <title>{{133.seo.metaTitle}} | {{1.seo.siteTitle}}</title>
-  <meta name="description" content="{{133.seo.metaDescription}} | {{1.seo.siteDescription}}" />
+  <title>{{seo.metaTitle}}</title>
+  <meta name="description" content="{{seo.metaDescription}}" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root {
-      --bg: {{1.mainColor}}; 
-      --btn: {{1.buttonColor}}; 
-      --text: #fff;
+    :root{
+      --bg: {{ui.mainColor}};
+      --btn: {{ui.buttonColor}};
+      --text:#fff;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: system-ui, -apple-system, Roboto, Arial, sans-serif;
-      line-height: 1.5;
-    }
-    main {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 24px;
-      display: flex;
-      flex-direction: row;
-      gap: 24px;
-    }
-    /* Colonne gauche = formulaire + contenu texte */
-    .content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    /* Colonne droite = image ou vidéo */
-    .media {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .media img, .media video {
-      max-width: 100%;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-    }
-    /* Quand pas de média → contenu centré */
-    .fullwidth {
-      flex: 1;
-      max-width: 700px;
-      margin: 0 auto;
-      text-align: center;
-    }
-    header {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 24px;
-    }
-    header img {
-      max-height: 48px;
-    }
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 8px;
-    }
-    p.subtitle {
-      opacity: 0.85;
-      margin-bottom: 12px;
-    }
-    ul {
-      margin-top: 12px;
-      margin-left: 16px;
-    }
-    ul li {
-      margin-bottom: 6px;
-    }
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      background: rgba(255,255,255,0.05);
-      padding: 16px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    }
-    form input, form button {
-      padding: 12px;
-      border-radius: 8px;
-      border: none;
-      font-size: 1rem;
-    }
-    form input {
-      background: #fff;
-      color: #333;
-    }
-    form button {
-      background: var(--btn);
-      color: #fff;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    /* Bouton produit bonus */
-    .download-btn {
-      display: inline-block;
-      margin-top: 12px;
-      padding: 12px 16px;
-      background: var(--btn);
-      color: #fff;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: bold;
-    }
-  </style>
-</head>
-<body>
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    main{max-width:1100px;margin:0 auto;padding:24px}
+    header{display:flex;justify-content:center;padding:16px 0}
+    header img{max-height:56px;display:block}
 
-  <header>
-    {{#if brand.logoUrl}}
-      <img src="{{brand.logoUrl}}" alt="Logo" />
-    {{/if}}
-  </header>
+    .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
+    .hero{text-align:center;margin-bottom:16px}
+    .hero h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0}
+    .hero .sub{opacity:.9;margin:0}
 
-  <main>
-    <!-- Colonne gauche = contenu + formulaire -->
-    <div class="content {{#unless media.videoMp4}}{{#unless media.imageUrl}}{{#unless brand.logoUrl}}fullwidth{{/unless}}{{/unless}}{{/unless}}">
-      <h1>{{copy.title}}</h1>
-      <p class="subtitle">{{copy.subtitle}}</p>
-      <div>{{copy.productDescription}}</div>
+    .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
+    form input,form textarea,form select{width:100%;padding:12px;border-radius:10px;border:0;margin:8px 0;background:#ffffff12;color:#fff}
 
-      {{#if copy.bullets}}
-        <ul>
-          {{#each copy.bullets}}
-            <li>{{this}}</li>
-          {{/each}}
-        </ul>
-      {{/if}}
+    /* Grilles */
+    .grid{display:grid;gap:18px}
+    .two-cols{grid-template-columns:1fr}
+    @media(min-width:880px){.two-cols{grid-template-columns:1.1fr .9fr}}
+    /* ===== Grille adaptative formulaire | média ===== */
+    #main-zone{
+      display:grid;
+      gap:18px;
+      grid-template-columns:1fr; /* défaut = une colonne */
+    }
+    @media(min-width:880px){
+      #main-zone.has-media{ grid-template-columns:1fr 1fr; } /* si média => 2 colonnes */
+    }
 
-      <!-- FORMULAIRE LEAD -->
-      <form id="lead-form" data-role="capture" data-next="{{flow.nextHref}}">
-        <input type="text" name="name" placeholder="Votre prénom" required />
-        <input type="email" name="email" placeholder="Votre email" required />
-        <button type="submit">{{copy.ctaText}}</button>
-      </form>
+    /* Formulaire centré verticalement quand seul */
+    #left-col{ display:flex; flex-direction:column; justify-content:center; }
 
-      <!-- PRODUIT BONUS PAR PAGE -->
-      {{#if pageProductFile}}
-        <a class="download-btn" href="{{pageProductFile}}" download>Télécharger le fichier</a>
-      {{else if pageProductUrl}}
-        <a class="download-btn" href="{{pageProductUrl}}" target="_blank">Accéder au produit</a>
-      {{/if}}
-    </div>
+    .pair{display:grid;grid-template-columns:1fr;gap:12px}
+    @media(min-width:880px){.pair{grid-template-columns:1fr 1fr}}
+    /* Média responsive */
+    #right-media img, #right-media video{
+      width:100%; max-height:420px; object-fit:cover; border-radius:12px; display:block;
+    }
 
-    <!-- Colonne droite = médias -->
-    {{#if media.videoMp4}}
-      <div class="media">
-        <video controls autoplay muted>
-          <source src="{{media.videoMp4}}" type="video/mp4" />
-          Votre navigateur ne supporte pas la vidéo.
-        </video>
+    .argu-grid{display:grid;gap:14px;grid-template-columns:1fr}
+    @media(min-width:880px){.argu-grid{grid-template-columns:1fr 0.9fr}}
+
+    .media img,.media video{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
+    .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
+    .hide{display:none}
+    .text-center{text-align:center}
+@@ -60,40 +69,40 @@
+      <div id="desc">{{copy.productDescription}}</div>
+    </section>
+
+    <!-- 3) Zone principale : G = image + formulaire -->
+    <section class="grid two-cols" id="main-zone">
+      <!-- Colonne gauche -->
+    <!-- 3) Zone principale : Formulaire | Média -->
+    <section id="main-zone">
+      <!-- Colonne gauche : FORM -->
+      <div class="card" id="left-col">
+        <div class="pair" id="left-pair">
+          <div class="media" id="left-media">
+            <img id="img-left" src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
+          </div>
+
+          <div>
+            <div id="timer" class="timer hide"></div>
+
+            <!-- Spécification des champs (JSON) -->
+            <script id="form-fields-json" type="application/json">{{formFields}}</script>
+
+            <!-- Form -->
+            <form id="lead-form" data-role="capture" data-next="{{flow.nextHref}}">
+              <div id="form-visible"></div>
+
+              <!-- requis pour save-lead-tunnel.js -->
+              <input type="hidden" name="userId" value="{{userId}}" />
+              <input type="hidden" name="pageSlug" value="{{slug}}" />
+              <input type="hidden" name="slug" value="{{slug}}" />
+              <input type="hidden" name="type" value="tunnel" />
+              <input type="hidden" name="nextUrl" value="{{flow.nextHref}}" />
+
+              <button type="submit" class="btn">{{copy.ctaText}}</button>
+
+              <!-- Garantie sous le formulaire -->
+              <div id="gua" class="hide" style="margin-top:10px"><em>{{copy.guarantee}}</em></div>
+            </form>
+          </div>
+        <div>
+          <div id="timer" class="timer hide"></div>
+
+          <!-- Spécification des champs (JSON) -->
+          <script id="form-fields-json" type="application/json">{{formFields}}</script>
+
+          <!-- Form -->
+          <form id="lead-form" data-role="capture" data-next="{{flow.nextHref}}">
+            <div id="form-visible"></div>
+
+            <!-- requis pour save-lead-tunnel.js -->
+            <input type="hidden" name="userId" value="{{userId}}" />
+            <input type="hidden" name="pageSlug" value="{{slug}}" />
+            <input type="hidden" name="slug" value="{{slug}}" />
+            <input type="hidden" name="type" value="tunnel" />
+            <input type="hidden" name="nextUrl" value="{{flow.nextHref}}" />
+
+            <button type="submit" class="btn">{{copy.ctaText}}</button>
+
+            <!-- Garantie sous le formulaire -->
+            <div id="gua" class="hide" style="margin-top:10px"><em>{{copy.guarantee}}</em></div>
+          </form>
+        </div>
       </div>
-    {{else if media.imageUrl}}
-      <div class="media">
-        <img src="{{media.imageUrl}}" alt="Illustration" />
+
+      <!-- Colonne droite : MEDIA (image ou vidéo) -->
+      <div class="card" id="right-media">
+        <img id="img-media" src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
+        <video id="vid-media" src="{{media.videoMp4}}" controls playsinline onerror="this.style.display='none'"></video>
       </div>
-    {{/if}}
-  </main>
+    </section>
 
-  <!-- Scripts Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
-  <script src="./firebase-init.js"></script>
-  <script src="./save-lead-tunnel.js"></script>
+    <!-- 4) Bloc argumentaire SOUS le formulaire : gauche = textes, droite = vidéo -->
+@@ -185,71 +194,74 @@
 
+    // 2) Logique médias/form & argumentaire
+    (function(){
+      // Haut : image + form
+      const mainZone = document.getElementById('main-zone');
+      const leftCol = document.getElementById('left-col');
+      const leftPair = document.getElementById('left-pair');
+      const leftMedia = document.getElementById('left-media');
+      const imgLeft = document.getElementById('img-left');
+
+      const hasImg = !!cleanText(imgLeft.getAttribute('src'));
+      if (!hasImg) {
+        leftMedia.style.display = 'none';
+        leftPair.style.gridTemplateColumns = '1fr';
+        mainZone.classList.remove('two-cols');
+      const mainZone   = document.getElementById('main-zone');
+      const leftCol    = document.getElementById('left-col');
+      const rightMedia = document.getElementById('right-media');
+      const img        = document.getElementById('img-media');
+      const vid        = document.getElementById('vid-media');
+
+      const hasImg = !!cleanText(img.getAttribute('src'));
+      const hasVid = !!cleanText(vid.getAttribute('src'));
+
+      if (hasImg || hasVid) {
+        // 2 colonnes
+        mainZone.classList.add('has-media');
+      } else {
+        // 1 colonne centrée
+        if (rightMedia) rightMedia.style.display = 'none';
+        mainZone.classList.remove('has-media');
+        leftCol.classList.add('fun');
+      }
+
+      // Bas : argumentaire + vidéo
+      const arguZone = document.getElementById('argu-zone');
+      const vidWrap  = document.getElementById('argu-video');
+      const vid      = document.getElementById('vid-argu');
+      const hasVid   = !!cleanText(vid.getAttribute('src'));
+      const vidArgu  = document.getElementById('vid-argu');
+      const hasVidArgu = !!cleanText(vidArgu.getAttribute('src'));
+
+      if (!hasVid) {
+        // pas de vidéo -> une seule colonne + centrage du texte
+      if (!hasVidArgu) {
+        arguZone.style.gridTemplateColumns = '1fr';
+        document.getElementById('argu-left').classList.add('text-center');
+        vidWrap.style.display = 'none';
+      }
+    })();
+
+    // 3) Affichages conditionnels + timer
+    (function(){
+      // Garantie visible si contenu
+      const gua = document.getElementById('gua');
+      if (gua && cleanText(gua.textContent)) { gua.classList.remove('hide'); }
+
+      // Témoignages & FAQ (en bas)
+      ['testi','faq'].forEach(id=>{
+        const el=document.getElementById(id); if(!el) return;
+        const inner=el.querySelector('div'); const txt=cleanText(inner? inner.textContent: '');
+        if (txt) el.classList.remove('hide');
+      });
+
+      // Progress bar
+      const prog = document.getElementById('progress');
+      if (prog && cleanText(prog.textContent)) prog.classList.remove('hide');
+
+      // Timer
+      const evergreen = parseInt('{{timers.evergreenMinutes}}',10)||0;
+      const deadlineISO = cleanText('{{timers.deadlineISO}}');
+      const t = document.getElementById('timer');
+      function render(sec){ if(sec<=0){ t.textContent='Offre expirée'; return; } const m=Math.floor(sec/60), s=sec%60; t.textContent='Offre expire dans '+m+'m '+('0'+s).slice(-2)+'s'; }
+      let total=0;
+      if(evergreen>0) total=evergreen*60;
+      else if(deadlineISO && !isNaN(Date.parse(deadlineISO))) total=Math.max(0,Math.floor((new Date(deadlineISO)-new Date())/1000));
+      if(total>0){ t.classList.remove('hide'); (function tick(){ render(total--); if(total>=0) setTimeout(tick,1000); })(); }
+    })();
+
+    // 4) Pixels (vides = pas d’injection)
+    (function(){
+      const clean = cleanText;
+      var fb=clean('{{analytics.fbPixelId}}'); if(fb){!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
+      s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script'); fbq('init', fb); fbq('track','PageView');}
+      var gtm=clean('{{analytics.gtmId}}'); if(gtm){var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+gtm;document.head.appendChild(s)}
+    })();
+  </script>
 </body>
-</html>
