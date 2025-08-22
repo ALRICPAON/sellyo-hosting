@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>test merci vend2</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    :root {
+      --bg: ;
+      --btn: ;
+      --text: #fff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, Roboto, sans-serif; }
+    main { max-width: 720px; margin: 40px auto; padding: 24px; text-align: center; }
+    header img { max-width: 160px; display: block; margin: 0 auto 24px; }
+    h1 { font-size: 28px; margin-bottom: 12px; }
+    p { opacity: 0.9; margin-bottom: 24px; }
+
+    .card {
+      background: #ffffff10;
+      padding: 24px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 14px 24px;
+      background: var(--btn);
+      color: #fff;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 12px;
+      margin-top: 12px;
+      transition: 0.2s ease;
+    }
+    .btn:hover { opacity: 0.85; }
+    #bonus { display: none; }
+  </style>
+</head>
+<body>
+
+  <main>
+    <!-- Logo -->
+    <header>
+      <img id="logo" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-merci-vend2-0ppu8%2Flogo-1755878484752?alt=media&token=9272fb98-1d73-425b-a6b7-f44e99e8e97b" alt="Logo" onerror="this.style.display='none'" />
+    </header>
+
+    <!-- Message principal -->
+    <h1>Merci pour votre inscription 🎉</h1>
+    <p>Votre ressource est prête !</p>
+
+    <!-- Bloc de téléchargement -->
+    <section id="bonus" class="card">
+      <h3 id="bonus-title">Téléchargez votre produit</h3>
+      <p id="bonus-desc">Cliquez ci-dessous pour accéder à votre contenu :</p>
+      <a id="bonus-link" class="btn" href="#" download>Télécharger</a>
+    </section>
+
+    <!-- Bouton retour accueil -->
+    <a href="/" class="btn" style="background:#666;margin-top:32px;">Retour à l'accueil</a>
+  </main>
+
+  <script>
+    // 🟢 Utilitaire de nettoyage
+    function cleanText(str) {
+      return (str || '').trim();
+    }
+    function isHttp(url) {
+      return /^https?:\/\//.test(url || '');
+    }
+
+    (function() {
+      // ✅ On prend en priorité le produit principal livré
+      const url1 = cleanText('');      // URL principale fournie
+      const file1 = cleanText('');    // Fichier principal uploadé
+      const url2 = cleanText('');          // Fichier spécifique à la page
+      const href = isHttp(url1) ? url1 : (isHttp(file1) ? file1 : (isHttp(url2) ? url2 : ''));
+
+      const wrap = document.getElementById('bonus');
+      const link = document.getElementById('bonus-link');
+
+      if (href) {
+        link.href = href;
+        wrap.style.display = 'block';
+      } else {
+        // Pas de fichier à télécharger → masque le bloc
+        wrap.style.display = 'none';
+      }
+    })();
+  </script>
+</body>
+</html>
