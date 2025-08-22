@@ -7,133 +7,170 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root{
+      --bg: {{ui.backgroundColor}};
+      --main: {{ui.mainColor}};
       --bg: {{ui.mainColor}};
       --btn: {{ui.buttonColor}};
       --text:#fff;
     }
-    *{box-sizing:border-box}
-    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-    main{max-width:1100px;margin:0 auto;padding:24px}
-    header{display:flex;justify-content:center;padding:16px 0}
-    header img{max-height:56px;display:block}
-
-    .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
-    .hero{text-align:center;margin-bottom:16px}
-    .hero h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0}
-    .hero .sub{opacity:.9;margin:0}
-
+@@ -26,13 +25,20 @@
     .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
     form input,form textarea,form select{width:100%;padding:12px;border-radius:10px;border:0;margin:8px 0;background:#ffffff12;color:#fff}
 
     /* Grilles adaptatives */
-    /* Grilles */
     .grid{display:grid;gap:18px}
+    .grid-2{grid-template-columns:1fr}
+    @media(min-width:880px){.grid-2{grid-template-columns:1.1fr .9fr}}
     .two-cols{grid-template-columns:1fr}
     @media(min-width:880px){.two-cols{grid-template-columns:1.1fr .9fr}}
 
     .pair{display:grid;grid-template-columns:1fr;gap:12px}
     @media(min-width:880px){.pair{grid-template-columns:1fr 1fr}}
 
-    .argu-grid{display:grid;gap:14px;grid-template-columns:1fr}
-    @media(min-width:880px){.argu-grid{grid-template-columns:1fr 0.9fr}}
-
     .media img,.media video{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
     .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
     .hide{display:none}
-    .text-center{text-align:center}
 
     /* Petit effet "fun" si pas de média */
-    /* Effet si pas de média */
     .fun{background:linear-gradient(135deg,#ffffff12,#ffffff08)}
   </style>
 </head>
-@@ -56,7 +60,7 @@
+<body>
+@@ -45,54 +51,60 @@
+      <p class="sub">{{copy.subtitle}}</p>
+    </section>
+
+    <!-- 2) Description sous le sous-titre (avant le formulaire) -->
+    <!-- 2) Description avant le formulaire -->
+    <section class="card" id="desc-wrap">
       <div id="desc">{{copy.productDescription}}</div>
     </section>
 
+    <!-- 3) Formulaire (garantie en dessous dans le même bloc) -->
+    <section class="card">
+      <div id="timer" class="timer hide"></div>
     <!-- 3) Zone centrale : G = image + formulaire / D = textes + vidéo -->
-    <!-- 3) Zone principale : G = image + formulaire -->
     <section class="grid two-cols" id="main-zone">
       <!-- Colonne gauche -->
       <div class="card" id="left-col">
-@@ -68,12 +72,14 @@
+        <div class="pair" id="left-pair">
+          <div class="media" id="left-media">
+            <img id="img-left" src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
+          </div>
+
+      <!-- JSON des champs (anti-parasite) -->
+      <script id="form-fields-json" type="application/json">{{formFields}}</script>
           <div>
             <div id="timer" class="timer hide"></div>
 
+      <form id="lead-form" data-role="capture" data-next="{{flow.nextHref}}">
+        <div id="form-visible"></div>
             <!-- JSON des champs (anti-parasite) -->
-            <!-- Spécification des champs (JSON) -->
             <script id="form-fields-json" type="application/json">{{formFields}}</script>
 
-            <!-- Form -->
+        <input type="hidden" name="userId" value="{{userId}}" />
+        <input type="hidden" name="pageSlug" value="{{slug}}" />
+        <input type="hidden" name="slug" value="{{slug}}" />
+        <input type="hidden" name="type" value="tunnel" />
+        <input type="hidden" name="nextUrl" value="{{flow.nextHref}}" />
             <form id="lead-form" data-role="capture" data-next="{{flow.nextHref}}">
               <div id="form-visible"></div>
 
-              <!-- requis pour save-lead-tunnel.js -->
+        <button type="submit" class="btn">{{copy.ctaText}}</button>
               <input type="hidden" name="userId" value="{{userId}}" />
               <input type="hidden" name="pageSlug" value="{{slug}}" />
               <input type="hidden" name="slug" value="{{slug}}" />
-@@ -88,23 +94,25 @@
+              <input type="hidden" name="type" value="tunnel" />
+              <input type="hidden" name="nextUrl" value="{{flow.nextHref}}" />
+
+        <!-- Garantie juste sous le formulaire -->
+        <div id="gua" class="hide" style="margin-top:10px"><em>{{copy.guarantee}}</em></div>
+      </form>
+    </section>
+              <button type="submit" class="btn">{{copy.ctaText}}</button>
+
+    <!-- 4) Bas de page : media à gauche + problème/solution/bénéfices/bullets à droite -->
+    <section class="grid grid-2" id="bottom-zone">
+      <!-- Media (à gauche, masqué si vide) -->
+      <div class="card">
+        <div class="media">
+          <video src="{{media.videoMp4}}" controls playsinline onerror="this.style.display='none'"></video>
+          <img src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
+              <!-- Garantie sous le formulaire -->
+              <div id="gua" class="hide" style="margin-top:10px"><em>{{copy.guarantee}}</em></div>
+            </form>
           </div>
         </div>
       </div>
-    </section>
 
+      <!-- Détails (à droite) -->
+      <div class="card">
+        <h3 id="h-prob" class="hide">Le problème</h3><div id="prob">{{copy.problem}}</div>
+        <h3 id="h-sol" class="hide">La solution</h3><div id="sol">{{copy.solution}}</div>
+        <h3 id="h-ben" class="hide">Bénéfices</h3><div id="ben">{{copy.benefits}}</div>
+        <h3 id="h-bul" class="hide">Ce que vous obtenez</h3><div id="bul">{{copy.bullets}}</div>
       <!-- Colonne droite -->
       <div class="card" id="right-col">
         <!-- On affiche UNIQUEMENT le contenu, pas les titres -->
-    <!-- 4) Bloc argumentaire SOUS le formulaire : gauche = textes, droite = vidéo -->
-    <section class="card argu-grid" id="argu-zone">
-      <!-- Argumentaire (gauche) : uniquement contenu -->
-      <div id="argu-left">
         <div id="prob">{{copy.problem}}</div>
         <div id="sol">{{copy.solution}}</div>
         <div id="ben">{{copy.benefits}}</div>
         <div id="bul">{{copy.bullets}}</div>
-      </div>
 
         <!-- Vidéo en bas de la colonne droite -->
         <div class="media" id="right-video">
           <video id="vid-right" src="{{media.videoMp4}}" controls playsinline onerror="this.style.display='none'"></video>
         </div>
-      <!-- Vidéo (droite) -->
-      <div class="media" id="argu-video">
-        <video id="vid-argu" src="{{media.videoMp4}}" controls playsinline onerror="this.style.display='none'"></video>
       </div>
     </section>
 
+    <!-- 5) Témoignages + FAQ en dessous du bloc vidéo -->
     <!-- 4) Témoignages + FAQ en bas -->
-    <!-- 5) Témoignages + FAQ en bas -->
     <section class="card hide" id="testi">
       <h3>Témoignages</h3>
       <div>{{testimonials}}</div>
-@@ -124,16 +132,16 @@
+@@ -112,10 +124,19 @@
   <script type="module" src="https://alricpaon.github.io/sellyo-hosting/js/save-lead-tunnel.js"></script>
 
   <script>
+    // Anti-parasites
     // Anti-parasites simples (retire d'éventuels ```html ... ```)
-    // Anti-parasites (supprime d'éventuels ```html ... ```)
     (function(){
       const kill = (s)=>s.replace(/```html?/gi,'').replace(/```/g,'');
       ['desc','prob','sol','ben','bul','testi','faq'].forEach(id=>{
         const el=document.getElementById(id); if(!el) return;
         const t=el.innerHTML||''; el.innerHTML=kill(t);
-        el.innerHTML = kill(el.innerHTML||'');
       });
     })();
 
     // Helper trim/quotes
-    // Helper
     const cleanText = (s) => (s||"").replace(/^['"\\s]+|['"\\s]+$/g,'').trim();
 
+    // Génération des inputs visibles depuis {{formFields}} (JSON)
     // 1) Génération des inputs visibles depuis {{formFields}} (JSON)
-@@ -175,46 +183,38 @@
+    (function(){
+      const holder = document.getElementById('form-visible');
+      const blob = document.getElementById('form-fields-json');
+@@ -135,9 +156,7 @@
+      const makeInput = (key, cfg) => {
+        const type = (cfg && cfg.type) || (key==='email'?'email': key==='phone'?'tel':'text');
+        const req = (cfg && cfg.required) || (key==='email');
+        if (key==='notes') {
+          const ta=document.createElement('textarea'); ta.name=key; ta.placeholder=labels[key]||key; ta.required=!!req; return ta;
+        }
+        if (key==='notes') { const ta=document.createElement('textarea'); ta.name=key; ta.placeholder=labels[key]||key; ta.required=!!req; return ta; }
+        if (key==='gender') {
+          const sel=document.createElement('select'); sel.name=key;
+          ['','Femme','Homme','Autre','Ne se prononce pas'].forEach((t,i)=>{
+@@ -156,64 +175,78 @@
       }
     })();
 
+    // Affichages conditionnels + layout adaptatif
     // 2) Logique d'agencement médias/texte selon disponibilités
-    // 2) Logique médias/form & argumentaire
     (function(){
-      // Haut : image + form
+      const showIf = (id) => { const el=document.getElementById(id); if(!el) return; const txt=cleanText(el.textContent); if(txt) el.classList.remove('hide'); };
+      ['gua','progress'].forEach(showIf);
       const mainZone = document.getElementById('main-zone');
       const leftCol = document.getElementById('left-col');
       const leftPair = document.getElementById('left-pair');
@@ -164,44 +201,59 @@
         mainZone.classList.remove('two-cols');
       } else {
         // (c) Pas de média -> form bien centré et carte "fun"
-      if (!hasImg) {
         leftMedia.style.display = 'none';
         leftPair.style.gridTemplateColumns = '1fr';
         mainZone.classList.remove('two-cols');
         leftCol.classList.add('fun');
       }
-
-      // Bas : argumentaire + vidéo
-      const arguZone = document.getElementById('argu-zone');
-      const vidWrap  = document.getElementById('argu-video');
-      const vid      = document.getElementById('vid-argu');
-      const hasVid   = !!cleanText(vid.getAttribute('src'));
-
-      if (!hasVid) {
-        // pas de vidéo -> une seule colonne + centrage du texte
-        arguZone.style.gridTemplateColumns = '1fr';
-        document.getElementById('argu-left').classList.add('text-center');
-        vidWrap.style.display = 'none';
-      }
     })();
 
+      // Sections texte bas
+      [['h-prob','prob'],['h-sol','sol'],['h-ben','ben'],['h-bul','bul']].forEach(([h,c])=>{
+        const ce=document.getElementById(c), he=document.getElementById(h);
+        if (ce && cleanText(ce.textContent)) { if(he) he.classList.remove('hide'); }
+      });
     // 3) Affichages conditionnels et timer
-    // 3) Affichages conditionnels + timer
     (function(){
       // Garantie visible si contenu
       const gua = document.getElementById('gua');
-@@ -227,26 +227,30 @@
+      if (gua && cleanText(gua.textContent)) { gua.classList.remove('hide'); }
+
+      // Témoignages & FAQ (les afficher seulement si contenu)
+      // Témoignages & FAQ (en bas)
+      ['testi','faq'].forEach(id=>{
+        const el=document.getElementById(id);
+        if(!el) return;
+        const el=document.getElementById(id); if(!el) return;
+        const inner=el.querySelector('div'); const txt=cleanText(inner? inner.textContent: '');
         if (txt) el.classList.remove('hide');
       });
 
-      // Progress bar
-      const prog = document.getElementById('progress');
-      if (prog && cleanText(prog.textContent)) prog.classList.remove('hide');
+      // Media: cacher si vide + basculer en 1 colonne si pas de média
+      const grid = document.getElementById('bottom-zone');
+      const vid = grid && grid.querySelector('.media video');
+      const img = grid && grid.querySelector('.media img');
+      const hasVid = !!(vid && cleanText(vid.getAttribute('src')));
+      const hasImg = !!(img && cleanText(img.getAttribute('src')));
+      if (vid && !hasVid) vid.style.display='none';
+      if (img && !hasImg) img.style.display='none';
+      if (grid && !(hasVid || hasImg)) {
+        // pas de média -> 1 colonne, le bloc détails est centré automatiquement
+        grid.classList.remove('grid-2');
+      }
+    })();
 
+    // Timer
+    (function(){
       // Timer
       const evergreen = parseInt('{{timers.evergreenMinutes}}',10)||0;
       const deadlineISO = cleanText('{{timers.deadlineISO}}');
       const t = document.getElementById('timer');
+      function render(sec){
+        if(sec<=0){ t.textContent='Offre expirée'; return; }
+        const m=Math.floor(sec/60), s=sec%60;
+        t.textContent='Offre expire dans '+m+'m '+('0'+s).slice(-2)+'s';
+      }
       function render(sec){ if(sec<=0){ t.textContent='Offre expirée'; return; } const m=Math.floor(sec/60), s=sec%60; t.textContent='Offre expire dans '+m+'m '+('0'+s).slice(-2)+'s'; }
       let total=0;
       if(evergreen>0) total=evergreen*60;
@@ -209,6 +261,7 @@
       if(total>0){ t.classList.remove('hide'); (function tick(){ render(total--); if(total>=0) setTimeout(tick,1000); })(); }
     })();
 
+    // Pixels (vides = pas d’injection)
     // 4) Pixels (vides = pas d’injection)
     (function(){
       const clean = cleanText;
