@@ -54,18 +54,6 @@
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    input, textarea {
-      padding: 10px;
-      border-radius: 6px;
-      border: none;
-      font-size: 1rem;
-      width: 100%;
-    }
     button.cta {
       background: var(--btn);
       color: #fff;
@@ -77,6 +65,7 @@
       cursor: pointer;
       transition: background 0.3s ease;
       text-align: center;
+      margin-top: 16px;
     }
     button.cta:hover { background: #2563eb; }
     .testimonials, .faqs {
@@ -88,6 +77,16 @@
       margin-bottom: 10px;
       border-radius: 6px;
     }
+    .download-btn {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: var(--btn);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+    }
     footer {
       text-align: center;
       margin-top: 40px;
@@ -98,11 +97,13 @@
 </head>
 <body>
   <header>
-    <img src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'"/>
+    {{#if brand.logoUrl}}
+      <img src="{{brand.logoUrl}}" alt="Logo" />
+    {{/if}}
   </header>
 
   <main>
-    <!-- Colonne gauche : contenu / formulaire -->
+    <!-- Colonne gauche : contenu -->
     <div class="content">
       <h1>{{copy.title}}</h1>
       <p>{{copy.subtitle}}</p>
@@ -112,20 +113,29 @@
         {{copy.bullets}}
       </div>
 
-      <form id="lead-form" data-next="{{flow.nextHref}}">
-        <input type="hidden" name="userId" value="{{userId}}" />
-        <input type="hidden" name="slug" value="{{slug}}" />
-        <input type="hidden" name="type" value="tunnel" />
+      <!-- BOUTON CTA -->
+      <button class="cta">{{copy.ctaText}}</button>
 
-        <input type="text" name="name" placeholder="Votre prénom" />
-        <input type="email" name="email" placeholder="Votre email" required />
-        <button type="submit" class="cta">{{copy.ctaText}}</button>
-      </form>
+      <!-- PRODUIT PRINCIPAL SI DISPONIBLE -->
+      {{#if delivery.productFile}}
+        <a class="download-btn" href="{{delivery.productFile}}" download>Télécharger le produit</a>
+      {{else if delivery.productUrl}}
+        <a class="download-btn" href="{{delivery.productUrl}}" target="_blank">Accéder au produit</a>
+      {{/if}}
 
+      <!-- FICHIERS BONUS PAR PAGE -->
+      {{#if pageProductFile}}
+        <a class="download-btn" href="{{pageProductFile}}" download>Télécharger le fichier bonus</a>
+      {{else if pageProductUrl}}
+        <a class="download-btn" href="{{pageProductUrl}}" target="_blank">Voir le bonus</a>
+      {{/if}}
+
+      <!-- Témoignages -->
       <div class="testimonials">
         {{testimonials}}
       </div>
 
+      <!-- FAQ -->
       <div class="faqs">
         {{faqs}}
       </div>
@@ -133,11 +143,13 @@
 
     <!-- Colonne droite : image ou vidéo -->
     <div class="media">
-      <video controls autoplay muted loop style="{{media.videoMp4 ? '' : 'display:none;'}}">
-        <source src="{{media.videoMp4}}" type="video/mp4">
-      </video>
-      <img src="{{media.imageUrl}}" alt="Image" style="{{media.videoMp4 ? 'display:none;' : ''}}"
-           onerror="this.style.display='none'"/>
+      {{#if media.videoMp4}}
+        <video controls autoplay muted loop>
+          <source src="{{media.videoMp4}}" type="video/mp4">
+        </video>
+      {{else if media.imageUrl}}
+        <img src="{{media.imageUrl}}" alt="Image" onerror="this.style.display='none'" />
+      {{/if}}
     </div>
   </main>
 
@@ -145,8 +157,7 @@
     <p>&copy; {{seo.metaTitle}} - Tous droits réservés.</p>
   </footer>
 
-  <!-- Scripts dynamiques -->
-  <script src="https://js.stripe.com/v3"></script>
+  <!-- Gestion dynamique du CTA -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const btn = document.querySelector("button.cta");
@@ -154,27 +165,16 @@
       const url = "{{cta.url}}".trim();
       const pay = "{{payment.paymentLink}}".trim();
       const next = "{{flow.nextHref}}".trim();
+      const download = "{{download.url}}".trim();
 
       if (mode === "payment" && pay) {
-        btn.onclick = (e) => {
-          e.preventDefault();
-          window.location.href = pay;
-        };
+        btn.onclick = (e) => { e.preventDefault(); window.location.href = pay; };
       } else if (mode === "next" && next) {
-        btn.onclick = (e) => {
-          e.preventDefault();
-          window.location.href = next;
-        };
+        btn.onclick = (e) => { e.preventDefault(); window.location.href = next; };
       } else if (mode === "url" && url) {
-        btn.onclick = (e) => {
-          e.preventDefault();
-          window.location.href = url;
-        };
-      } else if ("{{download.url}}".trim()) {
-        btn.onclick = (e) => {
-          e.preventDefault();
-          window.location.href = "{{download.url}}";
-        };
+        btn.onclick = (e) => { e.preventDefault(); window.location.href = url; };
+      } else if (download) {
+        btn.onclick = (e) => { e.preventDefault(); window.location.href = download; };
       } else {
         btn.style.display = "none";
       }
@@ -186,6 +186,5 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
   <script src="./firebase-init.js" type="module"></script>
-  <script src="./save-lead-tunnel.js" type="module"></script>
 </body>
 </html>
