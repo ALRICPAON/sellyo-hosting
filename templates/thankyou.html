@@ -69,151 +69,59 @@
   </main>
 
   <script>
-    // --- Utils
-    const txt = s => (s||'').toString().trim();
-    const isHttp = u => { try{ const x=new URL(u); return x.protocol==='http:'||x.protocol==='https:' }catch(_){ return false } };
-    const killMD = s => (s||'').replace(/```html?/gi,'').replace(/```/g,'');
+// === ThankYou: bouton de téléchargement (sans deliveryMode) ===
+(function(){
+  const clean = (s)=> (s||'').toString().trim();
+  const isHttp = (u)=>{ try{ const x=new URL(clean(u)); return x.protocol==='http:'||x.protocol==='https:'; }catch(e){ return false; } };
 
-    // Affiche logo si dispo
-    (function(){
-      const logo = document.getElementById('logo');
-      if (logo && txt(logo.getAttribute('src'))) logo.style.display='block';
-    })();
+  const dlWrap = document.getElementById('dl-wrap');
+  const dlBtn  = document.getElementById('dl');
+  const nextWrap = document.getElementById('next-wrap'); // on le masque si pas utilisé
+  if (nextWrap) nextWrap.classList.add('hide');
 
-    // Nettoyage sections texte
-    (function(){
-      ['desc','bul','ben','faq'].forEach(id=>{
-        const el=document.getElementById(id);
-        if (el) el.innerHTML = killMD(el.innerHTML);
-      });
-      const hasDesc = !!txt(document.getElementById('desc')?.textContent);
-      const hasBul  = !!txt(document.getElementById('bul')?.textContent);
-      const hasBen  = !!txt(document.getElementById('ben')?.textContent);
-      const hasFaq  = !!txt(document.querySelector('#faq > div')?.textContent);
-      if (hasDesc || hasBul || hasBen || hasFaq) {
-        document.getElementById('desc-wrap').classList.remove('hide');
-        if (hasFaq) document.getElementById('faq').classList.remove('hide');
-      }
-    })();
+  // 1) Sources possibles
+  const fromMerged  = clean('{{download.url}}');         // mapping Make (priorité côté Make)
+  const fromPage    = clean('{{productUrl}}');           // bonus/fichier de la page
+  const fromGlobalF = clean('{{delivery.fileUrl}}');     // fichier global uploadé
+  const fromGlobalU = clean('{{delivery.url}}');         // URL globale externe
 
-    // --- Sources possibles pour la livraison / redirection
-    const deliveryMode = txt('{{pageDeliveryMode}}') || txt('{{deliveryMode}}'); // "direct" | "livrer-sur-page" | "livrer-apres-lead" | "livrer-apres-paiement" | ""
-    const downloadUrl  = txt('{{download.url}}') || txt('{{delivery.productUrl}}') || txt('{{redirectURL}}');
-    const flowNextHref = txt('{{flow.nextHref}}') || (function(){ const s = txt('{{flow.nextSlug}}'); return s ? (s.endsWith('.html')?s:(s+'.html')) : '' })();
+  // 2) Choix final (si Make n'a pas déjà résolu)
+  let finalUrl = isHttp(fromMerged)  ? fromMerged
+               : isHttp(fromPage)    ? fromPage
+               : isHttp(fromGlobalF) ? fromGlobalF
+               : isHttp(fromGlobalU) ? fromGlobalU
+               : '';
 
-    // pageFiles peut arriver en JSON encodé (&quot;)
-    function parsePageFiles(){
-      const raw = '{{pageFiles}}';
-      const safe = raw.replace(/&quot;/g,'"');
-      try{
-        const arr = JSON.parse(safe);
-        return Array.isArray(arr) ? arr : [];
-      }catch(_){ return [] }
-    }
+  if (finalUrl) {
+    dlBtn.href = finalUrl;
+    dlWrap.classList.remove('hide');
+  } else {
+    // Pas de ressource trouvée → message doux (optionnel)
+    // document.querySelector('.lead')?.insertAdjacentHTML('afterend','<p style="opacity:.8">Aucun fichier à télécharger pour le moment.</p>');
+  }
 
-    // Normaliser liste de fichiers (url + name)
-    function normalizeFiles(primaryUrl, files){
-      const list = [];
-      if (isHttp(primaryUrl)) list.push({ url: primaryUrl, name: primaryUrl.split('/').pop() || 'Fichier' });
-      (files||[]).forEach(f=>{
-        if (!f) return;
-        const url = txt(f.url || f.href || f.link || '');
-        const name = txt(f.name || f.filename || (url.split('/').pop()) || 'Fichier');
-        if (isHttp(url)) list.push({ url, name });
-      });
-      // dédupliquer par URL
-      const seen = new Set(); const out=[];
-      list.forEach(it=>{ if(!seen.has(it.url)){ seen.add(it.url); out.push(it) } });
-      return out;
-    }
+  // 3) Contenu additionnel (afficher si rempli)
+  const cleanText = (s)=> (s||'').replace(/```html?/gi,'').replace(/```/g,'').trim();
+  ['desc','bul','ben','faq'].forEach(id=>{
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = cleanText(el.innerHTML||'');
+  });
 
-    (function(){
-      const leadText  = document.getElementById('lead-text');
-      const dlPrimary = document.getElementById('dl-primary');
-      const dlBtn     = document.getElementById('dl-btn');
-      const filesWrap = document.getElementById('files-wrap');
-      const filesEl   = document.getElementById('files');
-      const nextWrap  = document.getElementById('next-wrap');
-      const nextBtn   = document.getElementById('next-btn');
+  const has = (id) => {
+    const el = document.getElementById(id);
+    if (!el) return false;
+    const inner = el.tagName==='DIV' ? el : el.querySelector('div') || el;
+    return !!clean(inner.textContent);
+  };
 
-      const files = normalizeFiles(downloadUrl, parsePageFiles());
-
-      // Logique des modes
-      const mode = (deliveryMode || '').toLowerCase();
-
-      // 1) Si paiement → on privilégie la redirection (ex: vers un espace membre / page suite)
-      if (mode === 'livrer-apres-paiement') {
-        if (flowNextHref) {
-          leadText.textContent = 'Paiement confirmé. Cliquez pour continuer.';
-          nextBtn.href = flowNextHref;
-          nextWrap.classList.remove('hide');
-          // Si on a quand même des fichiers, on les liste aussi (optionnel)
-          if (files.length) {
-            renderFiles(filesEl, files);
-            filesWrap.classList.remove('hide');
-          }
-          return;
-        }
-        // fallback : pas de next → livrer les fichiers s’ils existent
-      }
-
-      // 2) Modes "direct" / "livrer-sur-page" / "livrer-apres-lead" → montrer fichiers si présents
-      if (files.length === 1) {
-        dlBtn.href = files[0].url;
-        dlPrimary.classList.remove('hide');
-      } else if (files.length > 1) {
-        renderFiles(filesEl, files);
-        filesWrap.classList.remove('hide');
-      }
-
-      // 3) Si pas de fichier et qu’on a un nextHref → proposer de continuer
-      if (!files.length && flowNextHref) {
-        nextBtn.href = flowNextHref;
-        nextWrap.classList.remove('hide');
-      }
-
-      // 4) Si rien du tout → message informatif
-      if (!files.length && !flowNextHref) {
-        leadText.textContent = "Aucun fichier disponible pour le moment. Vérifiez votre email ou contactez le support.";
-      }
-
-      function renderFiles(host, list){
-        host.innerHTML = list.map(item=>{
-          const safeName = escapeHtml(item.name || 'Fichier');
-          const u = item.url;
-          return `
-            <div class="file">
-              <span class="name">${safeName}</span>
-              <div class="row">
-                <a class="btn btn-alt" href="${u}" target="_blank" rel="noopener">Ouvrir</a>
-                <a class="btn" href="${u}" download>📥 Télécharger</a>
-              </div>
-            </div>
-          `;
-        }).join('');
-      }
-
-      function escapeHtml(s){
-        return (s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-      }
-    })();
-
-    // Pixels & GTM (identique optin)
-    (function(){
-      const fb='{{analytics.fbPixelId}}'.trim();
-      if (fb){
-        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-          n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;
-          n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
-          s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script');
-        fbq('init', fb); fbq('track','PageView');
-      }
-      const gtm='{{analytics.gtmId}}'.trim();
-      if (gtm){
-        var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+encodeURIComponent(gtm);
-        document.head.appendChild(s);
-      }
-    })();
-  </script>
+  const showContent = has('desc') || has('bul') || has('ben') || has('faq');
+  if (showContent) {
+    const wrap = document.getElementById('desc-wrap');
+    if (wrap) wrap.classList.remove('hide');
+    const faq = document.getElementById('faq');
+    if (faq && has('faq')) faq.classList.remove('hide');
+  }
+})();
+</script>
 </body>
 </html>
