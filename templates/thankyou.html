@@ -6,45 +6,57 @@
   <meta name="description" content="{{seo.metaDescription}}" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root { --bg: {{ui.mainColor}}; --btn: {{ui.buttonColor}}; --text: #fff }
-    * { box-sizing: border-box }
-    body { margin: 0; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif }
-    main { max-width: 820px; margin: 0 auto; padding: 24px }
-    header { display: flex; justify-content: center; padding: 16px 0 }
-    header img { max-height: 56px; display: block }
-    .card { background: #ffffff10; border: 1px solid #ffffff14; border-radius: 16px; padding: 22px }
-    h1 { font-size: clamp(28px, 3.5vw, 40px); margin: 8px 0; text-align: center }
-    p.lead { opacity: .9; text-align: center; margin: 0 0 12px }
-    .btn { display: inline-block; width: 100%; padding: 14px 18px; border-radius: 12px; background: var(--btn); color: #fff; font-weight: 800; text-align: center; text-decoration: none; border: 0; cursor: pointer }
-    .btn-alt { background: #ffffff22 }
-    .grid { display: grid; gap: 18px }
-    .hide { display: none }
+    :root{ --bg: {{ui.mainColor}}; --btn: {{ui.buttonColor}}; --text:#fff }
+    *{ box-sizing:border-box }
+    body{ margin:0; background:var(--bg); color:var(--text); font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif }
+    main{ max-width:900px; margin:0 auto; padding:24px }
+    header{ display:flex; justify-content:center; padding:16px 0 }
+    #logo{ max-height:56px; display:none }
+    .card{ background:#ffffff10; border:1px solid #ffffff14; border-radius:16px; padding:22px }
+    h1{ font-size:clamp(28px,3.5vw,40px); margin:8px 0; text-align:center }
+    p.lead{ opacity:.9; text-align:center; margin:0 0 14px }
+    .btn{ display:inline-block; width:100%; padding:14px 18px; border-radius:12px; background:var(--btn); color:#fff; font-weight:800; text-align:center; text-decoration:none; border:0; cursor:pointer }
+    .btn-alt{ background:#ffffff22 }
+    .grid{ display:grid; gap:18px }
+    .hide{ display:none }
+
+    /* Liste de fichiers */
+    .files{ display:grid; gap:10px; margin-top:8px }
+    .file{ display:flex; align-items:center; justify-content:space-between; background:#ffffff12; padding:12px 14px; border-radius:12px }
+    .file .name{ font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-right:10px }
+    .row{ display:flex; gap:10px }
+    @media (min-width:720px){ .row{ justify-content:flex-end } }
   </style>
 </head>
 <body>
   <header>
-    <img src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'">
+    <img id="logo" src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'">
   </header>
 
   <main>
     <!-- Bloc principal -->
     <section class="card">
       <h1>Merci 🎉</h1>
-      <p class="lead">Votre commande est confirmée. Vous trouverez ci-dessous l’accès à votre produit.</p>
+      <p class="lead" id="lead-text">Votre accès est prêt.</p>
 
-      <!-- Bouton téléchargement -->
-      <div id="dl-wrap" class="hide" style="margin:14px 0 6px">
-        <a id="dl" class="btn" href="#" target="_blank" rel="noopener">📥 Télécharger</a>
+      <!-- Bouton téléchargement principal (si un seul fichier / URL) -->
+      <div id="dl-primary" class="hide" style="margin:14px 0 6px">
+        <a id="dl-btn" class="btn" href="#" target="_blank" rel="noopener">📥 Télécharger</a>
       </div>
 
-      <!-- Bouton continuer -->
-      <div id="next-wrap" class="hide">
-        <a id="next" class="btn btn-alt" href="#">Continuer</a>
+      <!-- Liste de fichiers (si plusieurs) -->
+      <div id="files-wrap" class="hide">
+        <div class="files" id="files"></div>
+      </div>
+
+      <!-- Bouton continuer (redirection) -->
+      <div id="next-wrap" class="hide" style="margin-top:12px">
+        <a id="next-btn" class="btn btn-alt" href="#">Continuer</a>
       </div>
     </section>
 
-    <!-- Contenu additionnel -->
-    <section class="card hide" id="desc-wrap">
+    <!-- Contenu additionnel / récap -->
+    <section class="card hide" id="desc-wrap" style="margin-top:18px">
       <h3>Contenu</h3>
       <div id="desc">{{copy.productDescription}}</div>
       <div id="bul">{{copy.bullets}}</div>
@@ -57,97 +69,148 @@
   </main>
 
   <script>
-    const clean = (s) => (s || '').trim();
+    // --- Utils
+    const txt = s => (s||'').toString().trim();
+    const isHttp = u => { try{ const x=new URL(u); return x.protocol==='http:'||x.protocol==='https:' }catch(_){ return false } };
+    const killMD = s => (s||'').replace(/```html?/gi,'').replace(/```/g,'');
 
-    // Nettoyage des wrappers Markdown éventuels
+    // Affiche logo si dispo
     (function(){
-      const kill = s => s.replace(/```html?/gi, '').replace(/```/g, '');
-      ['desc', 'bul', 'ben', 'faq'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.innerHTML = kill(el.innerHTML || '');
-      });
+      const logo = document.getElementById('logo');
+      if (logo && txt(logo.getAttribute('src'))) logo.style.display='block';
     })();
 
-    (function() {
-      const mode = '{{deliveryMode}}'.trim(); // Nouvel ajout
-      const dlUrl = '{{download.url}}'.trim();
-      const next = '{{flow.nextHref}}'.trim();
-      const dlWrap = document.getElementById('dl-wrap');
-      const nextWrap = document.getElementById('next-wrap');
-      const dlBtn = document.getElementById('dl');
-      const nextBtn = document.getElementById('next');
-
-      let finalDlUrl = dlUrl;
-
-      // Fallback automatique : si pas de download.url mais pageFiles existe
-      try {
-        const pageFiles = JSON.parse('{{pageFiles}}'.replace(/&quot;/g,'"'));
-        if ((!finalDlUrl || finalDlUrl === '{{download.url}}') && Array.isArray(pageFiles) && pageFiles.length > 0) {
-          finalDlUrl = pageFiles[0].url;
-        }
-      } catch(e) { /* aucun fichier en fallback */ }
-
-      // Logique par mode
-      if (mode === 'livrer-sur-page') {
-        if (finalDlUrl && finalDlUrl !== '{{download.url}}') {
-          dlBtn.href = finalDlUrl;
-          dlWrap.classList.remove('hide');
-        }
-      }
-      else if (mode === 'livrer-apres-lead') {
-        if (finalDlUrl && finalDlUrl !== '{{download.url}}') {
-          dlBtn.href = finalDlUrl;
-          dlWrap.classList.remove('hide');
-        }
-      }
-      else if (mode === 'livrer-apres-paiement') {
-        if (next && next !== '{{flow.nextHref}}') {
-          nextBtn.href = next;
-          nextWrap.classList.remove('hide');
-        }
-      }
-      // aucun-produit → on n'affiche rien
-
-      // Gestion bloc contenu additionnel
-      const hasDesc = !!clean(document.getElementById('desc').textContent);
-      const hasBul = !!clean(document.getElementById('bul').textContent);
-      const hasBen = !!clean(document.getElementById('ben').textContent);
-      const hasFaq = !!clean(document.querySelector('#faq > div').textContent);
-
+    // Nettoyage sections texte
+    (function(){
+      ['desc','bul','ben','faq'].forEach(id=>{
+        const el=document.getElementById(id);
+        if (el) el.innerHTML = killMD(el.innerHTML);
+      });
+      const hasDesc = !!txt(document.getElementById('desc')?.textContent);
+      const hasBul  = !!txt(document.getElementById('bul')?.textContent);
+      const hasBen  = !!txt(document.getElementById('ben')?.textContent);
+      const hasFaq  = !!txt(document.querySelector('#faq > div')?.textContent);
       if (hasDesc || hasBul || hasBen || hasFaq) {
         document.getElementById('desc-wrap').classList.remove('hide');
         if (hasFaq) document.getElementById('faq').classList.remove('hide');
       }
     })();
 
-    // Pixels & GTM
+    // --- Sources possibles pour la livraison / redirection
+    const deliveryMode = txt('{{pageDeliveryMode}}') || txt('{{deliveryMode}}'); // "direct" | "livrer-sur-page" | "livrer-apres-lead" | "livrer-apres-paiement" | ""
+    const downloadUrl  = txt('{{download.url}}') || txt('{{delivery.productUrl}}') || txt('{{redirectURL}}');
+    const flowNextHref = txt('{{flow.nextHref}}') || (function(){ const s = txt('{{flow.nextSlug}}'); return s ? (s.endsWith('.html')?s:(s+'.html')) : '' })();
+
+    // pageFiles peut arriver en JSON encodé (&quot;)
+    function parsePageFiles(){
+      const raw = '{{pageFiles}}';
+      const safe = raw.replace(/&quot;/g,'"');
+      try{
+        const arr = JSON.parse(safe);
+        return Array.isArray(arr) ? arr : [];
+      }catch(_){ return [] }
+    }
+
+    // Normaliser liste de fichiers (url + name)
+    function normalizeFiles(primaryUrl, files){
+      const list = [];
+      if (isHttp(primaryUrl)) list.push({ url: primaryUrl, name: primaryUrl.split('/').pop() || 'Fichier' });
+      (files||[]).forEach(f=>{
+        if (!f) return;
+        const url = txt(f.url || f.href || f.link || '');
+        const name = txt(f.name || f.filename || (url.split('/').pop()) || 'Fichier');
+        if (isHttp(url)) list.push({ url, name });
+      });
+      // dédupliquer par URL
+      const seen = new Set(); const out=[];
+      list.forEach(it=>{ if(!seen.has(it.url)){ seen.add(it.url); out.push(it) } });
+      return out;
+    }
+
     (function(){
-      const fb='{{analytics.fbPixelId}}'.trim();
-      if(fb){
-        !function(f,b,e,v,n,t,s){
-          if(f.fbq)return;
-          n=f.fbq=function(){n.callMethod?
-            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-          if(!f._fbq)f._fbq=n;
-          n.push=n;
-          n.loaded=!0;
-          n.version='2.0';
-          n.queue=[];
-          t=b.createElement(e);
-          t.async=!0;
-          t.src='https://connect.facebook.net/en_US/fbevents.js';
-          s=b.getElementsByTagName(e)[0];
-          s.parentNode.insertBefore(t,s)
-        }(window,document,'script');
-        fbq('init',fb);
-        fbq('track','PageView');
+      const leadText  = document.getElementById('lead-text');
+      const dlPrimary = document.getElementById('dl-primary');
+      const dlBtn     = document.getElementById('dl-btn');
+      const filesWrap = document.getElementById('files-wrap');
+      const filesEl   = document.getElementById('files');
+      const nextWrap  = document.getElementById('next-wrap');
+      const nextBtn   = document.getElementById('next-btn');
+
+      const files = normalizeFiles(downloadUrl, parsePageFiles());
+
+      // Logique des modes
+      const mode = (deliveryMode || '').toLowerCase();
+
+      // 1) Si paiement → on privilégie la redirection (ex: vers un espace membre / page suite)
+      if (mode === 'livrer-apres-paiement') {
+        if (flowNextHref) {
+          leadText.textContent = 'Paiement confirmé. Cliquez pour continuer.';
+          nextBtn.href = flowNextHref;
+          nextWrap.classList.remove('hide');
+          // Si on a quand même des fichiers, on les liste aussi (optionnel)
+          if (files.length) {
+            renderFiles(filesEl, files);
+            filesWrap.classList.remove('hide');
+          }
+          return;
+        }
+        // fallback : pas de next → livrer les fichiers s’ils existent
       }
 
+      // 2) Modes "direct" / "livrer-sur-page" / "livrer-apres-lead" → montrer fichiers si présents
+      if (files.length === 1) {
+        dlBtn.href = files[0].url;
+        dlPrimary.classList.remove('hide');
+      } else if (files.length > 1) {
+        renderFiles(filesEl, files);
+        filesWrap.classList.remove('hide');
+      }
+
+      // 3) Si pas de fichier et qu’on a un nextHref → proposer de continuer
+      if (!files.length && flowNextHref) {
+        nextBtn.href = flowNextHref;
+        nextWrap.classList.remove('hide');
+      }
+
+      // 4) Si rien du tout → message informatif
+      if (!files.length && !flowNextHref) {
+        leadText.textContent = "Aucun fichier disponible pour le moment. Vérifiez votre email ou contactez le support.";
+      }
+
+      function renderFiles(host, list){
+        host.innerHTML = list.map(item=>{
+          const safeName = escapeHtml(item.name || 'Fichier');
+          const u = item.url;
+          return `
+            <div class="file">
+              <span class="name">${safeName}</span>
+              <div class="row">
+                <a class="btn btn-alt" href="${u}" target="_blank" rel="noopener">Ouvrir</a>
+                <a class="btn" href="${u}" download>📥 Télécharger</a>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      function escapeHtml(s){
+        return (s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+      }
+    })();
+
+    // Pixels & GTM (identique optin)
+    (function(){
+      const fb='{{analytics.fbPixelId}}'.trim();
+      if (fb){
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+          n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;
+          n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
+          s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script');
+        fbq('init', fb); fbq('track','PageView');
+      }
       const gtm='{{analytics.gtmId}}'.trim();
-      if(gtm){
-        var s=document.createElement('script');
-        s.async=1;
-        s.src='https://www.googletagmanager.com/gtm.js?id='+gtm;
+      if (gtm){
+        var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+encodeURIComponent(gtm);
         document.head.appendChild(s);
       }
     })();
