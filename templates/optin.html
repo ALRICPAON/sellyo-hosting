@@ -69,9 +69,10 @@
       <div id="pair-a">
         <!-- Média A (image OU vidéo si pas d’image) -->
         <div class="media" id="media-a">
-          <img id="img-a" src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
-          <video id="vid-a" src="" controls playsinline class="hide"></video>
-        </div>
+  <img id="img-a" src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
+  <!-- La vidéo n'est créée que si nécessaire -->
+  <video id="vid-a" controls playsinline class="hide" onerror="this.style.display='none'"></video>
+</div>
 
         <!-- Formulaire -->
         <div id="form-col">
@@ -153,11 +154,11 @@
 
     // Couleur de fond fallback
     (function(){
-      const v=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
-      if (!v || v==='{{ui.mainColor}}'){
-        document.documentElement.style.setProperty('--bg', '{{ui.backgroundColor}}'.trim() || '#111');
-      }
-    })();
+  const v=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
+  if (!v || v==='{{ui.mainColor}}'){
+    document.documentElement.style.setProperty('--bg', '{{ui.mainColor}}'.trim() || '#111');
+  }
+})();
 
     // Logo + blocs vides
     (function(){
@@ -259,6 +260,11 @@
         // Image cachée
         mediaA.querySelector('img')?.setAttribute('style','display:none');
       }
+      // Si aucune vidéo n'est définie, on masque vid-a
+if (!vidA.src) {
+  vidA.style.display = 'none';
+  vidA.classList.add('hide');
+}
 
       // 3) Pair A: 2 colonnes seulement si média A visible (image OU vidA)
       const hasMediaA = (hasImg || !vidA.classList.contains('hide'));
