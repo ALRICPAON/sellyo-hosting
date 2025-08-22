@@ -224,57 +224,89 @@
       host.innerHTML=html;
     })();
 
-    // Layout logique :
-    // - Bloc A: affiche image ; si pas d'image mais vidéo existe => injecte vidéo ici.
-    // - Bloc B: texte à gauche + vidéo à droite ; si pas de vidéo => texte seule en pleine largeur.
-    (function(){
-      const mediaA   = document.getElementById('media-a');
-      const imgA     = document.getElementById('img-a');
-      const vidA     = document.getElementById('vid-a');
-      const pairA    = document.getElementById('pair-a');
+    /* === Layout logique (REMPLACE L'ANCIEN BLOC ENTIER) ===
+   - Bloc A : image ; si pas d'image mais vidéo/iframe en B -> on DÉPLACE le média de B vers A (pas de copie).
+   - Bloc B : si aucun média après déplacement -> texte pleine largeur. */
+(function(){
+  const mediaA   = document.getElementById('media-a');
+  const imgA     = document.getElementById('img-a');
+  const vidA     = document.getElementById('vid-a'); // placeholder (reste caché si on déplace)
+  const pairA    = document.getElementById('pair-a');
 
-      const vidB     = document.getElementById('vid-b');
-      const embB     = document.getElementById('emb-b');
-      const arguGrid = document.getElementById('argu-grid');
-      const arguWrap = document.getElementById('argu-video');
+  const vidB     = document.getElementById('vid-b');
+  const embB     = document.getElementById('emb-b');
+  const arguGrid = document.getElementById('argu-grid');
+  const arguWrap = document.getElementById('argu-video');
 
-      const imgUrl   = cleanText(imgA.getAttribute('src'));
-      const vidUrl   = cleanText(vidB.getAttribute('src'));
-      const embUrl   = cleanText(embB.getAttribute('src'));
+  const isHttp = (u)=>{ try{ const x=new URL((u||'').trim()); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
 
-      const hasImg = isHttp(imgUrl);
-      const hasVidB = isHttp(vidUrl);
-      const hasEmbB = isHttp(embUrl);
+  const imgUrl = (imgA?.getAttribute('src')||'').trim();
+  const hasImg = isHttp(imgUrl);
+  const hasVidB = isHttp(vidB?.getAttribute('src')||'');
+  const hasEmbB = isHttp(embB?.getAttribute('src')||'');
 
-      // 1) Bloc B: si pas de mp4 mais embed présent, montre l'embed
-      if (!hasVidB && hasEmbB){ embB.classList.remove('hide'); }
+  // 1) Si pas d'image mais média en B -> DÉPLACER (move) la <video> ou l'<iframe> de B vers A
+  if (!hasImg && (hasVidB || hasEmbB)) {
+    // vider A et masquer l'image
+    if (mediaA) {
+      mediaA.innerHTML = '';
+      if (imgA) imgA.style.display = 'none';
+    }
 
-      // 2) Bloc A: si pas d'image mais (vidéo B ou embed B) dispo, on met une vidéo dans A
-      if (!hasImg && (hasVidB || hasEmbB)){
-        // on copie l'URL vidéo dans vid-a
-        const src = hasVidB ? vidUrl : embUrl; // si embed, on ne peut pas charger dans <video> → on garde <iframe> en B, mais on duplique pas
-        if (hasVidB){
-          vidA.src = src;
-          vidA.classList.remove('hide');
-        }
-        // Image cachée
-        mediaA.querySelector('img')?.setAttribute('style','display:none');
-      }
-      // Si aucune vidéo n'est définie, on masque vid-a
-if (!vidA.src) {
-  vidA.style.display = 'none';
-  vidA.classList.add('hide');
-}
+    if (hasVidB && vidB && mediaA) {
+      mediaA.appendChild(vidB);                 // MOVE
+      vidB.style.display = 'block';
+      vidB.classList.remove('hide');
+    } else if (hasEmbB && embB && mediaA) {
+      mediaA.appendChild(embB);                 // MOVE
+      embB.style.display = 'block';
+      embB.classList.remove('hide');
+    }
 
-      // 3) Pair A: 2 colonnes seulement si média A visible (image OU vidA)
-      const hasMediaA = (hasImg || !vidA.classList.contains('hide'));
-      if (hasMediaA){ pairA.classList.add('two-cols'); } else { pairA.classList.remove('two-cols'); mediaA.style.display='none'; }
+    // masquer totalement le conteneur vidéo de B
+    if (arguWrap) arguWrap.style.display = 'none';
+    if (arguGrid) arguGrid.classList.remove('two-cols');
 
-      // 4) Bloc B: 2 colonnes si une vidéo (mp4 ou embed) est visible
-      const hasMediaB = hasVidB || hasEmbB;
-      if (hasMediaB){ arguGrid.classList.add('two-cols'); }
-      else { arguGrid.classList.remove('two-cols'); arguWrap.style.display='none'; }
-    })();
+    // 2 colonnes pour A (média + formulaire)
+    if (pairA) pairA.classList.add('two-cols');
+
+    // placeholder vid-a reste caché
+    if (vidA) { vidA.removeAttribute('src'); vidA.style.display='none'; vidA.classList.add('hide'); }
+    return; // fin cas "déplacement"
+  }
+
+  // 2) Cas standard : image en A ?
+  const hasMediaA = hasImg;
+  if (pairA) {
+    if (hasMediaA) { pairA.classList.add('two-cols'); }
+    else { pairA.classList.remove('two-cols'); if (mediaA) mediaA.style.display='none'; }
+  }
+
+  // 3) Bloc B : afficher vidéo mp4 ou, à défaut, l’embed
+  let hasMediaB = false;
+  if (hasVidB && vidB) {
+    vidB.style.display = 'block';
+    vidB.classList.remove('hide');
+    hasMediaB = true;
+  } else if (hasEmbB && embB) {
+    embB.style.display = 'block';
+    embB.classList.remove('hide');
+    hasMediaB = true;
+  } else if (arguWrap) {
+    arguWrap.style.display = 'none';
+  }
+
+  if (arguGrid) {
+    if (hasMediaB) arguGrid.classList.add('two-cols');
+    else arguGrid.classList.remove('two-cols');
+  }
+
+  // placeholder vid-a caché si non utilisé
+  if (vidA && !vidA.getAttribute('src')) {
+    vidA.style.display = 'none';
+    vidA.classList.add('hide');
+  }
+})();
 
     // CTA / nextHref (évite ".html")
     (function(){
