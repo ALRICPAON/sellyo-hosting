@@ -21,32 +21,46 @@
     @media(min-width:880px){.two{grid-template-columns:1.1fr .9fr}}
     .media img,.media video{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
     .price{font-size:28px;font-weight:900;margin:6px 0}
-    .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
+    .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer;margin-top:12px}
     .btn-alt{background:#ffffff22}
     .hide{display:none}
+    .resources ul{padding-left:18px;margin:0}
+    .resources li{margin-bottom:6px}
   </style>
 </head>
 <body>
   <header><img src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'"></header>
 
   <main>
+    <!-- Hero -->
     <section class="card hero">
       <h1>{{copy.title}}</h1>
       <p class="sub">{{copy.subtitle}}</p>
     </section>
 
+    <!-- Produit + Paiement -->
     <section class="grid two">
       <div class="card">
+        <!-- Image / Vidéo -->
         <div class="media" id="mwrap">
           <img id="img" src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
           <video id="vid" src="{{media.videoMp4}}" controls playsinline onerror="this.style.display='none'"></video>
         </div>
 
+        <!-- Prix -->
         <div class="price hide" id="price">{{payment.price}} {{payment.currency}}</div>
+
+        <!-- Bouton Paiement -->
         <a id="paybtn" class="btn" href="{{payment.paymentLink}}">Payer maintenant</a>
-        <a class="btn btn-alt" href="{{flow.nextHref}}">Voir plus d’infos</a>
+
+        <!-- Bouton Téléchargement produit direct -->
+        <a id="downloadBtn" class="btn hide" href="{{download.url}}" target="_blank">Télécharger le produit</a>
+
+        <!-- Voir page suivante -->
+        <a class="btn btn-alt" id="nextBtn" href="{{flow.nextHref}}">Voir plus d’infos</a>
       </div>
 
+      <!-- Description produit -->
       <aside class="card">
         <div id="desc">{{copy.productDescription}}</div>
         <hr style="border:0;border-top:1px solid #ffffff22;margin:16px 0">
@@ -55,11 +69,19 @@
       </aside>
     </section>
 
+    <!-- Ressources offertes -->
+    <section id="resources" class="card resources hide">
+      <h3>Ressources offertes</h3>
+      <ul id="resourcesList"></ul>
+    </section>
+
+    <!-- Témoignages -->
     <section class="card hide" id="testi">
       <h3>Témoignages</h3>
       <div>{{testimonials}}</div>
     </section>
 
+    <!-- FAQ -->
     <section class="card hide" id="faq">
       <h3>FAQ</h3>
       <div>{{faqs}}</div>
@@ -67,47 +89,95 @@
   </main>
 
   <script>
-    // Clean ``` wrappers
+    const clean=(s)=> (s||"").trim();
+
+    // Nettoyage éventuels backticks
     (function(){const kill=s=>s.replace(/```html?/gi,'').replace(/```/g,'');
-      ['desc','bul','ben','testi','faq'].forEach(id=>{const el=document.getElementById(id); if(el) el.innerHTML=kill(el.innerHTML||'')});
+      ['desc','bul','ben','testi','faq'].forEach(id=>{
+        const el=document.getElementById(id);
+        if(el) el.innerHTML=kill(el.innerHTML||'');
+      });
     })();
 
-    const clean=(s)=> (s||'').trim();
-
-    // Media preference: video > image; hide empty
+    // Gestion image / vidéo
     (function(){
       const img=document.getElementById('img');
       const vid=document.getElementById('vid');
       const hasImg=!!clean(img.getAttribute('src'));
       const hasVid=!!clean(vid.getAttribute('src'));
       if(!hasVid && !hasImg){ document.getElementById('mwrap').style.display='none'; }
-      if(hasVid && hasImg){ img.style.display='none'; } // garde la vidéo si les deux existent
+      if(hasVid && hasImg){ img.style.display='none'; }
     })();
 
-    // Show/Hide conditionals
+    // Gestion du prix
     (function(){
       const price=document.getElementById('price');
       if(clean(price.textContent)) price.classList.remove('hide');
-
-      ['testi','faq'].forEach(id=>{
-        const el=document.getElementById(id); if(!el) return;
-        const inner=el.querySelector('div'); if(inner && clean(inner.textContent)) el.classList.remove('hide');
-      });
-
-      // Sécurité : si pas de paymentLink, on masque le bouton
-      var href='{{payment.paymentLink}}'.trim();
-      if(!href || href==='{{payment.paymentLink}}'){ document.getElementById('paybtn').classList.add('hide'); }
     })();
 
-    // Pixels
+    // Bouton paiement ou téléchargement
+    (function(){
+      const paybtn=document.getElementById('paybtn');
+      const downloadBtn=document.getElementById('downloadBtn');
+      const hrefPay='{{payment.paymentLink}}'.trim();
+      const dlUrl='{{download.url}}'.trim();
+      const mode='{{delivery.mode}}'.trim();
+
+      // Si pas de paiement → on cache le bouton
+      if(!hrefPay || hrefPay==='{{payment.paymentLink}}'){
+        paybtn.classList.add('hide');
+      }
+
+      // Si mode = livrer sur cette page et URL existe → afficher bouton téléchargement
+      if(mode==="deliver_here" && dlUrl && dlUrl!=='{{download.url}}'){
+        downloadBtn.classList.remove('hide');
+      }
+    })();
+
+    // Ressources offertes dynamiques
+    (function(){
+      const resources = {{page.files}};
+      const wrap = document.getElementById('resources');
+      const list = document.getElementById('resourcesList');
+      if(resources && Array.isArray(resources) && resources.length){
+        resources.forEach(f=>{
+          if(f && f.url){
+            const li=document.createElement('li');
+            li.innerHTML=`<a href="${f.url}" target="_blank">${f.name||'Ressource'}</a>`;
+            list.appendChild(li);
+          }
+        });
+        wrap.classList.remove('hide');
+      }
+    })();
+
+    // Témoignages / FAQ conditionnels
+    (function(){
+      ['testi','faq'].forEach(id=>{
+        const el=document.getElementById(id);
+        if(!el) return;
+        const inner=el.querySelector('div');
+        if(inner && clean(inner.textContent)) el.classList.remove('hide');
+      });
+    })();
+
+    // Pixels tracking
     (function(){
       const fb='{{analytics.fbPixelId}}'.trim();
-      if(fb){!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-      n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
-      s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script'); fbq('init',fb); fbq('track','PageView');}
+      if(fb){
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
+        s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script');
+        fbq('init',fb); fbq('track','PageView');
+      }
       const gtm='{{analytics.gtmId}}'.trim();
-      if(gtm){var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+gtm;document.head.appendChild(s)}
+      if(gtm){
+        var s=document.createElement('script');
+        s.async=1;
+        s.src='https://www.googletagmanager.com/gtm.js?id='+gtm;
+        document.head.appendChild(s);
+      }
     })();
   </script>
 </body>
