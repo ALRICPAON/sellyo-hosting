@@ -1,65 +1,155 @@
-<!DOCTYPE html><html lang="fr"><head>
-<meta charset="utf-8"/><title>{{seo.metaTitle}}</title>
-<meta name="description" content="{{seo.metaDescription}}"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<title>{{seo.metaTitle}}</title>
+<meta name="description" content="{{seo.metaDescription}}" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
-:root{--bg:{{ui.mainColor}};--btn:{{ui.buttonColor}};--text:#fff}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-main{max-width:1100px;margin:0 auto;padding:24px}
-header{display:flex;justify-content:center;padding:16px 0}header img{max-height:56px;display:block}
-.card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px;margin:0 0 16px}
-.hero{text-align:center}.hero h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0}.sub{opacity:.9;margin:0}
-.media img,.media video{width:100%;max-height:480px;object-fit:cover;border-radius:12px;display:block}
-.btn{display:inline-block;width:auto;padding:12px 16px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-decoration:none;border:0;cursor:pointer}
-.hide{display:none}
-.grid{display:grid;gap:18px}
-</style></head><body>
-<header><img src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'"></header>
+:root { --bg: {{ui.mainColor}}; --btn: {{ui.buttonColor}}; --text:#fff }
+* { box-sizing:border-box }
+body { margin:0; background:var(--bg); color:var(--text); font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif }
+main { max-width:1100px; margin:0 auto; padding:24px }
+header { display:flex; justify-content:center; padding:16px 0 }
+header img { max-height:56px; display:block }
+.card { background:#ffffff10; border:1px solid #ffffff14; border-radius:16px; padding:18px; margin:0 0 16px }
+.hero { text-align:center }
+.hero h1 { font-size:clamp(28px,3.5vw,42px); margin:8px 0 }
+.sub { opacity:.9; margin:0 }
+.media img, .media video { width:100%; max-height:480px; object-fit:cover; border-radius:12px; display:block }
+.btn { display:inline-block; width:auto; padding:12px 16px; border-radius:12px; background:var(--btn); color:#fff; font-weight:800; text-decoration:none; border:0; cursor:pointer }
+.hide { display:none }
+.grid { display:grid; gap:18px }
+</style>
+</head>
+<body>
+
+<header>
+  <img src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'">
+</header>
+
 <main>
-  <section class="card hero hide" id="hero"><h1 id="ttl">{{copy.title}}</h1><p class="sub" id="sub">{{copy.subtitle}}</p></section>
+  <section class="card hero hide" id="hero">
+    <h1 id="ttl">{{copy.title}}</h1>
+    <p class="sub" id="sub">{{copy.subtitle}}</p>
+  </section>
+
   <section class="card hide" id="media">
     <img id="img" src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
     <video id="vid" src="{{media.videoMp4}}" controls playsinline onerror="this.style.display='none'"></video>
   </section>
-  <section class="card hide" id="desc"><div>{{copy.productDescription}}</div></section>
-  <section class="card hide" id="copy"><div id="prob">{{copy.problem}}</div><div id="sol">{{copy.solution}}</div><div id="ben">{{copy.benefits}}</div><div id="bul">{{copy.bullets}}</div></section>
+
+  <section class="card hide" id="desc">
+    <div>{{copy.productDescription}}</div>
+  </section>
+
+  <section class="card hide" id="copy">
+    <div id="prob">{{copy.problem}}</div>
+    <div id="sol">{{copy.solution}}</div>
+    <div id="ben">{{copy.benefits}}</div>
+    <div id="bul">{{copy.bullets}}</div>
+  </section>
+
+  <!-- CTA Principal -->
   <section class="card hide" id="cta">
     <a id="primary" class="btn" href="{{payment.paymentLink}}">{{copy.ctaText}}</a>
     <a id="next" class="btn" style="background:#ffffff22" href="{{flow.nextHref}}">Continuer</a>
   </section>
+
+  <!-- Section Livraison Produit -->
+  <section class="card hide" id="delivery">
+    <div id="delivery-file" class="hide">
+      <a id="download-file" class="btn" href="{{delivery.globalFileUrl}}" download>Télécharger le produit</a>
+    </div>
+    <div id="delivery-url" class="hide">
+      <a id="download-url" class="btn" href="{{delivery.globalUrl}}" target="_blank">Accéder au produit</a>
+    </div>
+    <div id="delivery-page" class="hide">
+      <a id="download-page" class="btn" href="{{delivery.pageFileUrl}}" download>Fichier bonus de cette page</a>
+    </div>
+  </section>
+
   <section class="card hide" id="testi"><h3>Témoignages</h3><div>{{testimonials}}</div></section>
   <section class="card hide" id="faq"><h3>FAQ</h3><div>{{faqs}}</div></section>
 </main>
 
 <script>
-const clean=s=>(s||'').trim();
-(function(){
-  if(clean(document.getElementById('ttl').textContent) || clean(document.getElementById('sub').textContent))
+const clean = s => (s || '').trim();
+
+(function() {
+  // HERO
+  if (clean(document.getElementById('ttl').textContent) || clean(document.getElementById('sub').textContent))
     document.getElementById('hero').classList.remove('hide');
 
-  const img=document.getElementById('img'), vid=document.getElementById('vid'); const hasImg=!!clean(img.getAttribute('src')), hasVid=!!clean(vid.getAttribute('src'));
-  if(hasImg || hasVid) document.getElementById('media').classList.remove('hide');
-  if(hasVid && hasImg) img.style.display='none';
+  // MEDIA
+  const img = document.getElementById('img');
+  const vid = document.getElementById('vid');
+  const hasImg = !!clean(img.getAttribute('src'));
+  const hasVid = !!clean(vid.getAttribute('src'));
+  if (hasImg || hasVid) document.getElementById('media').classList.remove('hide');
+  if (hasVid && hasImg) img.style.display = 'none';
 
-  if(clean(document.querySelector('#desc > div').textContent)) document.getElementById('desc').classList.remove('hide');
+  // DESCRIPTION
+  if (clean(document.querySelector('#desc > div').textContent))
+    document.getElementById('desc').classList.remove('hide');
 
-  const hasCopy = ['prob','sol','ben','bul'].some(id=>clean(document.getElementById(id).textContent));
-  if(hasCopy) document.getElementById('copy').classList.remove('hide');
+  // COPY
+  const hasCopy = ['prob','sol','ben','bul'].some(id => clean(document.getElementById(id).textContent));
+  if (hasCopy) document.getElementById('copy').classList.remove('hide');
 
-  const pl='{{payment.paymentLink}}'.trim(); const nx='{{flow.nextHref}}'.trim();
-  if((pl && pl!=='{{payment.paymentLink}}') || (nx && nx!=='{{flow.nextHref}}')) document.getElementById('cta').classList.remove('hide');
-  if(!pl || pl==='{{payment.paymentLink}}') document.getElementById('primary').classList.add('hide');
+  // CTA + LIVRAISON
+  const pl = '{{payment.paymentLink}}'.trim();
+  const nx = '{{flow.nextHref}}'.trim();
+  const deliveryType = '{{delivery.type}}'.trim();
+  const globalFile = '{{delivery.globalFileUrl}}'.trim();
+  const globalUrl = '{{delivery.globalUrl}}'.trim();
+  const pageFile = '{{delivery.pageFileUrl}}'.trim();
+  const cta = document.getElementById('cta');
+  const btn = document.getElementById('primary');
+  const dlSection = document.getElementById('delivery');
+  let hasProduct = false;
 
-  ['testi','faq'].forEach(id=>{const el=document.getElementById(id); if(!el) return; const c=el.querySelector('div'); if(c && clean(c.textContent)) el.classList.remove('hide');});
-})();
+  // Produit global : fichier ou URL
+  if (globalFile && globalFile !== '{{delivery.globalFileUrl}}') {
+    document.getElementById('delivery-file').classList.remove('hide');
+    hasProduct = true;
+  }
+  if (globalUrl && globalUrl !== '{{delivery.globalUrl}}') {
+    document.getElementById('delivery-url').classList.remove('hide');
+    hasProduct = true;
+  }
+  // Produit page spécifique
+  if (pageFile && pageFile !== '{{delivery.pageFileUrl}}') {
+    document.getElementById('delivery-page').classList.remove('hide');
+  }
 
-// Pixels
-(function(){
-  const fb='{{analytics.fbPixelId}}'.trim(); if(fb){!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-  n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
-  s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script'); fbq('init',fb); fbq('track','PageView');}
-  const gtm='{{analytics.gtmId}}'.trim(); if(gtm){var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+gtm;document.head.appendChild(s)}
+  // Affichage CTA
+  const hasCta = (pl && pl !== '{{payment.paymentLink}}') || (nx && nx !== '{{flow.nextHref}}');
+  if (hasCta) cta.classList.remove('hide');
+  if (!pl || pl === '{{payment.paymentLink}}') btn.classList.add('hide');
+
+  // Blocage si CTA = paiement mais aucun produit défini
+  if ('{{cta.action}}' === 'payment' && deliveryType === 'payment' && !hasProduct) {
+    btn.setAttribute('disabled', true);
+    btn.textContent = "⚠️ Configurez d'abord la livraison";
+  }
+
+  // Affichage / Masquage bloc produit
+  if (deliveryType === 'payment' && !hasProduct) {
+    dlSection.classList.add('hide');
+  } else {
+    dlSection.classList.remove('hide');
+  }
+
+  // Témoignages & FAQ
+  ['testi','faq'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const c = el.querySelector('div');
+    if (c && clean(c.textContent)) el.classList.remove('hide');
+  });
 })();
 </script>
-</body></html>
+
+</body>
+</html>
