@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>meta | optin vend test1</title>
+  <meta name="description" content="meta desc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      --bg: #61177c;
+      --btn: #b92d5d;
+      --text:#fff;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    main{max-width:1100px;margin:0 auto;padding:24px}
+
+    header{display:flex;justify-content:center;padding:16px 0}
+    #logo{max-height:56px;display:none}
+
+    .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
+    .hero{text-align:center;margin-bottom:16px}
+    .hero h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0}
+    .hero .sub{opacity:.9;margin:0}
+
+    .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
+    form input,form textarea,form select{width:100%;padding:12px;border-radius:10px;border:0;margin:8px 0;background:#ffffff12;color:#fff}
+
+    .grid{display:grid;gap:18px}
+    .two-cols{grid-template-columns:1fr}
+    @media(min-width:880px){.two-cols{grid-template-columns:1.1fr .9fr}}
+
+    /* Zone adaptative Form | Média */
+    #main-zone{ display:grid; gap:18px; grid-template-columns:1fr; }
+    @media(min-width:880px){ #main-zone.has-media{ grid-template-columns:1fr 1fr; } }
+
+    #left-col{ display:flex; flex-direction:column; justify-content:center; }
+
+    /* Médias */
+    .media img,.media video,.media iframe{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
+    .media iframe{aspect-ratio:16/9;border:0}
+
+    .argu-grid{display:grid;gap:14px;grid-template-columns:1fr}
+    @media(min-width:880px){.argu-grid{grid-template-columns:1fr 0.9fr}}
+
+    .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
+    .hide{display:none}
+    .text-center{text-align:center}
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <img id="logo" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Foptin-vend-test1-l6ide%2Flogo-1755852394370?alt=media&token=b26ec7d5-07c0-4d12-8e2d-6c2a0640b69c" alt="Logo" onerror="this.style.display='none'">
+    </header>
+
+    <!-- 1) Hero -->
+    <section class="hero">
+      <h1 id="title">test capture</h1>
+      <p class="sub" id="subtitle">test</p>
+    </section>
+
+    <!-- 2) Description (masquée si vide) -->
+    <section class="card" id="desc-wrap">
+      <div id="desc">test livrer apres enregistrement lead + un fichier page</div>
+    </section>
+
+    <!-- 3) Zone principale : Form | Media -->
+    <section id="main-zone">
+      <!-- Colonne gauche : FORM -->
+      <div class="card" id="left-col">
+        <div id="timer" class="timer hide"></div>
+
+        <!-- Champs dynamiques (JSON) -->
+        <script id="form-fields-json" type="application/json">{"name":true,"firstname":true,"email":true,"phone":true,"address":true}</script>
+
+        <!-- Form (capture par défaut sur optin) -->
+        <form id="lead-form" data-role="capture">
+          <div id="form-visible"></div>
+
+          <!-- requis pour save-lead-tunnel.js -->
+          <input type="hidden" name="userId" value="pOoqftYacXhirXtjxVk60Or09nm2" />
+          <input type="hidden" name="pageSlug" value="optin-vend-test1-l6ide-p1" />
+          <input type="hidden" name="slug" value="optin-vend-test1-l6ide-p1" />
+          <input type="hidden" name="type" value="tunnel" />
+          <input type="hidden" id="nextUrl-hidden" name="nextUrl" value=".html" />
+
+          <button type="submit" class="btn" id="cta-btn">je test</button>
+
+          <!-- Garantie sous le formulaire (si fournie) -->
+          <div id="gua" class="hide" style="margin-top:10px"><em></em></div>
+        </form>
+
+        <!-- Fallback si cta != capture -->
+        <a id="cta-link" class="btn hide" href="#" rel="nofollow noopener">je test</a>
+      </div>
+
+      <!-- Colonne droite : MEDIA (image, mp4, ou embed) -->
+      <div class="card media" id="right-media">
+        <img id="img-media" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Foptin-vend-test1-l6ide%2Fpage1-hero-1755852396038?alt=media&token=eee3f40c-3ab7-482e-a6a4-e4de770cc87f" alt="" onerror="this.style.display='none'">
+        <video id="vid-media" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Foptin-vend-test1-l6ide%2Fpage1-video-1755852397064?alt=media&token=ba9f4d95-7227-4477-afa6-a846506c6cd8" controls playsinline onerror="this.style.display='none'"></video>
+        <iframe id="embed-media" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen class="hide"></iframe>
+      </div>
+    </section>
+
+    <!-- 4) Argumentaire (texte + vidéo argumentaire optionnelle) -->
+    <section class="argu-grid" id="argu-zone">
+      <div class="card" id="argu-left">
+        <div id="bullets">point cles</div>
+        <div id="benefits">benef</div>
+        <div id="testi" class="hide"><div></div></div>
+        <div id="faq" class="hide"><div></div></div>
+      </div>
+      <div class="card media" id="argu-video">
+        <video id="vid-argu" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Foptin-vend-test1-l6ide%2Fpage1-video-1755852397064?alt=media&token=ba9f4d95-7227-4477-afa6-a846506c6cd8" controls playsinline onerror="this.style.display='none'"></video>
+      </div>
+    </section>
+
+    <!-- 5) Bonus/fichiers (affiché seulement si demandé) -->
+    <section class="card hide" id="bonus">
+      <h3>Bonus</h3>
+      <p id="bonus-desc">Votre ressource est prête.</p>
+      <a id="bonus-link" class="btn" href="#" download>Télécharger</a>
+    </section>
+  </main>
+
+  <!-- Scripts front -->
+  <script>
+    /* Utils */
+    function cleanText(v){ return (v||"").toString().trim(); }
+    function isHttpUrl(u){ try{ const x=new URL(u); return x.protocol==="http:"||x.protocol==="https:"; }catch(e){return false;} }
+
+    // 0) Logo visible si présent
+    (function(){
+      const logo=document.getElementById('logo');
+      if (logo && cleanText(logo.getAttribute('src'))) { logo.style.display='block'; }
+    })();
+
+    // 1) Masquer blocs vides (titre/sous-titre/desc)
+    (function(){
+      const t=document.getElementById('title'), s=document.getElementById('subtitle'), d=document.getElementById('desc-wrap');
+      if (!cleanText(t.textContent)) t.parentElement.style.display='none';
+      if (!cleanText(s.textContent)) s.style.display='none';
+      if (!cleanText(document.getElementById('desc').textContent)) d.style.display='none';
+    })();
+
+    // 2) Media logic (image | mp4 | embed)
+    (function(){
+      const zone   = document.getElementById('main-zone');
+      const right  = document.getElementById('right-media');
+      const img    = document.getElementById('img-media');
+      const vid    = document.getElementById('vid-media');
+      const iframe = document.getElementById('embed-media');
+
+      const hasImg = isHttpUrl(cleanText(img.getAttribute('src')));
+      const hasVid = isHttpUrl(cleanText(vid.getAttribute('src')));
+      const embed  = cleanText(iframe.getAttribute('src'));
+      const hasEmb = isHttpUrl(embed) && !hasVid; // priorité mp4 si fourni
+
+      if (hasEmb){ iframe.classList.remove('hide'); }
+
+      if (hasImg || hasVid || hasEmb) {
+        zone.classList.add('has-media');
+      } else {
+        right.style.display='none';
+        zone.classList.remove('has-media');
+      }
+
+      // Argumentaire vidéo (réutilise media.videoMp4 par défaut)
+      const arguZone=document.getElementById('argu-zone');
+      const vidArgu=document.getElementById('vid-argu');
+      const hasVidArgu = isHttpUrl(cleanText(vidArgu.getAttribute('src')));
+      if (!hasVidArgu){
+        arguZone.style.gridTemplateColumns='1fr';
+        document.getElementById('argu-left').classList.add('text-center');
+        document.getElementById('argu-video').style.display='none';
+      }
+    })();
+
+    // 3) CTA / Form routing
+    (function(){
+      const ctaAction = cleanText('').toLowerCase() || 'capture';
+      const ctaLink   = cleanText('');
+      const nextSlug  = cleanText('') || cleanText('');
+      const explicitNextHref = cleanText('') || cleanText('.html');
+
+      // nextHref résolu
+      let nextHref = explicitNextHref;
+      if (!nextHref && nextSlug){ nextHref = nextSlug.endsWith('.html') ? nextSlug : (nextSlug + '.html'); }
+
+      // Injecte dans le hidden nextUrl si form
+      const nextHidden = document.getElementById('nextUrl-hidden');
+      if (nextHidden) nextHidden.value = nextHref || '';
+
+      const form = document.getElementById('lead-form');
+      const link = document.getElementById('cta-link');
+      const btn  = document.getElementById('cta-btn');
+
+      if (ctaAction === 'capture') {
+        // OK: on laisse le form visible
+        link.classList.add('hide');
+      } else {
+        // Pas de capture → remplace par un lien
+        form.classList.add('hide');
+        link.classList.remove('hide');
+        // cible = paiement ou lien simple
+        link.href = (ctaAction==='paiement' && isHttpUrl(ctaLink)) ? ctaLink : (nextHref || '#');
+      }
+    })();
+
+    // 4) Affichages conditionnels + timer
+    (function(){
+      // Garantie visible si contenu
+      const gua = document.getElementById('gua');
+      if (gua && cleanText(gua.textContent)) { gua.classList.remove('hide'); }
+
+      // Témoignages & FAQ
+      ['testi','faq'].forEach(id=>{
+        const el=document.getElementById(id); if(!el) return;
+        const inner=el.querySelector('div'); const txt=cleanText(inner? inner.textContent: '');
+        if (txt) el.classList.remove('hide');
+      });
+
+      // Timer
+      const evergreen = parseInt('10',10)||0;
+      const deadlineISO = cleanText('');
+      const t = document.getElementById('timer');
+      function render(sec){ if(sec<=0){ t.textContent='Offre expirée'; return; } const m=Math.floor(sec/60), s=sec%60; t.textContent='Offre expire dans '+m+'m '+('0'+s).slice(-2)+'s'; }
+      let total=0;
+      if(evergreen>0) total=evergreen*60;
+      else if(deadlineISO && !isNaN(Date.parse(deadlineISO))) total=Math.max(0,Math.floor((new Date(deadlineISO)-new Date())/1000));
+      if(total>0){ t.classList.remove('hide'); (function tick(){ render(total--); if(total>=0) setTimeout(tick,1000); })(); }
+    })();
+
+    // 5) Bonus / fichiers (pageDelivery*)
+    (function(){
+      const mode = cleanText('').toLowerCase(); // "direct" | "aucun" | ""
+      const url  = cleanText('https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Foptin-vend-test1-l6ide%2Fpage1-product-1755852398394?alt=media&token=3a8d9629-8ce6-4c0a-a935-15b9d2d5715f') || cleanText('https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Foptin-vend-test1-l6ide%2Fpage1-product-1755852398394?alt=media&token=3a8d9629-8ce6-4c0a-a935-15b9d2d5715f') || cleanText('');
+      const file = cleanText('') || cleanText('');
+      const link = document.getElementById('bonus-link');
+      const wrap = document.getElementById('bonus');
+
+      const href = isHttpUrl(url) ? url : (isHttpUrl(file) ? file : '');
+      if (mode==='direct' && href){
+        link.href = href;
+        wrap.classList.remove('hide');
+      }
+    })();
+
+    // 6) Pixels (injection si présents)
+    (function(){
+      const fb = cleanText('');
+      if (fb){
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+          n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+          n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];
+          t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
+          s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script');
+        fbq('init', fb); fbq('track','PageView');
+      }
+      const gtm = cleanText('');
+      if (gtm){
+        var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+encodeURIComponent(gtm);
+        document.head.appendChild(s);
+      }
+    })();
+  </script>
+
+  <!-- Ces deux scripts doivent être en place côté optin -->
+  <script src="https://ALRICPAON.github.io/sellyo-hosting/firebase-init.js" defer></script>
+  <script src="https://ALRICPAON.github.io/sellyo-hosting/save-lead-tunnel.js" defer></script>
+</body>
+</html>
