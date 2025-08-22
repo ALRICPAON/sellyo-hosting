@@ -5,123 +5,91 @@
   <title>{{seo.metaTitle}}</title>
   <meta name="description" content="{{seo.metaDescription}}" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root{ --bg: {{ui.mainColor}}; --btn: {{ui.buttonColor}}; --text:#fff }
-    *{ box-sizing:border-box }
-    body{ margin:0; background:var(--bg); color:var(--text); font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif }
-    main{ max-width:900px; margin:0 auto; padding:24px }
-    header{ display:flex; justify-content:center; padding:16px 0 }
-    #logo{ max-height:56px; display:none }
-    .card{ background:#ffffff10; border:1px solid #ffffff14; border-radius:16px; padding:22px }
-    h1{ font-size:clamp(28px,3.5vw,40px); margin:8px 0; text-align:center }
-    p.lead{ opacity:.9; text-align:center; margin:0 0 14px }
-    .btn{ display:inline-block; width:100%; padding:14px 18px; border-radius:12px; background:var(--btn); color:#fff; font-weight:800; text-align:center; text-decoration:none; border:0; cursor:pointer }
-    .btn-alt{ background:#ffffff22 }
-    .grid{ display:grid; gap:18px }
-    .hide{ display:none }
 
-    /* Liste de fichiers */
-    .files{ display:grid; gap:10px; margin-top:8px }
-    .file{ display:flex; align-items:center; justify-content:space-between; background:#ffffff12; padding:12px 14px; border-radius:12px }
-    .file .name{ font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-right:10px }
-    .row{ display:flex; gap:10px }
-    @media (min-width:720px){ .row{ justify-content:flex-end } }
+  <style>
+    :root {
+      --bg: {{ui.mainColor}};
+      --btn: {{ui.buttonColor}};
+      --text: #fff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, Roboto, sans-serif; }
+    main { max-width: 720px; margin: 40px auto; padding: 24px; text-align: center; }
+    header img { max-width: 160px; display: block; margin: 0 auto 24px; }
+    h1 { font-size: 28px; margin-bottom: 12px; }
+    p { opacity: 0.9; margin-bottom: 24px; }
+
+    .card {
+      background: #ffffff10;
+      padding: 24px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 14px 24px;
+      background: var(--btn);
+      color: #fff;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 12px;
+      margin-top: 12px;
+      transition: 0.2s ease;
+    }
+    .btn:hover { opacity: 0.85; }
+    #bonus { display: none; }
   </style>
 </head>
 <body>
-  <header>
-    <img id="logo" src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'">
-  </header>
 
   <main>
-    <!-- Bloc principal -->
-    <section class="card">
-      <h1>Merci 🎉</h1>
-      <p class="lead" id="lead-text">Votre accès est prêt.</p>
+    <!-- Logo -->
+    <header>
+      <img id="logo" src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'" />
+    </header>
 
-      <!-- Bouton téléchargement principal (si un seul fichier / URL) -->
-      <div id="dl-primary" class="hide" style="margin:14px 0 6px">
-        <a id="dl-btn" class="btn" href="#" target="_blank" rel="noopener">📥 Télécharger</a>
-      </div>
+    <!-- Message principal -->
+    <h1>Merci pour votre inscription 🎉</h1>
+    <p>Votre ressource est prête !</p>
 
-      <!-- Liste de fichiers (si plusieurs) -->
-      <div id="files-wrap" class="hide">
-        <div class="files" id="files"></div>
-      </div>
-
-      <!-- Bouton continuer (redirection) -->
-      <div id="next-wrap" class="hide" style="margin-top:12px">
-        <a id="next-btn" class="btn btn-alt" href="#">Continuer</a>
-      </div>
+    <!-- Bloc de téléchargement -->
+    <section id="bonus" class="card">
+      <h3 id="bonus-title">Téléchargez votre produit</h3>
+      <p id="bonus-desc">Cliquez ci-dessous pour accéder à votre contenu :</p>
+      <a id="bonus-link" class="btn" href="#" download>Télécharger</a>
     </section>
 
-    <!-- Contenu additionnel / récap -->
-    <section class="card hide" id="desc-wrap" style="margin-top:18px">
-      <h3>Contenu</h3>
-      <div id="desc">{{copy.productDescription}}</div>
-      <div id="bul">{{copy.bullets}}</div>
-      <div id="ben">{{copy.benefits}}</div>
-      <div id="faq" class="hide">
-        <h3>FAQ</h3>
-        <div>{{faqs}}</div>
-      </div>
-    </section>
+    <!-- Bouton retour accueil -->
+    <a href="/" class="btn" style="background:#666;margin-top:32px;">Retour à l'accueil</a>
   </main>
 
   <script>
-// === ThankYou: bouton de téléchargement (sans deliveryMode) ===
-(function(){
-  const clean = (s)=> (s||'').toString().trim();
-  const isHttp = (u)=>{ try{ const x=new URL(clean(u)); return x.protocol==='http:'||x.protocol==='https:'; }catch(e){ return false; } };
+    // 🟢 Utilitaire de nettoyage
+    function cleanText(str) {
+      return (str || '').trim();
+    }
+    function isHttp(url) {
+      return /^https?:\/\//.test(url || '');
+    }
 
-  const dlWrap = document.getElementById('dl-wrap');
-  const dlBtn  = document.getElementById('dl');
-  const nextWrap = document.getElementById('next-wrap'); // on le masque si pas utilisé
-  if (nextWrap) nextWrap.classList.add('hide');
+    (function() {
+      // ✅ On prend en priorité le produit principal livré
+      const url1 = cleanText('{{delivery.productUrl}}');      // URL principale fournie
+      const file1 = cleanText('{{delivery.productFile}}');    // Fichier principal uploadé
+      const url2 = cleanText('{{pageProductUrl}}');          // Fichier spécifique à la page
+      const href = isHttp(url1) ? url1 : (isHttp(file1) ? file1 : (isHttp(url2) ? url2 : ''));
 
-  // 1) Sources possibles
-  const fromMerged  = clean('{{download.url}}');         // mapping Make (priorité côté Make)
-  const fromPage    = clean('{{productUrl}}');           // bonus/fichier de la page
-  const fromGlobalF = clean('{{delivery.fileUrl}}');     // fichier global uploadé
-  const fromGlobalU = clean('{{delivery.url}}');         // URL globale externe
+      const wrap = document.getElementById('bonus');
+      const link = document.getElementById('bonus-link');
 
-  // 2) Choix final (si Make n'a pas déjà résolu)
-  let finalUrl = isHttp(fromMerged)  ? fromMerged
-               : isHttp(fromPage)    ? fromPage
-               : isHttp(fromGlobalF) ? fromGlobalF
-               : isHttp(fromGlobalU) ? fromGlobalU
-               : '';
-
-  if (finalUrl) {
-    dlBtn.href = finalUrl;
-    dlWrap.classList.remove('hide');
-  } else {
-    // Pas de ressource trouvée → message doux (optionnel)
-    // document.querySelector('.lead')?.insertAdjacentHTML('afterend','<p style="opacity:.8">Aucun fichier à télécharger pour le moment.</p>');
-  }
-
-  // 3) Contenu additionnel (afficher si rempli)
-  const cleanText = (s)=> (s||'').replace(/```html?/gi,'').replace(/```/g,'').trim();
-  ['desc','bul','ben','faq'].forEach(id=>{
-    const el = document.getElementById(id);
-    if (el) el.innerHTML = cleanText(el.innerHTML||'');
-  });
-
-  const has = (id) => {
-    const el = document.getElementById(id);
-    if (!el) return false;
-    const inner = el.tagName==='DIV' ? el : el.querySelector('div') || el;
-    return !!clean(inner.textContent);
-  };
-
-  const showContent = has('desc') || has('bul') || has('ben') || has('faq');
-  if (showContent) {
-    const wrap = document.getElementById('desc-wrap');
-    if (wrap) wrap.classList.remove('hide');
-    const faq = document.getElementById('faq');
-    if (faq && has('faq')) faq.classList.remove('hide');
-  }
-})();
-</script>
+      if (href) {
+        link.href = href;
+        wrap.style.display = 'block';
+      } else {
+        // Pas de fichier à télécharger → masque le bloc
+        wrap.style.display = 'none';
+      }
+    })();
+  </script>
 </body>
 </html>
