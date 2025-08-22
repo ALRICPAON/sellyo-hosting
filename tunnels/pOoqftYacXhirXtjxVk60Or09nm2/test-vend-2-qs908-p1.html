@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>meta | test vend 2</title>
+  <meta name="description" content="meta | " />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      --bg: #450e59;
+      --btn: #e63b7a;
+      --text:#fff;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    main{max-width:1100px;margin:0 auto;padding:24px}
+    header{display:flex;justify-content:center;padding:16px 0}
+    header img{max-height:56px;display:block}
+
+    .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
+    .hero{text-align:center;margin-bottom:16px}
+    .hero h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0}
+    .hero .sub{opacity:.9;margin:0}
+
+    .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
+    form input,form textarea,form select{width:100%;padding:12px;border-radius:10px;border:0;margin:8px 0;background:#ffffff12;color:#fff}
+
+    .grid{display:grid;gap:18px}
+    .two-cols{grid-template-columns:1fr}
+    @media(min-width:880px){.two-cols{grid-template-columns:1.1fr .9fr}}
+
+    .pair{display:grid;grid-template-columns:1fr;gap:12px}
+    @media(min-width:880px){.pair{grid-template-columns:1fr 1fr}}
+
+    .argu-grid{display:grid;gap:14px;grid-template-columns:1fr}
+    @media(min-width:880px){.argu-grid{grid-template-columns:1fr 0.9fr}}
+
+    .media img,.media video{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
+    .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
+    .hide{display:none}
+    .text-center{text-align:center}
+
+    .fun{background:linear-gradient(135deg,#ffffff12,#ffffff08)}
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-vend-2-qs908%2Flogo-1755861806744?alt=media&token=80a81904-1822-41f7-85c4-c051aa807ae2" alt="Logo" />
+  </header>
+  <main>
+    <section class="hero">
+      <h1>test capture</h1>
+      <p class="sub">test</p>
+      <div id="desc">test capture</div>
+    </section>
+    <section class="grid two-cols" id="main-zone">
+      <div class="card" id="left-col">
+        <div class="pair" id="left-pair">
+          <div class="media" id="left-media">
+            <img id="img-left" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-vend-2-qs908%2Fpage1-hero-1755861808517?alt=media&token=8c062938-166d-435d-9835-756ee7800325" alt="Image"/>
+          </div>
+          <div>
+            <div id="timer" class="timer hide"></div>
+            <script id="form-fields-json" type="application/json">{"name":true,"firstname":true,"email":true,"phone":true,"address":true}</script>
+            <form id="lead-form" data-role="capture" data-next=".html">
+              <div id="form-visible"></div>
+              <input type="hidden" name="userId" value="pOoqftYacXhirXtjxVk60Or09nm2" />
+              <input type="hidden" name="pageSlug" value="test-vend-2-qs908-p1" />
+              <input type="hidden" name="slug" value="test-vend-2-qs908-p1" />
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="card argu-grid" id="argu-zone">
+      <div id="argu-left">
+        <div id="prob">problème</div>
+        <div id="sol">solution</div>
+        <div id="ben">benef</div>
+        <div id="bul">point clé</div>
+      </div>
+      <div class="media" id="argu-video">
+        <video id="vid-argu" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-vend-2-qs908%2Fpage1-video-1755861809480?alt=media&token=13fa2b3a-0259-4058-afb5-19908879f285" controls playsinline onerror="this.style.display='none'"></video>
+      </div>
+    </section>
+    <section class="card hide" id="testi">
+      <h3>Témoignages</h3>
+      <div>
+        <div class="testimonial-item">"supers"</div>
+      </div>
+    </section>
+    <section class="card hide" id="faq">
+      <h3>Q&R</h3>
+      <div>
+        <div class="faq-item"><strong>q</strong><br/>a</div>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="https://alricpaon.github.io/sellyo-hosting/js/save-lead-tunnel.js"></script>
+
+  <script>
+    (function(){
+      const kill = (s)=>s.replace(/```html?/gi,'').replace(/```/g,'');
+      ['desc','prob','sol','ben','bul','testi','faq'].forEach(id=>{
+        const el=document.getElementById(id); if(!el) return;
+        const t=el.innerHTML||''; el.innerHTML=kill(t);
+        el.innerHTML = kill(el.innerHTML||'');
+      });
+    })();
+
+    const cleanText = (s) => (s||"").replace(/^['"\\s]+|['"\\s]+$/g,'').trim();
+
+    (function(){
+      const mainZone = document.getElementById('main-zone');
+      const leftCol = document.getElementById('left-col');
+      const leftPair = document.getElementById('left-pair');
+      const leftMedia = document.getElementById('left-media');
+      const imgLeft = document.getElementById('img-left');
+      const rightCol = document.getElementById('right-col');
+      const rightVideoWrap = document.getElementById('right-video');
+      const vidRight = document.getElementById('vid-right');
+      const hasImg = !!cleanText(imgLeft.getAttribute('src'));
+      const hasVid = !!cleanText(vidRight.getAttribute('src'));
+
+      if (!hasImg) {
+        leftMedia.style.display = 'none';
+        leftPair.style.gridTemplateColumns = '1fr';
+        mainZone.classList.remove('two-cols');
+        leftCol.classList.add('fun');
+      }
+
+      const arguZone = document.getElementById('argu-zone');
+      const vidWrap  = document.getElementById('argu-video');
+      const vid      = document.getElementById('vid-argu');
+      const hasVid   = !!cleanText(vid.getAttribute('src'));
+
+      if (!hasVid) {
+        arguZone.style.gridTemplateColumns = '1fr';
+        document.getElementById('argu-left').classList.add('text-center');
+        vidWrap.style.display = 'none';
+      }
+    })();
+
+    (function(){
+      const gua = document.getElementById('gua');
+      [gua].forEach(el=>{
+        if (!el) return;
+        const txt = cleanText(el.textContent);
+        if (txt) el.classList.remove('hide');
+      });
+
+      const prog = document.getElementById('progress');
+      if (prog && cleanText(prog.textContent)) prog.classList.remove('hide');
+
+      const evergreen = parseInt('30',10)||0;
+      const deadlineISO = cleanText('');
+      const t = document.getElementById('timer');
+      function render(sec){ if(sec<=0){ t.textContent='Offre expirée'; return; } const m=Math.floor(sec/60), s=sec%60; t.textContent='Offre expire dans '+m+'m '+('0'+s).slice(-2)+'s'; }
+      let total=0;
+      if(evergreen>0) total=evergreen*60;
+      else if(deadlineISO && !isNaN(Date.parse(deadlineISO))) total=Math.max(0,Math.floor((new Date(deadlineISO)-new Date())/1000));
+      if(total>0){ t.classList.remove('hide'); (function tick(){ render(total--); if(total>=0) setTimeout(tick,1000); })(); }
+    })();
+
+    (function(){
+      const clean = cleanText;
+      var fb=clean(''); if(fb){!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
+      s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script'); fbq('init', fb); fbq('track','PageView');}
+      var gtm=clean(''); if(gtm){var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+gtm;document.head.appendChild(s)}
+    })();
+  </script>
+</body>
+</html>
