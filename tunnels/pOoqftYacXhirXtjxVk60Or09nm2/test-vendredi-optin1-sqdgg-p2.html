@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>test vendredi optin1</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { --bg: ; --btn: ; --text: #fff }
+    * { box-sizing: border-box }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif }
+    main { max-width: 820px; margin: 0 auto; padding: 24px }
+    header { display: flex; justify-content: center; padding: 16px 0 }
+    header img { max-height: 56px; display: block }
+    .card { background: #ffffff10; border: 1px solid #ffffff14; border-radius: 16px; padding: 22px }
+    h1 { font-size: clamp(28px, 3.5vw, 40px); margin: 8px 0; text-align: center }
+    p.lead { opacity: .9; text-align: center; margin: 0 0 12px }
+    .btn { display: inline-block; width: 100%; padding: 14px 18px; border-radius: 12px; background: var(--btn); color: #fff; font-weight: 800; text-align: center; text-decoration: none; border: 0; cursor: pointer }
+    .btn-alt { background: #ffffff22 }
+    .grid { display: grid; gap: 18px }
+    .hide { display: none }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-vendredi-optin1-sqdgg%2Flogo-1755865078432?alt=media&token=8b14acf1-fe05-41bf-b11c-0b94058e5160" alt="Logo" onerror="this.style.display='none'">
+  </header>
+
+  <main>
+    <!-- Bloc principal -->
+    <section class="card">
+      <h1>Merci 🎉</h1>
+      <p class="lead">Votre commande est confirmée. Vous trouverez ci-dessous l’accès à votre produit.</p>
+
+      <!-- Bouton téléchargement -->
+      <div id="dl-wrap" class="hide" style="margin:14px 0 6px">
+        <a id="dl" class="btn" href="#" target="_blank" rel="noopener">📥 Télécharger</a>
+      </div>
+
+      <!-- Bouton continuer -->
+      <div id="next-wrap" class="hide">
+        <a id="next" class="btn btn-alt" href="#">Continuer</a>
+      </div>
+    </section>
+
+    <!-- Contenu additionnel -->
+    <section class="card hide" id="desc-wrap">
+      <h3>Contenu</h3>
+      <div id="desc"></div>
+      <div id="bul"></div>
+      <div id="ben"></div>
+      <div id="faq" class="hide">
+        <h3>FAQ</h3>
+        <div></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const clean = (s) => (s || '').trim();
+
+    // Nettoyage des wrappers Markdown éventuels
+    (function(){
+      const kill = s => s.replace(/```html?/gi, '').replace(/```/g, '');
+      ['desc', 'bul', 'ben', 'faq'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = kill(el.innerHTML || '');
+      });
+    })();
+
+    (function() {
+      const mode = 'lead'.trim(); // Nouvel ajout
+      const dlUrl = ''.trim();
+      const next = ''.trim();
+      const dlWrap = document.getElementById('dl-wrap');
+      const nextWrap = document.getElementById('next-wrap');
+      const dlBtn = document.getElementById('dl');
+      const nextBtn = document.getElementById('next');
+
+      let finalDlUrl = dlUrl;
+
+      // Fallback automatique : si pas de download.url mais pageFiles existe
+      try {
+        const pageFiles = JSON.parse(''.replace(/&quot;/g,'"'));
+        if ((!finalDlUrl || finalDlUrl === '{{download.url}}') && Array.isArray(pageFiles) && pageFiles.length > 0) {
+          finalDlUrl = pageFiles[0].url;
+        }
+      } catch(e) { /* aucun fichier en fallback */ }
+
+      // Logique par mode
+      if (mode === 'livrer-sur-page') {
+        if (finalDlUrl && finalDlUrl !== '{{download.url}}') {
+          dlBtn.href = finalDlUrl;
+          dlWrap.classList.remove('hide');
+        }
+      }
+      else if (mode === 'livrer-apres-lead') {
+        if (finalDlUrl && finalDlUrl !== '{{download.url}}') {
+          dlBtn.href = finalDlUrl;
+          dlWrap.classList.remove('hide');
+        }
+      }
+      else if (mode === 'livrer-apres-paiement') {
+        if (next && next !== '{{flow.nextHref}}') {
+          nextBtn.href = next;
+          nextWrap.classList.remove('hide');
+        }
+      }
+      // aucun-produit → on n'affiche rien
+
+      // Gestion bloc contenu additionnel
+      const hasDesc = !!clean(document.getElementById('desc').textContent);
+      const hasBul = !!clean(document.getElementById('bul').textContent);
+      const hasBen = !!clean(document.getElementById('ben').textContent);
+      const hasFaq = !!clean(document.querySelector('#faq > div').textContent);
+
+      if (hasDesc || hasBul || hasBen || hasFaq) {
+        document.getElementById('desc-wrap').classList.remove('hide');
+        if (hasFaq) document.getElementById('faq').classList.remove('hide');
+      }
+    })();
+
+    // Pixels & GTM
+    (function(){
+      const fb=''.trim();
+      if(fb){
+        !function(f,b,e,v,n,t,s){
+          if(f.fbq)return;
+          n=f.fbq=function(){n.callMethod?
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+          if(!f._fbq)f._fbq=n;
+          n.push=n;
+          n.loaded=!0;
+          n.version='2.0';
+          n.queue=[];
+          t=b.createElement(e);
+          t.async=!0;
+          t.src='https://connect.facebook.net/en_US/fbevents.js';
+          s=b.getElementsByTagName(e)[0];
+          s.parentNode.insertBefore(t,s)
+        }(window,document,'script');
+        fbq('init',fb);
+        fbq('track','PageView');
+      }
+
+      const gtm=''.trim();
+      if(gtm){
+        var s=document.createElement('script');
+        s.async=1;
+        s.src='https://www.googletagmanager.com/gtm.js?id='+gtm;
+        document.head.appendChild(s);
+      }
+    })();
+  </script>
+</body>
+</html>
