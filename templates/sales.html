@@ -32,67 +32,40 @@
       font-size: 2rem;
       margin-bottom: 16px;
     }
-    .content p {
-      font-size: 1rem;
-      margin-bottom: 12px;
-    }
-    .bullets ul {
-      padding-left: 20px;
-      margin-bottom: 16px;
-    }
-    .bullets li {
-      margin-bottom: 8px;
-      list-style: disc;
-    }
+    .content p { font-size: 1rem; margin-bottom: 12px; }
+    .bullets ul { padding-left: 20px; margin-bottom: 16px; }
+    .bullets li { margin-bottom: 8px; list-style: disc; }
+
     .media {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      display: flex; justify-content: center; align-items: center;
     }
     .media img, .media video {
-      max-width: 100%;
-      border-radius: 8px;
+      max-width: 100%; border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
+
     button.cta {
-      background: var(--btn);
-      color: #fff;
-      font-weight: bold;
-      padding: 14px;
-      border: none;
-      border-radius: 6px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: background 0.3s ease;
-      text-align: center;
-      margin-top: 16px;
+      background: var(--btn); color: #fff; font-weight: bold;
+      padding: 14px; border: none; border-radius: 6px;
+      font-size: 1.1rem; cursor: pointer; transition: background 0.3s ease;
+      text-align: center; margin-top: 16px;
     }
     button.cta:hover { background: #2563eb; }
-    .testimonials, .faqs {
-      margin-top: 32px;
-    }
+
+    .testimonials, .faqs { margin-top: 32px; }
     .testimonial-item, .faq-item {
       background: rgba(255, 255, 255, 0.05);
-      padding: 12px;
-      margin-bottom: 10px;
-      border-radius: 6px;
+      padding: 12px; margin-bottom: 10px; border-radius: 6px;
     }
     .download-btn {
-      display: inline-block;
-      margin-top: 16px;
-      padding: 12px 16px;
-      background: var(--btn);
-      color: #fff;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: bold;
+      display: inline-block; margin-top: 16px; padding: 12px 16px;
+      background: var(--btn); color: #fff; text-decoration: none;
+      border-radius: 8px; font-weight: bold;
     }
-    footer {
-      text-align: center;
-      margin-top: 40px;
-      opacity: 0.6;
-      font-size: 0.9rem;
-    }
+    footer { text-align: center; margin-top: 40px; opacity: 0.6; font-size: 0.9rem; }
+
+    /* Timer */
+    .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
   </style>
 </head>
 <body>
@@ -112,6 +85,15 @@
       <div class="bullets">
         {{copy.bullets}}
       </div>
+
+      <!-- Problème / Solution / Bénéfices / Garantie -->
+      <div id="prob">{{copy.problem}}</div>
+      <div id="sol">{{copy.solution}}</div>
+      <div id="ben">{{copy.benefits}}</div>
+      <div id="gua"><em>{{copy.guarantee}}</em></div>
+
+      <!-- Timer (affiché si timers.* fournis) -->
+      <div id="timer" class="timer" style="display:none"></div>
 
       <!-- BOUTON CTA -->
       <button class="cta">{{copy.ctaText}}</button>
@@ -179,6 +161,35 @@
         btn.style.display = "none";
       }
     });
+  </script>
+
+  <!-- Timer (evergreen ou deadline ISO) -->
+  <script>
+    (function(){
+      const clean = (s)=> (s||"").toString().trim();
+      const t = document.getElementById('timer');
+      if(!t) return;
+
+      const evergreen = parseInt('{{timers.evergreenMinutes}}',10) || 0;
+      const deadlineISO = clean('{{timers.deadlineISO}}');
+
+      function render(sec){
+        if(sec<=0){ t.textContent='Offre expirée'; return; }
+        const m=Math.floor(sec/60), s=sec%60;
+        t.textContent='Offre expire dans '+m+'m '+('0'+s).slice(-2)+'s';
+      }
+
+      let total=0;
+      if(evergreen>0) total=evergreen*60;
+      else if(deadlineISO && !isNaN(Date.parse(deadlineISO))) {
+        total=Math.max(0,Math.floor((new Date(deadlineISO)-new Date())/1000));
+      }
+
+      if(total>0){
+        t.style.display='block';
+        (function tick(){ render(total--); if(total>=0) setTimeout(tick,1000); })();
+      }
+    })();
   </script>
 
   <!-- Scripts Firebase -->
