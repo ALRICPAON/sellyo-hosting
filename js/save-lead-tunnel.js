@@ -66,20 +66,30 @@ form.querySelectorAll("input, textarea, select").forEach(el => {
       console.warn("[lead] Firestore error (lead non sauvegardé)", err?.code || err?.message || err);
     }
 
-    // 🔗 Redirection : priorité à data-next puis nextUrl
-    let next = form.dataset.next || val("nextUrl") || "";
-    if (!next) {
-      // petit fallback si pas fourni : tente slug -pX → -p(X+1)
-      if (/-p(\d+)$/.test(slug)) {
-        const n = Number(RegExp.$1) + 1;
-        next = slug.replace(/-p\d+$/, `-p${n}`) + ".html";
-      }
-    }
+   // 🔗 Redirection : priorité nextUrl (input hidden) puis data-next
+function clean(s){ return (s || "").toString().trim(); }
+function isToken(s){ return /\{\{.*\}\}/.test(s || ""); }
 
-    // event custom (si besoin d’écouter ailleurs)
-    window.dispatchEvent(new CustomEvent("sellyo:redirect", { detail: { next } }));
+let next = clean(val("nextUrl")) || clean(form.dataset.next) || "";
 
-    if (next) location.href = next;
+// Ignore tout placeholder non remplacé ({{...}})
+if (isToken(next)) next = "";
+
+// Fallback intelligent si rien de valide fourni : slug -pX → -p(X+1).html
+if (!next) {
+  const s = clean(val("slug")) || "";
+  const m = s.match(/-p(\d+)$/i);
+  if (m) next = s.replace(/-p(\d+)$/i, (_, n) => `-p${Number(n) + 1}`) + ".html";
+}
+
+// Event custom (si besoin d’écouter ailleurs)
+window.dispatchEvent(new CustomEvent("sellyo:redirect", { detail: { next } }));
+
+if (next) {
+  location.href = next; // relatif → reste dans le même dossier GitHub Pages
+} else {
+  console.warn("[lead] Aucune nextUrl valide (ni hidden, ni data-next, ni fallback).");
+}
   });
 
   console.log("[lead] listener installé sur", form.id || "[data-role='capture']");
