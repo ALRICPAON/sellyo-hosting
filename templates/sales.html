@@ -139,29 +139,48 @@
     <p>&copy; {{seo.metaTitle}} - Tous droits réservés.</p>
   </footer>
 
-  <!-- Gestion dynamique du CTA -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const btn = document.querySelector("button.cta");
-      const mode = "{{cta.action}}".trim();
-      const url = "{{cta.url}}".trim();
-      const pay = "{{payment.paymentLink}}".trim();
-      const next = "{{flow.nextHref}}".trim();
-      const download = "{{download.url}}".trim();
+ <!-- Gestion dynamique du CTA (robuste) -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.querySelector("button.cta");
+    if (!btn) return;
 
-      if (mode === "payment" && pay) {
-        btn.onclick = (e) => { e.preventDefault(); window.location.href = pay; };
-      } else if (mode === "next" && next) {
-        btn.onclick = (e) => { e.preventDefault(); window.location.href = next; };
-      } else if (mode === "url" && url) {
-        btn.onclick = (e) => { e.preventDefault(); window.location.href = url; };
-      } else if (download) {
-        btn.onclick = (e) => { e.preventDefault(); window.location.href = download; };
-      } else {
-        btn.style.display = "none";
-      }
-    });
-  </script>
+    const clean   = (s)=> (s||"").toString().trim();
+    const isToken = (s)=> /\{\{[^}]+\}\}/.test(s||"");
+
+    // 1) MODE d'action : par défaut "payment" (évite checkout / tokens non remplacés)
+    let rawMode = "{{cta.action}}";
+    let mode = (!rawMode || isToken(rawMode)) ? "payment" : clean(rawMode).toLowerCase();
+    if (mode === "checkout") mode = "payment";
+
+    // 2) PAYMENT LINK (essaie payment.paymentLink puis webhook 1.*)
+    const pay = [ "{{payment.paymentLink}}", "{{1.payment.paymentLink}}" ]
+      .map(clean).find(v => v && !isToken(v)) || "";
+
+    // 3) NEXT (flow.nextHref ou dérivé de flow.nextSlug)
+    const rawNext     = clean("{{flow.nextHref}}");
+    const rawNextSlug = clean("{{flow.nextSlug}}");
+    const next = (!isToken(rawNext) && rawNext)
+               || (rawNextSlug && !isToken(rawNextSlug) ? (rawNextSlug + ".html") : "");
+
+    // 4) URL directe (CTA URL) + Download (bonus)
+    const url = clean("{{cta.url}}");
+    const download = clean("{{download.url}}");
+
+    // 5) Wiring du bouton (priorité: payment > next > url > download)
+    if (mode === "payment" && pay) {
+      btn.onclick = (e) => { e.preventDefault(); window.location.href = pay; };
+    } else if (mode === "next" && next) {
+      btn.onclick = (e) => { e.preventDefault(); window.location.href = next; };
+    } else if (mode === "url" && url && !isToken(url)) {
+      btn.onclick = (e) => { e.preventDefault(); window.location.href = url; };
+    } else if (download && !isToken(download)) {
+      btn.onclick = (e) => { e.preventDefault(); window.location.href = download; };
+    } else {
+      btn.style.display = "none";
+    }
+  });
+</script>
 
   <!-- Timer (evergreen ou deadline ISO) -->
   <script>
