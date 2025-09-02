@@ -106,13 +106,12 @@
     bonusLink = card.querySelector('#__tk_dl');
   }
 
-  if (href){
-    bonusLink.href = href;
-    bonusWrap.classList.remove('hide');
-  } else {
-    // Pas de lien dispo → ne rien afficher, ou montrer un message
-    // bonusWrap.classList.add('hide');
-  }
+ if (href){
+  bonusLink.href = href;
+  bonusWrap.style.display = 'block'; // rend visible #bonus même si le CSS le cache
+} else {
+  bonusWrap.style.display = 'none';  // le cache proprement si pas de lien
+}
 
   // 3) Rendre visible le Hero si vide (facultatif)
   const title = clean('{{copy.title}}');
