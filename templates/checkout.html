@@ -85,7 +85,7 @@
       <div id="timer" class="timer" style="display:none"></div>
 
       <!-- Prix -->
-      <div id="price" class="price">{{payment.price}} {{payment.currency}}</div>
+      <div id="price" class="price">{{1.payment.price}} {{1.currency}}</div>
 
       <!-- CTA Paiement -->
       <button class="cta" id="payBtn">{{copy.ctaText}}</button>
@@ -131,17 +131,17 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const btn = document.getElementById('payBtn');
-      const pay = "{{payment.paymentLink}}".trim();
+      const pay = "{{1.payment.paymentLink}}".trim();
       const next = "{{flow.nextHref}}".trim();
       const url  = "{{cta.url}}".trim();
-      const mode = ("{{cta.action}}" || "payment").trim();
+      const mode = "payment";
 
       // Affiche/Masque le prix si vide
       const priceEl = document.getElementById('price');
       const priceTxt = (priceEl.textContent || '').trim();
-      if (!priceTxt || priceTxt === "{{payment.price}} {{payment.currency}}") {
-        priceEl.style.display = 'none';
-      }
+      if (!priceTxt || /\{\{.+\}\}/.test(priceTxt)) {
+  priceEl.style.display = 'none';
+}
 
       // Comportement CTA (priorité payment > next > url > download)
       if (mode === 'payment' && pay) {
