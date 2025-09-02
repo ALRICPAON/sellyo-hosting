@@ -89,6 +89,24 @@
   </main>
 
   <script>
+
+// Fail-safe couleurs UI : si les tokens n'ont pas été remplacés ou sont vides,
+// on force des valeurs par défaut pour voir la page.
+(function(){
+  var root = document.documentElement;
+  var get = function(name){ return getComputedStyle(root).getPropertyValue(name).trim(); };
+
+  var bg = get('--bg');
+  var btn = get('--btn');
+
+  // Cas 1: variable vide ("")  | Cas 2: token non remplacé ("{{ui.mainColor}}"/"{{ui.buttonColor}}")
+  if (!bg || bg === '{{ui.mainColor}}')  root.style.setProperty('--bg',  '#0b1220');  // fond sombre
+  if (!btn || btn === '{{ui.buttonColor}}') root.style.setProperty('--btn', '#3b82f6'); // bouton bleu
+
+  // (optionnel) si texte invisible, tu peux forcer le texte clair :
+  // root.style.setProperty('--text', '#fff');
+})();
+    
     const clean=(s)=> (s||"").trim();
 
     // Nettoyage éventuels backticks
