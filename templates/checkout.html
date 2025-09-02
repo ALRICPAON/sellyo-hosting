@@ -127,46 +127,91 @@
     <p>&copy; {{seo.metaTitle}} - Tous droits réservés.</p>
   </footer>
 
+  <script src="https://js.stripe.com/v3"></script>
+
   <!-- CTA paiement + redirection (identique philosophie sales) -->
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const btn = document.getElementById('payBtn');
-      const pay = "{{1.payment.paymentLink}}".trim();
-      const next = "{{flow.nextHref}}".trim();
-      const url  = "{{cta.url}}".trim();
-      const mode = "payment";
+  document.addEventListener('DOMContentLoaded', async () => {
+    const btn  = document.getElementById('payBtn');
 
-      // Affiche/Masque le prix si vide
-      const priceEl = document.getElementById('price');
-      const priceTxt = (priceEl.textContent || '').trim();
-      if (!priceTxt || /\{\{.+\}\}/.test(priceTxt)) {
-  priceEl.style.display = 'none';
-}
+    // === Champs mappés UNIQUEMENT depuis webhook 1.* ===
+    const paymentLink = "{{payment.paymentLink}}".trim();                  // ex: https://buy.stripe.com/...
+    const pubKey      = "{{payment.stripePublishableKey}}".trim();         // ex: pk_test_...
+    const priceId     = "{{payment.stripePriceId}}".trim();                // ex: price_...
+    const next        = "{{flow.nextHref}}".trim();                        // ex: mardi3-l3tb2-p4.html
+    const url         = "{{cta.url}}".trim();
+    const mode        = ("{{cta.action}}" || "payment").trim();            // "payment" | "next" | "url"
 
-      // Comportement CTA (priorité payment > next > url > download)
-      if (mode === 'payment' && pay) {
-        btn.onclick = (e) => { e.preventDefault(); window.location.href = pay; };
-      } else if (mode === 'next' && next) {
-        btn.onclick = (e) => { e.preventDefault(); window.location.href = next; };
-      } else if (mode === 'url' && url) {
-        btn.onclick = (e) => { e.preventDefault(); window.location.href = url; };
-      } else {
-        const dl = "{{download.url}}".trim();
-        if (dl) btn.onclick = (e) => { e.preventDefault(); window.location.href = dl; };
-        else btn.style.display = 'none';
-      }
+    // Prix: masque si non renseigné
+    const priceEl  = document.getElementById('price');
+    const priceTxt = (priceEl?.textContent || '').trim();
+    if (!priceTxt || priceTxt === "{{payment.price}} {{payment.currency}}") {
+      priceEl.style.display = 'none';
+    }
 
-      // Fallback de redirection après paiement :
-      // si Stripe renvoie sur cette page avec ?paid=1 OU si on revient de stripe.com,
-      // on redirige automatiquement vers la page suivante (merci) si fournie.
+    // Helper URL absolue pour la redirection de succès
+    function abs(href) {
+      try { return new URL(href, location.href).href; } catch(_) { return ""; }
+    }
+    const successUrl = abs(next || "");
+
+    // === Priorité 1: Stripe Checkout dynamique (si priceId + pubKey) ===
+    if (mode === 'payment' && pubKey && priceId) {
+      btn.style.display = 'block';
+      btn.onclick = async (e) => {
+        e.preventDefault();
+        // Stripe.js client-only Checkout → successUrl dynamique vers la page "merci"
+        const stripe = Stripe(pubKey);
+        // IMPORTANT: successUrl/cancelUrl DOIVENT être absolues
+        const cancelUrl = abs(location.href);
+        // Redirection sans créer de session backend (MVP)
+        const { error } = await stripe.redirectToCheckout({
+          lineItems: [{ price: priceId, quantity: 1 }],
+          mode: 'payment',
+          successUrl: successUrl || cancelUrl,
+          cancelUrl
+        });
+        if (error) {
+          console.error('[checkout] Stripe error:', error);
+          // Fallback éventuel
+          if (paymentLink) location.href = paymentLink;
+        }
+      };
+    }
+
+    // === Priorité 2: Payment Link (si fourni et pas de priceId/pubKey) ===
+    else if (mode === 'payment' && paymentLink) {
+      btn.style.display = 'block';
+      btn.onclick = (e) => { e.preventDefault(); location.href = paymentLink; };
+
+      // Fallback auto: si l'utilisateur revient de stripe.com et qu'on a une "next"
       try {
         const qs = new URLSearchParams(location.search);
         if ((qs.get('paid') === '1' || document.referrer.includes('stripe.com')) && next) {
-          window.location.replace(next);
+          // ⚠️ Ce fallback ne marche que si le Payment Link a été configuré pour revenir ici.
+          location.replace(successUrl);
         }
-      } catch (_) {}
-    });
-  </script>
+      } catch(_) {}
+    }
+
+    // === Priorité 3: autres modes (next/url/download) ===
+    else if (mode === 'next' && next) {
+      btn.style.display = 'block';
+      btn.onclick = (e) => { e.preventDefault(); location.href = successUrl; };
+    } else if (mode === 'url' && url) {
+      btn.style.display = 'block';
+      btn.onclick = (e) => { e.preventDefault(); location.href = url; };
+    } else {
+      const dl = "{{download.url}}".trim();
+      if (dl) {
+        btn.style.display = 'block';
+        btn.onclick = (e) => { e.preventDefault(); location.href = dl; };
+      } else {
+        btn.style.display = 'none';
+      }
+    }
+  });
+</script>
 
   <!-- Timer (evergreen ou deadline ISO) -->
   <script>
