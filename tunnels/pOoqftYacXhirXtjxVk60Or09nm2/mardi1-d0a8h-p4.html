@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>mardi1</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    :root {
+      --bg: ;
+      --btn: ;
+      --text: #fff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, Roboto, sans-serif; }
+    main { max-width: 720px; margin: 40px auto; padding: 24px; text-align: center; }
+    header img { max-width: 160px; display: block; margin: 0 auto 24px; }
+    h1 { font-size: 28px; margin-bottom: 12px; }
+    p { opacity: 0.9; margin-bottom: 24px; }
+
+    .card {
+      background: #ffffff10;
+      padding: 24px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 14px 24px;
+      background: var(--btn);
+      color: #fff;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 12px;
+      margin-top: 12px;
+      transition: 0.2s ease;
+    }
+    .btn:hover { opacity: 0.85; }
+    #bonus { display: none; }
+  </style>
+</head>
+<body>
+
+  <main>
+    <!-- Logo -->
+    <header>
+      <img id="logo" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fmardi1-d0a8h%2Flogo-1756806125777?alt=media&token=a5a90492-921f-4efd-b280-fa0a81850d04" alt="Logo" onerror="this.style.display='none'" />
+    </header>
+
+    <!-- Message principal -->
+    <h1>Merci pour votre inscription 🎉</h1>
+    <p>Votre ressource est prête !</p>
+
+    <!-- Bloc de téléchargement -->
+    <section id="bonus" class="card">
+      <h3 id="bonus-title">Téléchargez votre produit</h3>
+      <p id="bonus-desc">Cliquez ci-dessous pour accéder à votre contenu :</p>
+      <a id="bonus-link" class="btn" href="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fmardi1-d0a8h%2Fdelivery-product-1756806126050?alt=media&token=6b06fee4-1741-4a2d-b37d-e5c1e00fe8d5" download>Télécharger</a>
+    </section>
+
+    <!-- Bouton retour accueil -->
+    <a href="/" class="btn" style="background:#666;margin-top:32px;">Retour à l'accueil</a>
+  </main>
+
+ <script>
+(function(){
+  const clean = (s)=> (s||"").toString().trim();
+  const isHttp = (u)=>{ try{ const x=new URL(u); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
+
+  // 1) Texte de remerciement + récap
+  const thx = clean('merci');
+  const recap = clean('');
+
+  // Ajoute un bloc simple si tu n’en as pas déjà un dans le HTML
+  let host = document.getElementById('desc'); // recycle la zone #desc si elle existe
+  if (host){
+    const parts = [];
+    if (thx)   parts.push(thx);
+    if (recap) parts.push('<div class="fun" style="padding:12px;border-radius:10px;margin-top:8px;">'+recap+'</div>');
+    host.innerHTML = parts.join('') || "Merci pour votre confiance !";
+    document.getElementById('desc-wrap')?.classList.remove('hide');
+  }
+
+  // 2) Lien de livraison (toujours sans pageDeliveryMode)
+  const pageFile   = clean('');
+  const globalFile = clean('');
+  const globalUrl  = clean('https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fmardi1-d0a8h%2Fdelivery-product-1756806126050?alt=media&token=6b06fee4-1741-4a2d-b37d-e5c1e00fe8d5');
+
+  const href = [pageFile, globalFile, globalUrl].find(isHttp) || "";
+
+  // Si tu as déjà un bloc #bonus dans thankyou, on le réutilise :
+  let bonusWrap = document.getElementById('bonus');
+  let bonusLink = document.getElementById('bonus-link');
+
+  if (!bonusWrap || !bonusLink){
+    // fallback minimal si ton template thankyou n’a pas #bonus
+    const card = document.createElement('section');
+    card.className = 'card';
+    card.innerHTML = `
+      <h3>Votre accès</h3>
+      <a id="__tk_dl" class="btn" href="#" download>Télécharger / Ouvrir</a>
+    `;
+    document.querySelector('main')?.appendChild(card);
+    bonusWrap = card;
+    bonusLink = card.querySelector('#__tk_dl');
+  }
+
+  if (href){
+    bonusLink.href = href;
+    bonusWrap.classList.remove('hide');
+  } else {
+    // Pas de lien dispo → ne rien afficher, ou montrer un message
+    // bonusWrap.classList.add('hide');
+  }
+
+  // 3) Rendre visible le Hero si vide (facultatif)
+  const title = clean('');
+  const subtitle = clean('');
+  if (!title && !subtitle){
+    document.getElementById('hero')?.classList.add('hide');
+  }
+})();
+</script>
+</body>
+</html>
