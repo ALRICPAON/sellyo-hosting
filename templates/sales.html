@@ -71,10 +71,14 @@
 </head>
 <body>
   <header>
-    {{#if brand.logoUrl}}
-      <img src="{{brand.logoUrl}}" alt="Logo" />
-    {{/if}}
-  </header>
+  <img id="logo" src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'">
+</header>
+<script>
+document.addEventListener('DOMContentLoaded', ()=>{
+  const lg=document.getElementById('logo');
+  if(lg && (lg.getAttribute('src')||'').trim().startsWith('http')) lg.style.display='block';
+});
+</script>
 
   <main>
     <!-- Colonne gauche : contenu -->
