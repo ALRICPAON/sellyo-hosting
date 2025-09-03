@@ -67,6 +67,7 @@
     /* Timer */
     .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
   </style>
+  <script src="https://js.stripe.com/v3"></script>
 </head>
 <body>
   <header>
@@ -147,40 +148,74 @@
 
     const clean   = (s)=> (s||"").toString().trim();
     const isToken = (s)=> /\{\{[^}]+\}\}/.test(s||"");
+    const withSlash = (u)=> u ? (u.endsWith('/') ? u : (u + '/')) : "";
 
-    // 1) MODE d'action : par défaut "payment" (évite checkout / tokens non remplacés)
+    // === Données (1.* = global webhook) ===
+    const pk       = clean("{{1.payment.stripePublishableKey}}");
+    const priceId  = clean("{{1.payment.stripePriceId}}");
+    const payLink  = clean("{{1.payment.paymentLink}}");
+    const baseUrl0 = clean("{{1.baseUrl}}");                 // ABSOLU requis par Stripe
+    const baseUrl  = withSlash(baseUrl0);
+
+    // Cibles de navigation (merci / suite)
+    const nextSlug = clean("{{133.flow.nextSlug}}");
+    const rawNext  = clean("{{flow.nextHref}}");
+    const nextHref = (!isToken(rawNext) && rawNext) || (nextSlug ? (nextSlug + ".html") : "");
+
+    // URL directe et download (si jamais)
+    const url      = clean("{{cta.url}}");
+    const download = clean("{{download.url}}");
+
+    // Mode (par défaut, payment)
     let rawMode = "{{cta.action}}";
     let mode = (!rawMode || isToken(rawMode)) ? "payment" : clean(rawMode).toLowerCase();
     if (mode === "checkout") mode = "payment";
 
-    // 2) PAYMENT LINK (essaie payment.paymentLink puis webhook 1.*)
-    const pay = [ "{{payment.paymentLink}}", "{{1.payment.paymentLink}}" ]
-      .map(clean).find(v => v && !isToken(v)) || "";
-
-    // 3) NEXT (flow.nextHref ou dérivé de flow.nextSlug)
-    const rawNext     = clean("{{flow.nextHref}}");
-    const rawNextSlug = clean("{{flow.nextSlug}}");
-    const next = (!isToken(rawNext) && rawNext)
-               || (rawNextSlug && !isToken(rawNextSlug) ? (rawNextSlug + ".html") : "");
-
-    // 4) URL directe (CTA URL) + Download (bonus)
-    const url = clean("{{cta.url}}");
-    const download = clean("{{download.url}}");
-
-    // 5) Wiring du bouton (priorité: payment > next > url > download)
-    if (mode === "payment" && pay) {
-      btn.onclick = (e) => { e.preventDefault(); window.location.href = pay; };
-    } else if (mode === "next" && next) {
-      btn.onclick = (e) => { e.preventDefault(); window.location.href = next; };
-    } else if (mode === "url" && url && !isToken(url)) {
-      btn.onclick = (e) => { e.preventDefault(); window.location.href = url; };
-    } else if (download && !isToken(download)) {
-      btn.onclick = (e) => { e.preventDefault(); window.location.href = download; };
-    } else {
-      btn.style.display = "none";
+    // --- Priorité: Stripe Checkout (pk+priceId+nextHref) > Payment Link > next > url > download ---
+    if (mode === "payment" && pk && priceId && nextHref) {
+      // Stripe Checkout client-only (redirection auto vers la page merci)
+      const stripe = Stripe(pk);
+      btn.onclick = async (e) => {
+        e.preventDefault();
+        const successUrl = baseUrl + nextHref;   // doit être ABSOLU
+        const cancelUrl  = window.location.href;
+        const { error } = await stripe.redirectToCheckout({
+          lineItems: [{ price: priceId, quantity: 1 }],
+          mode: "payment",
+          successUrl,
+          cancelUrl
+        });
+        if (error) console.warn("Stripe error:", error.message);
+      };
+      return;
     }
+
+    if (mode === "payment" && payLink && !isToken(payLink)) {
+      // Fallback: Payment Link
+      btn.onclick = (e) => { e.preventDefault(); window.location.href = payLink; };
+      return;
+    }
+
+    if (mode === "next" && nextHref) {
+      btn.onclick = (e) => { e.preventDefault(); window.location.href = nextHref; };
+      return;
+    }
+
+    if (mode === "url" && url && !isToken(url)) {
+      btn.onclick = (e) => { e.preventDefault(); window.location.href = url; };
+      return;
+    }
+
+    if (download && !isToken(download)) {
+      btn.onclick = (e) => { e.preventDefault(); window.location.href = download; };
+      return;
+    }
+
+    // Sinon, on cache le bouton
+    btn.style.display = "none";
   });
 </script>
+
 
   <!-- Timer (evergreen ou deadline ISO) -->
   <script>
