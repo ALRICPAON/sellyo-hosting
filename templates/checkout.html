@@ -60,10 +60,14 @@
 </head>
 <body>
   <header>
-    {{#if brand.logoUrl}}
-      <img src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'" />
-    {{/if}}
-  </header>
+  <img id="logo" src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'">
+</header>
+<script>
+document.addEventListener('DOMContentLoaded', ()=>{
+  const lg=document.getElementById('logo');
+  if(lg && (lg.getAttribute('src')||'').trim().startsWith('http')) lg.style.display='block';
+});
+</script>
 
   <main>
     <!-- Colonne gauche : contenu -->
@@ -92,16 +96,13 @@
       <button class="cta" id="payBtn">{{copy.ctaText}}</button>
     </div> <!-- <-- ferme .content -->
 
-    <!-- Colonne droite : image ou vidéo (parité avec sales) -->
-    <div class="media">
-      {{#if media.videoMp4}}
-        <video controls autoplay muted loop>
-          <source src="{{media.videoMp4}}" type="video/mp4">
-        </video>
-      {{else if media.imageUrl}}
-        <img src="{{media.imageUrl}}" alt="Image" onerror="this.style.display='none'" />
-      {{/if}}
-    </div>
+    <!-- Colonne droite : image ou vidéo -->
+<div class="media" id="media">
+  <img id="media-img" src="{{media.imageUrl}}" alt="Image" onerror="this.style.display='none'" style="display:none" />
+  <video id="media-video" controls autoplay muted loop class="hide" style="display:none">
+    <source id="media-video-src" src="{{media.videoMp4}}" type="video/mp4">
+  </video>
+</div>
   </main>
 
   <!-- Paiement: Stripe Checkout client-only + fallbacks -->
@@ -177,6 +178,39 @@
     btn.style.display = 'none';
   });
   </script>
+
+  <script>
+document.addEventListener('DOMContentLoaded', () => {
+  const val = (s)=> (s||"").toString().trim();
+  const isToken = (s)=> /\{\{[^}]+\}\}/.test(s||"");
+
+  const vidSrc = val("{{media.videoMp4}}");
+  const imgSrc = val("{{media.imageUrl}}");
+
+  const wrap   = document.getElementById('media');
+  const img    = document.getElementById('media-img');
+  const video  = document.getElementById('media-video');
+  const source = document.getElementById('media-video-src');
+
+  const hasVid = vidSrc && !isToken(vidSrc);
+  const hasImg = imgSrc && !isToken(imgSrc);
+
+  if (!wrap) return;
+
+  if (hasVid) {
+    if (source) source.src = vidSrc;
+    if (video) { video.style.display = 'block'; video.classList.remove('hide'); video.load(); }
+    if (img)   img.style.display = 'none';
+    wrap.style.display = 'flex';
+  } else if (hasImg) {
+    if (img)   { img.src = imgSrc; img.style.display = 'block'; }
+    if (video) video.style.display = 'none';
+    wrap.style.display = 'flex';
+  } else {
+    wrap.style.display = 'none';
+  }
+});
+</script>
 
   <!-- Timer (evergreen ou deadline ISO) -->
   <script>
