@@ -89,111 +89,94 @@
       <div id="price" class="price">{{1.payment.price}} {{1.currency}}</div>
 
       <!-- CTA Paiement -->
-     <button class="cta" id="payBtn">{{copy.ctaText}}</button>
-</div> <!-- <-- ferme .content ici -->
+      <button class="cta" id="payBtn">{{copy.ctaText}}</button>
+    </div> <!-- <-- ferme .content -->
 
+    <!-- Colonne droite : image ou vidéo (parité avec sales) -->
+    <div class="media">
+      {{#if media.videoMp4}}
+        <video controls autoplay muted loop>
+          <source src="{{media.videoMp4}}" type="video/mp4">
+        </video>
+      {{else if media.imageUrl}}
+        <img src="{{media.imageUrl}}" alt="Image" onerror="this.style.display='none'" />
+      {{/if}}
+    </div>
+  </main>
+
+  <!-- Paiement: Stripe Checkout client-only + fallbacks -->
   <script>
-document.addEventListener('DOMContentLoaded', () => {
-  // --- DEBUG PANEL (visible) ---
-  const dbg = document.createElement('pre');
-  dbg.style.cssText = "background:#0b1220;color:#8aff8a;padding:10px;margin:10px 0;white-space:pre-wrap;border-radius:8px;font-size:13px";
-  document.querySelector('.content')?.prepend(dbg);
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('payBtn');
+    if (!btn) return;
 
-  const btn = document.getElementById('payBtn');
+    const clean   = (s)=> (s||"").toString().trim();
+    const isToken = (s)=> /\{\{[^}]+\}\}/.test(s||"");
+    const withSlash = (u)=> u ? (u.endsWith('/') ? u : (u + '/')) : "";
 
-  // Champs (webhook 1.* / 133.*) – déjà injectés par GPT
-  const pk       = ("pk_test_51RVsTD4PUVU3ejcHlK1AAkobBcOKPp3k0l9AHMmq68d7OdSDjyVKLtA9XpMGqiUIeIgtMvhSTUDrMl9rPityqi5u002UMlmdET" || "").trim();
-  const priceId  = ("price_1Rx31U4PUVU3ejcHtRO3U55v" || "").trim();
-  const payLink  = ("" || "").trim();
-  const baseUrl0 = ("https://alricpaon.github.io/sellyo-hosting/tunnels/pOoqftYacXhirXtjxVk60Or09nm2" || "").trim();
-  const nextSlug = ("mercredi2-py3uv-p2" || "").trim();
+    // Champs (webhook 1.* / 133.*)
+    const pk        = clean("{{1.payment.stripePublishableKey}}");
+    const priceId   = clean("{{1.payment.stripePriceId}}");
+    const payLink   = clean("{{1.payment.paymentLink}}");
+    const baseUrl0  = clean("{{1.baseUrl}}"); // Absolu requis pour successUrl
+    const baseUrl   = withSlash(baseUrl0);
 
-  // Helpers
-  const withSlash = (u) => u ? (u.endsWith('/') ? u : (u + '/')) : "";
-  const baseUrl = withSlash(baseUrl0);
-  const nextHref = nextSlug ? (nextSlug + ".html") : "";
+    const rawNext   = clean("{{flow.nextHref}}");
+    const nextSlug  = clean("{{133.flow.nextSlug}}");
+    const nextHref  = (!isToken(rawNext) && rawNext) || (nextSlug ? (nextSlug + ".html") : "");
 
-  // Affiche le prix si non vide et non token
-  const priceEl = document.getElementById('price');
-  if (priceEl) {
-    const raw = (priceEl.textContent || '').trim();
-    if (!raw || /\{\{.+\}\}/.test(raw)) priceEl.style.display = 'none';
-  }
+    const url       = clean("{{cta.url}}");
+    const download  = clean("{{download.url}}");
 
-  // Toujours montrer le bouton en debug
-  if (btn) {
-    btn.style.display = 'block';
-    btn.disabled = false;
-  }
+    // Afficher/Masquer le prix si vide ou token non remplacé
+    const priceEl = document.getElementById('price');
+    if (priceEl) {
+      const raw = (priceEl.textContent || '').trim();
+      if (!raw || /\{\{.+\}\}/.test(raw)) priceEl.style.display = 'none';
+    }
 
-  // DEBUG dump
-  dbg.textContent =
-    "DEBUG CHECKOUT\n" +
-    "pk: " + pk + "\n" +
-    "priceId: " + priceId + "\n" +
-    "paymentLink: " + payLink + "\n" +
-    "baseUrl: " + baseUrl + "\n" +
-    "nextSlug: " + nextSlug + "\n" +
-    "nextHref: " + nextHref + "\n";
-
-  // Branchement clair + logs
-  if (!btn) return;
-
-  // 1) Stripe Checkout dynamique si pk + priceId + nextHref
-  if (pk && priceId && nextHref) {
-    try {
-      const stripe = Stripe(pk); // (pas besoin de await)
-      btn.textContent = "Payer (Stripe Checkout)";
-      btn.dataset.mode = "checkout";
+    // Priorité: Stripe Checkout > Payment Link > next > url > download
+    if (pk && priceId && nextHref) {
+      const stripe = Stripe(pk);
       btn.onclick = async (e) => {
         e.preventDefault();
-        const successUrl = baseUrl + nextHref;
+        const successUrl = baseUrl + nextHref; // Absolu
         const cancelUrl  = window.location.href;
-        console.log("[Stripe] redirectToCheckout", { priceId, successUrl, cancelUrl });
-
         const { error } = await stripe.redirectToCheckout({
           lineItems: [{ price: priceId, quantity: 1 }],
           mode: "payment",
           successUrl,
           cancelUrl
         });
-        if (error) {
-          console.warn("[Stripe] error:", error.message);
-          alert("Stripe error: " + error.message);
-        }
+        if (error) console.warn("Stripe error:", error.message);
       };
       return;
-    } catch (err) {
-      console.error("Stripe init error:", err);
     }
-  }
 
-  // 2) Fallback Payment Link
-  if (payLink) {
-    btn.textContent = "Payer (Payment Link)";
-    btn.dataset.mode = "payment_link";
-    btn.onclick = (e) => { e.preventDefault(); window.location.href = payLink; };
-    return;
-  }
+    if (payLink && !isToken(payLink)) {
+      btn.onclick = (e) => { e.preventDefault(); window.location.href = payLink; };
+      return;
+    }
 
-  // 3) Fallback navigation simple si on a au moins la suite
-  if (nextHref) {
-    btn.textContent = "Continuer";
-    btn.dataset.mode = "next";
-    btn.onclick = (e) => { e.preventDefault(); window.location.href = baseUrl + nextHref; };
-    return;
-  }
+    if (nextHref) {
+      btn.onclick = (e) => { e.preventDefault(); window.location.href = nextHref; };
+      return;
+    }
 
-  // 4) Dernier recours: indiquer que la config est manquante
-  btn.textContent = "⚠️ Config paiement manquante";
-  btn.dataset.mode = "disabled";
-  btn.onclick = (e) => {
-    e.preventDefault();
-    alert("Configuration incomplète : il manque baseUrl et/ou nextSlug et/ou priceId/pk.");
-  };
-});
-</script>
+    if (url && !isToken(url)) {
+      btn.onclick = (e) => { e.preventDefault(); window.location.href = url; };
+      return;
+    }
 
+    if (download && !isToken(download)) {
+      btn.onclick = (e) => { e.preventDefault(); window.location.href = download; };
+      return;
+    }
+
+    // Sinon, cache le bouton (aucune action valable)
+    btn.style.display = 'none';
+  });
+  </script>
 
   <!-- Timer (evergreen ou deadline ISO) -->
   <script>
@@ -223,7 +206,5 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     })();
   </script>
-
-
 </body>
 </html>
