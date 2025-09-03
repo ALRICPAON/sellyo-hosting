@@ -36,6 +36,7 @@
 
     .media img,.media video{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
     .media iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:12px;display:block}
+    .media .hide{display:none!important;}
 
     /* ===== Bloc B : texte à gauche + vidéo à droite ===== */
     #argu-grid{display:grid;gap:14px;grid-template-columns:1fr}
@@ -309,11 +310,15 @@
   // Valeurs envoyées par submit-tunnel.js : "next" | "url" | "checkout"
   const rawAction = cleanText('{{cta.action}}').toLowerCase();
 
-  // Normalisation interne (compatibilité backward)
-  const ctaAction = (rawAction === 'checkout') ? 'paiement'
-                   : (rawAction === 'url')     ? 'lien'
-                   : (rawAction === 'next')    ? 'capture'
-                   : rawAction;
+ // Valeurs envoyées par submit-tunnel.js : "next" | "url" | "checkout"
+// Fallback par défaut = "capture" (formulaire visible)
+const rawAction = cleanText('{{cta.action}}').toLowerCase();
+const ctaAction = rawAction
+  ? (rawAction === 'checkout') ? 'paiement'
+    : (rawAction === 'url')    ? 'lien'
+    : (rawAction === 'next')   ? 'capture'
+    : rawAction
+  : 'capture';
 
   // Récupère les liens potentiels
   const payLink   = cleanText('{{payment.paymentLink}}'); // lien Stripe officiel
