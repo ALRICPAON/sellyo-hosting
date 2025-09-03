@@ -167,56 +167,75 @@
       if (!cleanText(desc.textContent)) document.getElementById('desc-wrap').style.display='none';
     })();
 
-    // Form fields: accepte array | objet flags | string "email,name"
-    (function(){
-      const host = document.getElementById('form-visible');
-      const raw  = document.getElementById('form-fields-json')?.textContent || '[]';
+   <!-- Form fields: accepte array | objet flags | string "email,name" -->
 
-      function input(type, name, placeholder, required=true, options=null){
-        const req = required ? 'required' : '';
-        if (type==='textarea') return `<textarea name="${name}" placeholder="${placeholder}" ${req}></textarea>`;
-        if (type==='select' && Array.isArray(options)){
-          const opts=options.map(o=>`<option value="${(o.value??o)}">${(o.label??o)}</option>`).join('');
-          return `<select name="${name}" ${req}>${opts}</select>`;
-        }
-        return `<input name="${name}" type="${type}" placeholder="${placeholder}" ${req}/>`;
-      }
-      function fromArray(arr){
-        if (!Array.isArray(arr)) return '';
-        return arr.map(f=>{
-          const t=(f.type||'text').toLowerCase(), n=f.name||'field', ph=f.placeholder||f.label||n;
-          return input(t,n,ph,!!f.required,Array.isArray(f.options)?f.options:null);
-        }).join('');
-      }
-      function fromObject(obj){
-        const order=['firstname','name','email','phone','address'];
-        const keys=order.filter(k=>obj[k]).concat(Object.keys(obj).filter(k=>!order.includes(k) && obj[k]));
-        if (keys.length===0) return '';
-        return keys.map(k=>{
-          const key=k.toLowerCase();
-          if (key==='email') return input('email','email','Votre email');
-          if (key==='phone') return input('tel','phone','Votre téléphone');
-          if (key==='address') return input('textarea','address','Votre adresse');
-          if (key==='firstname') return input('text','firstname','Votre prénom');
-          if (key==='name'||key==='lastname') return input('text','name','Votre nom');
-          return input('text',key,key);
-        }).join('');
-      }
-      function fromString(str){
-        const parts=(str||'').split(',').map(s=>s.trim()).filter(Boolean);
-        if (!parts.length) return '';
-        return fromObject(Object.fromEntries(parts.map(p=>[p,true])));
-      }
+(function(){
+  const host = document.getElementById('form-visible');
+  if (!host) return;
 
-      let fields; try{ fields=JSON.parse(raw); }catch(e){ fields=raw; }
-      let html='';
-      if (Array.isArray(fields)) html=fromArray(fields);
-      else if (fields && typeof fields==='object') html=fromObject(fields);
-      else if (typeof fields==='string') html=fromString(fields);
+  // Récup brut du JSON posé par Make
+  const node = document.getElementById('form-fields-json');
+  let raw = node ? (node.textContent || '').trim() : '';
 
-      if (!html) html=input('email','email','Votre email');
-      host.innerHTML=html;
-    })();
+  // Si le token n'a PAS été remplacé, ou si c'est vide → forcer un champ email
+  const looksLikeToken = /\{\{[^}]+\}\}/.test(raw);
+  if (!raw || looksLikeToken) {
+    host.innerHTML = `<input name="email" type="email" placeholder="Votre email" required/>`;
+    return;
+  }
+
+  // Helpers
+  function input(type, name, placeholder, required=true, options=null){
+    const req = required ? 'required' : '';
+    if (type==='textarea') return `<textarea name="${name}" placeholder="${placeholder}" ${req}></textarea>`;
+    if (type==='select' && Array.isArray(options)){
+      const opts=options.map(o=>`<option value="${(o.value??o)}">${(o.label??o)}</option>`).join('');
+      return `<select name="${name}" ${req}>${opts}</select>`;
+    }
+    return `<input name="${name}" type="${type}" placeholder="${placeholder}" ${req}/>`;
+  }
+  function fromArray(arr){
+    if (!Array.isArray(arr) || !arr.length) return input('email','email','Votre email');
+    const html = arr.map(f=>{
+      const t=(f?.type||'text').toLowerCase(), n=f?.name||'field', ph=f?.placeholder||f?.label||n;
+      return input(t,n,ph,!!f?.required,Array.isArray(f?.options)?f.options:null);
+    }).join('');
+    return html || input('email','email','Votre email');
+  }
+  function fromObject(obj){
+    if (!obj || typeof obj!=='object') return input('email','email','Votre email');
+    const order=['firstname','name','email','phone','address'];
+    const keys=order.filter(k=>obj[k]).concat(Object.keys(obj).filter(k=>!order.includes(k) && obj[k]));
+    if (!keys.length) return input('email','email','Votre email');
+    return keys.map(k=>{
+      const key=k.toLowerCase();
+      if (key==='email') return input('email','email','Votre email');
+      if (key==='phone') return input('tel','phone','Votre téléphone');
+      if (key==='address') return input('textarea','address','Votre adresse');
+      if (key==='firstname') return input('text','firstname','Votre prénom');
+      if (key==='name'||key==='lastname') return input('text','name','Votre nom');
+      return input('text',key,key);
+    }).join('');
+  }
+  function fromString(str){
+    const parts=(str||'').split(',').map(s=>s.trim()).filter(Boolean);
+    if (!parts.length) return input('email','email','Votre email');
+    return fromObject(Object.fromEntries(parts.map(p=>[p,true])));
+  }
+
+  // Parse ultra-robuste
+  let fields;
+  try { fields = JSON.parse(raw); }
+  catch { fields = raw; }
+
+  let html = '';
+  if (Array.isArray(fields)) html = fromArray(fields);
+  else if (fields && typeof fields==='object') html = fromObject(fields);
+  else html = fromString(fields);
+
+  host.innerHTML = html || input('email','email','Votre email');
+})();
+
 
     /* === Layout logique === */
 (function(){
