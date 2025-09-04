@@ -168,9 +168,15 @@
 
     // Form fields: accepte array | objet flags | string "email,name"
     (function(){
-      const host = document.getElementById('form-visible');
-      const raw  = document.getElementById('form-fields-json')?.textContent || '[]';
+  const host = document.getElementById('form-visible');
+  const raw  = document.getElementById('form-fields-json')?.textContent || '[]';
 
+  // ✅ AJOUT : Fallback si Make n’a pas remplacé {{formFields}}
+  const looksLikeToken = /\{\{[^}]+\}\}/.test(raw);
+  if (!raw || looksLikeToken) {
+    host.innerHTML = `<input name="email" type="email" placeholder="Votre email" required/>`;
+    return;
+  }
       function input(type, name, placeholder, required=true, options=null){
         const req = required ? 'required' : '';
         if (type==='textarea') return `<textarea name="${name}" placeholder="${placeholder}" ${req}></textarea>`;
@@ -340,6 +346,7 @@
   // On sélectionne les bons boutons
   const form = document.getElementById('lead-form');
   const link = document.getElementById('cta-link');
+  if (form) form.setAttribute('data-next', nextHref || '');
 
   if (ctaAction === 'paiement' || ctaAction === 'lien') {
     // Cas paiement Stripe OU lien externe
