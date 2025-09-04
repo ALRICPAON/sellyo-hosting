@@ -26,8 +26,8 @@
       grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
       gap: 32px;
     }
-    header { text-align: center; margin-bottom: 32px; }
-    header img { max-height: 60px; margin-bottom: 16px; }
+    header{display:flex;justify-content:center;align-items:center;padding:16px 0;margin-bottom:32px}
+#logo{max-height:60px;display:none} /* caché tant qu'on n'a pas validé l'URL */
     .content h1 {
       font-size: 2rem;
       margin-bottom: 16px;
@@ -66,6 +66,7 @@
 
     /* Timer */
     .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
+    .hide { display: none !important; }
   </style>
   <script src="https://js.stripe.com/v3"></script>
 </head>
@@ -75,8 +76,11 @@
 </header>
 <script>
 document.addEventListener('DOMContentLoaded', ()=>{
-  const lg=document.getElementById('logo');
-  if(lg && (lg.getAttribute('src')||'').trim().startsWith('http')) lg.style.display='block';
+  const logo = document.getElementById('logo');
+  const src = (logo?.getAttribute('src') || '').trim();
+  // on affiche si on a quelque chose d'exploitable (http/https ou data:)
+  const looksValid = /^(https?:|data:image)/i.test(src);
+  if (logo && looksValid) logo.style.display = 'block';
 });
 </script>
 
@@ -221,6 +225,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 document.addEventListener('DOMContentLoaded', () => {
   const val = (s)=> (s||"").toString().trim();
   const isToken = (s)=> /\{\{[^}]+\}\}/.test(s||"");
+  const isImgLike = (u)=> /^(https?:|data:image)/i.test(u||""); // tolère http/https + data:
 
   const vidSrc = val("{{media.videoMp4}}");
   const imgSrc = val("{{media.imageUrl}}");
@@ -230,19 +235,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const video  = document.getElementById('media-video');
   const source = document.getElementById('media-video-src');
 
-  const hasVid = vidSrc && !isToken(vidSrc);
-  const hasImg = imgSrc && !isToken(imgSrc);
-
   if (!wrap) return;
+
+  const hasVid = !!vidSrc && !isToken(vidSrc);
+  const hasImg = !!imgSrc && !isToken(imgSrc) && isImgLike(imgSrc);
 
   if (hasVid) {
     if (source) source.src = vidSrc;
-    if (video) { video.style.display = 'block'; video.classList.remove('hide'); video.load(); }
-    if (img)   img.style.display = 'none';
+    if (video) { video.classList.remove('hide'); video.style.display = 'block'; video.load(); }
+    if (img)   { img.classList.add('hide'); img.style.display = 'none'; }
     wrap.style.display = 'flex';
   } else if (hasImg) {
-    if (img)   { img.src = imgSrc; img.style.display = 'block'; }
-    if (video) video.style.display = 'none';
+    if (img)   { img.src = imgSrc; img.classList.remove('hide'); img.style.display = 'block'; }
+    if (video) { video.classList.add('hide'); video.style.display = 'none'; }
     wrap.style.display = 'flex';
   } else {
     wrap.style.display = 'none';
@@ -279,6 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     })();
   </script>
+  
 
   <!-- Scripts Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
