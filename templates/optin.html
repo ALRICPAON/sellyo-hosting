@@ -80,7 +80,6 @@
 
           <script id="form-fields-json" type="application/json">{{formFields}}</script>
 
-          <form id="lead-form" data-role="capture">
           <form id="lead-form" data-role="capture" data-next="{{flow.nextHref}}">
             <div id="form-visible"></div>
 
@@ -352,22 +351,6 @@
     form.classList.remove('hide');
     link.classList.add('hide');
   }
-if (hidden) hidden.value = nextHref || '';
-
-const form = document.getElementById('lead-form');
-const link = document.getElementById('cta-link');
-if (form) form.setAttribute('data-next', nextHref || '');
-
-if (ctaAction === 'paiement' || ctaAction === 'lien') {
-  // Cas paiement Stripe OU lien externe
-  form.classList.add('hide');
-  link.classList.remove('hide');
-  link.href = (ctaAction === 'paiement' && isHttp(payOrUrl)) ? payOrUrl : (nextHref || '#');
-} else {
-  // Cas capture → on montre le formulaire
-  form.classList.remove('hide');
-  link.classList.add('hide');
-}
 })();
     // Témoignages / FAQ / Timer
     (function(){
