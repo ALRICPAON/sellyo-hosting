@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>jeudi1</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      --bg: #450e59;
+      --btn: #008cb4;
+      --text:#fff;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    main{max-width:1100px;margin:0 auto;padding:24px}
+
+    header{display:flex;justify-content:center;padding:16px 0}
+    #logo{max-height:56px;display:none}
+
+    .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
+
+    .hero{text-align:center;margin-bottom:16px}
+    .hero h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0}
+    .hero .sub{opacity:.9;margin:0}
+
+    .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
+    form input,form textarea,form select{width:100%;padding:12px;border-radius:10px;border:0;margin:8px 0;background:#ffffff12;color:#fff}
+
+    .grid{display:grid;gap:18px}
+
+    /* ===== Bloc A : image|vid + formulaire ===== */
+    #block-a{max-width:1100px;margin:0 auto}
+    #pair-a{display:grid;gap:12px;grid-template-columns:1fr}
+    @media(min-width:880px){ #pair-a.two-cols{ grid-template-columns:1fr 1fr; } }
+
+    .media img,.media video{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
+    .media iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:12px;display:block}
+
+    /* ===== Bloc B : texte à gauche + vidéo à droite ===== */
+    #argu-grid{display:grid;gap:14px;grid-template-columns:1fr}
+    @media(min-width:880px){ #argu-grid.two-cols{ grid-template-columns:1fr 0.9fr; } }
+
+    .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
+    .hide{display:none}
+    .text-center{text-align:center}
+    .fun{background:linear-gradient(135deg,#ffffff12,#ffffff08)}
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <img id="logo" src="" alt="Logo" onerror="this.style.display='none'">
+    </header>
+
+    <!-- 1) Hero -->
+    <section class="hero" id="hero">
+      <h1 id="title">test</h1>
+      <p class="sub" id="subtitle">test</p>
+    </section>
+
+    <!-- 2) Description -->
+    <section class="card" id="desc-wrap">
+      <div id="desc">test</div>
+    </section>
+
+    <!-- ===== Bloc A : Image/Video (si pas d’image) + Formulaire ===== -->
+    <section class="card" id="block-a">
+      <div id="pair-a">
+        <!-- Média A (image OU vidéo si pas d’image) -->
+        <div class="media" id="media-a">
+  <img id="img-a" src="" alt="" onerror="this.style.display='none'">
+  <!-- La vidéo n'est créée que si nécessaire -->
+  <video id="vid-a" controls playsinline class="hide" onerror="this.style.display='none'"></video>
+</div>
+
+        <!-- Formulaire -->
+        <div id="form-col">
+          <div id="timer" class="timer hide"></div>
+
+          <script id="form-fields-json" type="application/json">{"name":true,"firstname":true,"email":true,"phone":false,"address":false}</script>
+
+          <form id="lead-form" data-role="capture">
+          <form id="lead-form" data-role="capture" data-next=".html">
+            <div id="form-visible"></div>
+
+            <input type="hidden" name="userId" value="pOoqftYacXhirXtjxVk60Or09nm2" />
+
+  // Injecte le nextHref dans le champ caché pour save-lead-tunnel.js
+  const hidden = document.getElementById('nextUrl-hidden');
+  if (hidden) hidden.value = nextHref || '';
+
+  // On sélectionne les bons boutons
+  const form = document.getElementById('lead-form');
+  const link = document.getElementById('cta-link');
+
+  if (ctaAction === 'paiement' || ctaAction === 'lien') {
+    // Cas paiement Stripe OU lien externe
+    form.classList.add('hide');
+    link.classList.remove('hide');
+    link.href = (ctaAction === 'paiement' && isHttp(payOrUrl)) ? payOrUrl : (nextHref || '#');
+  } else {
+    // Cas capture → on montre le formulaire
+    form.classList.remove('hide');
+    link.classList.add('hide');
+  }
+if (hidden) hidden.value = nextHref || '';
+
+const form = document.getElementById('lead-form');
+const link = document.getElementById('cta-link');
+if (form) form.setAttribute('data-next', nextHref || '');
+
+if (ctaAction === 'paiement' || ctaAction === 'lien') {
+  // Cas paiement Stripe OU lien externe
+  form.classList.add('hide');
+  link.classList.remove('hide');
+  link.href = (ctaAction === 'paiement' && isHttp(payOrUrl)) ? payOrUrl : (nextHref || '#');
+} else {
+  // Cas capture → on montre le formulaire
+  form.classList.remove('hide');
+  link.classList.add('hide');
+}
+})();
+    // Témoignages / FAQ / Timer
+    (function(){
+      const gua = document.getElementById('gua');
+      if (gua && cleanText(gua.textContent)) gua.classList.remove('hide');
+
+      ['testi','faq'].forEach(id=>{
+        const el=document.getElementById(id); if(!el) return;
+        const inner=el.querySelector('div'); const txt=cleanText(inner? inner.textContent: '');
+        if (txt) el.classList.remove('hide');
+      });
+
+      const evergreen = parseInt('',10)||0;
+      const deadlineISO = cleanText('');
+      const t = document.getElementById('timer');
+      function render(sec){ if(sec<=0){ t.textContent='Offre expirée'; return; } const m=Math.floor(sec/60), s=sec%60; t.textContent='Offre expire dans '+m+'m '+('0'+s).slice(-2)+'s'; }
+      let total=0;
+      if(evergreen>0) total=evergreen*60;
+      else if(deadlineISO && !isNaN(Date.parse(deadlineISO))) total=Math.max(0,Math.floor((new Date(deadlineISO)-new Date())/1000));
+      if(total>0){ t.classList.remove('hide'); (function tick(){ render(total--); if(total>=0) setTimeout(tick,1000); })(); }
+    })();
+
+
+    // Pixels
+    (function(){
+      const fb=''.trim();
+      if (fb){
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+          n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;
+          n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
+          s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script');
+        fbq('init', fb); fbq('track','PageView');
+      }
+      const gtm=''.trim();
+      if (gtm){
+        var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+encodeURIComponent(gtm);
+        document.head.appendChild(s);
+      }
+    })();
+  </script>
+</body>
+</html>
