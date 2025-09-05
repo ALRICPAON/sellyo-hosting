@@ -36,27 +36,62 @@
     .bullets ul { padding-left: 20px; margin-bottom: 16px; }
     .bullets li { margin-bottom: 8px; list-style: disc; }
 
-    /* Empiler vidéo + image comme dans Optin */
-.media{
+   /* Conteneur principal simple */
+main{
+  max-width:1100px;
+  margin:0 auto;
+  padding:32px 16px;
+}
+
+/* === Blocs alternés texte / média === */
+.sales-block{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  align-items:center;
+  gap:32px;
+  margin-bottom:48px;
+}
+
+.sales-content{
   display:flex;
   flex-direction:column;
-  justify-content:center;
-  align-items:center;
   gap:12px;
 }
-.media img,.media video{
+
+/* Zone média (image + vidéo + embed) */
+.sales-media{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  justify-content:center;
+  align-items:center;
+}
+.sales-media img,
+.sales-media video,
+.sales-media iframe{
   width:100%;
   max-height:420px;
   object-fit:cover;
   border-radius:12px;
   display:block;
 }
-.media iframe{
-  width:100%;
-  aspect-ratio:16/9;
-  border:0;
-  border-radius:12px;
-  display:block;
+
+/* Bloc 2 inversé sur desktop */
+.sales-block.alt{
+  direction:rtl;
+}
+.sales-block.alt .sales-content,
+.sales-block.alt .sales-media{
+  direction:ltr;
+}
+
+/* Responsive */
+@media(max-width:880px){
+  .sales-block{
+    grid-template-columns:1fr;
+    text-align:center;
+  }
+  .sales-media{ order:-1; } /* média au-dessus du texte sur mobile */
 }
 .hide{display:none!important;}
 
@@ -100,9 +135,10 @@ document.addEventListener('DOMContentLoaded', ()=>{
 });
 </script>
 
-  <main>
-    <!-- Colonne gauche : contenu -->
-    <div class="content">
+ <main>
+  <!-- === Bloc 1 : Texte à gauche | Média à droite === -->
+  <section class="sales-block">
+    <div class="sales-content">
       <h1>{{copy.title}}</h1>
       <p>{{copy.subtitle}}</p>
       <p>{{copy.productDescription}}</p>
@@ -111,52 +147,55 @@ document.addEventListener('DOMContentLoaded', ()=>{
         {{copy.bullets}}
       </div>
 
-      <!-- Problème / Solution / Bénéfices / Garantie -->
       <div id="prob">{{copy.problem}}</div>
       <div id="sol">{{copy.solution}}</div>
       <div id="ben">{{copy.benefits}}</div>
       <div id="gua"><em>{{copy.guarantee}}</em></div>
 
-      <!-- Timer (affiché si timers.* fournis) -->
       <div id="timer" class="timer" style="display:none"></div>
-
-      <!-- BOUTON CTA -->
       <button class="cta">{{copy.ctaText}}</button>
 
-      <!-- PRODUIT PRINCIPAL SI DISPONIBLE -->
       {{#if delivery.productFile}}
         <a class="download-btn" href="{{delivery.productFile}}" download>Télécharger le produit</a>
       {{else if delivery.productUrl}}
         <a class="download-btn" href="{{delivery.productUrl}}" target="_blank">Accéder au produit</a>
       {{/if}}
 
-      <!-- FICHIERS BONUS PAR PAGE -->
       {{#if pageProductFile}}
         <a class="download-btn" href="{{pageProductFile}}" download>Télécharger le fichier bonus</a>
       {{else if pageProductUrl}}
         <a class="download-btn" href="{{pageProductUrl}}" target="_blank">Voir le bonus</a>
       {{/if}}
-
-      <!-- Témoignages -->
-      <div class="testimonials">
-        {{testimonials}}
-      </div>
-
-      <!-- FAQ -->
-      <div class="faqs">
-        {{faqs}}
-      </div>
     </div>
 
-  <!-- Colonne droite : image ou vidéo (même logique que Optin) -->
-<div class="media" id="media">
-  <img id="media-img" src="{{media.imageUrl}}" alt="Image" onerror="this.style.display='none'">
-  <video id="media-video" controls playsinline autoplay muted loop class="hide" onerror="this.style.display='none'"></video>
-  <iframe id="media-emb" src="{{media.videoEmbed}}" class="hide"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen onerror="this.style.display='none'"></iframe>
-</div>
-  </main>
+    <div class="sales-media" id="media-1">
+      <img   id="media-img-1"  src="{{media.imageUrl}}" alt="Image" onerror="this.style.display='none'">
+      <video id="media-video-1" controls playsinline class="hide" onerror="this.style.display='none'"></video>
+      <iframe id="media-emb-1"  src="{{media.videoEmbed}}" class="hide"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen onerror="this.style.display='none'"></iframe>
+    </div>
+  </section>
+
+  <!-- === Bloc 2 : Média à gauche | Texte à droite === -->
+  <section class="sales-block alt">
+    <div class="sales-media" id="media-2">
+      <img   id="media-img-2"  src="{{media.imageUrl}}" alt="Image" onerror="this.style.display='none'">
+      <video id="media-video-2" controls playsinline class="hide" onerror="this.style.display='none'"></video>
+      <iframe id="media-emb-2"  src="{{media.videoEmbed}}" class="hide"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen onerror="this.style.display='none'"></iframe>
+    </div>
+
+    <div class="sales-content">
+      <h2>{{copy.secondaryTitle}}</h2>
+      <p>{{copy.secondaryDescription}}</p>
+      <div class="testimonials">{{testimonials}}</div>
+      <div class="faqs">{{faqs}}</div>
+      <button class="cta">{{copy.ctaText}}</button>
+    </div>
+  </section>
+</main>
 
   <footer>
     <p>&copy; {{seo.metaTitle}} - Tous droits réservés.</p>
@@ -238,58 +277,62 @@ document.addEventListener('DOMContentLoaded', ()=>{
   });
 </script>
 
-  <script>
+ <script>
 document.addEventListener('DOMContentLoaded', () => {
   const val     = (s)=> (s||"").toString().trim();
   const isToken = (s)=> /\{\{[^}]+\}\}/.test(s||"");
   const isHttp  = (u)=>{ try{ const x=new URL((u||'').trim()); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
-  const isRel   = (u)=> /^(\/|\.\/|\.\.\/)/.test((u||"").trim()); // chemins relatifs OK
+  const isRel   = (u)=> /^(\/|\.\/|\.\.\/)/.test((u||"").trim());
+  const goodImg = (u)=> /^data:image/i.test(u||"") || isHttp(u) || isRel(u);
 
-  const wrap  = document.getElementById('media');
-  const img   = document.getElementById('media-img');
-  const vid   = document.getElementById('media-video');
-  const emb   = document.getElementById('media-emb');
-
-  const imgSrc = val(img?.getAttribute('src'));
+  // même sources pour les 2 blocs (adapte ici si tu as d'autres champs pour le bloc 2)
   const mp4Src = val('{{media.videoMp4}}');
-  const embSrc = val(emb?.getAttribute('src'));
+  const embSrc = val('{{media.videoEmbed}}');
 
-  const hasImg = !!imgSrc && !isToken(imgSrc) && (isHttp(imgSrc) || isRel(imgSrc) || /^data:image/i.test(imgSrc));
-  const hasVid = !!mp4Src && !isToken(mp4Src) && (isHttp(mp4Src) || isRel(mp4Src));
-  const hasEmb = !!embSrc && !isToken(embSrc) && (isHttp(embSrc) || isRel(embSrc));
+  function setupMedia(block){
+    const wrap = document.getElementById(`media-${block}`);
+    if (!wrap) return;
 
-  if (!wrap) return;
+    const img  = document.getElementById(`media-img-${block}`);
+    const vid  = document.getElementById(`media-video-${block}`);
+    const emb  = document.getElementById(`media-emb-${block}`);
 
-  // ——— LOGIQUE TYPE OPTIN ———
-  // 1) Vidéo mp4 prioritaire. Si pas de mp4, on tente l'embed. L'image s'affiche en plus si dispo.
-  let showed = false;
+    const imgSrc = val(img?.getAttribute('src'));
 
-  if (hasVid) {
-    vid.src = mp4Src;
-    vid.classList.remove('hide');
-    vid.style.display = 'block';
-    showed = true;
-  } else if (hasEmb) {
-    emb.classList.remove('hide');
-    emb.style.display = 'block';
-    showed = true;
-  } else {
-    // ni mp4 ni embed -> on laissera seulement l'image si présente
-    if (vid)   { vid.classList.add('hide');  vid.style.display = 'none'; }
-    if (emb)   { emb.classList.add('hide');  emb.style.display = 'none'; }
+    const hasImg = !!imgSrc && !isToken(imgSrc) && goodImg(imgSrc);
+    const hasVid = !!mp4Src && !isToken(mp4Src) && (isHttp(mp4Src) || isRel(mp4Src));
+    const hasEmb = !!embSrc && !isToken(embSrc) && (isHttp(embSrc) || isRel(embSrc));
+
+    let shown = false;
+
+    if (hasVid && vid){
+      vid.src = mp4Src;
+      vid.classList.remove('hide');
+      vid.style.display = 'block';
+      shown = true;
+    } else if (hasEmb && emb){
+      emb.classList.remove('hide');
+      emb.style.display = 'block';
+      shown = true;
+    } else {
+      if (vid) { vid.classList.add('hide'); vid.style.display='none'; }
+      if (emb) { emb.classList.add('hide'); emb.style.display='none'; }
+    }
+
+    if (hasImg && img){
+      img.classList.remove('hide');
+      img.style.display = 'block';
+      shown = true;
+    } else if (img){
+      img.classList.add('hide');
+      img.style.display = 'none';
+    }
+
+    wrap.style.display = shown ? 'flex' : 'none';
   }
 
-  if (hasImg) {
-    img.classList.remove('hide');
-    img.style.display = 'block';
-    showed = true;
-  } else {
-    if (img) { img.classList.add('hide'); img.style.display = 'none'; }
-  }
-
-  // 2) Rien à montrer ? on masque le conteneur
-  if (!showed) wrap.style.display = 'none';
-  else wrap.style.display = 'flex';
+  setupMedia(1);
+  setupMedia(2);
 });
 </script>
 
