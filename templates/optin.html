@@ -333,16 +333,19 @@
     })();
 
     // ===== Affichage Garantie / Témoignages / FAQ / Timer =====
-    (function(){
-      // Garantie
-      (function(){
-        const el = document.querySelector('#gua');
-        if (!el) return;
-        const txt = cleanText(el.textContent);
-        const alt = cleanText(el.getAttribute('data-alt'));
-        const final = (!txt || isToken(txt)) ? (isToken(alt)? '' : alt) : txt;
-        if (final) { el.firstElementChild.textContent = final; el.classList.remove('hide'); }
-      })();
+/* ... à la place du bloc "garantie" existant ... */
+(function(){
+  const wrap = document.getElementById('gua');
+  if (!wrap) return;
+  const em = wrap.querySelector('em');
+  if (!em) return;
+  const txt = (em.textContent||'').trim();
+  const alt = (em.getAttribute('data-alt') || wrap.getAttribute('data-alt') || '').trim();
+  const isToken = (s)=>/\{\{[^}]+\}\}/.test(s||'');
+  const final = (!txt || isToken(txt)) ? (isToken(alt)? '' : alt) : txt;
+  if (final){ em.textContent = final; wrap.classList.remove('hide'); }
+})();
+
 
       // Témoignages
       (function(){
@@ -421,5 +424,149 @@
       }
     })();
   </script>
+  <!-- ===== FIX PACK — Optin Hardening (ajouter juste avant </body>) ===== -->
+<script>
+(function FIX_OPTIN_HARDENING(){
+  const $  = (s)=>document.querySelector(s);
+  const $$ = (s)=>Array.from(document.querySelectorAll(s));
+  const has = (v)=>!!(v && (""+v).trim() && !/\{\{[^}]+\}\}/.test(""+v));
+
+  if (window.__optinFixApplied) return; window.__optinFixApplied = true;
+
+  /* 1) FORMULAIRE — fallback si vide */
+  (function ensureForm(){
+    const host = $('#form-visible');
+    if (!host) return;
+    const empty = !host.innerHTML || host.innerHTML.trim()==='';
+    if (empty){
+      host.innerHTML = [
+        `<input name="firstname" type="text" placeholder="Votre prénom" required/>`,
+        `<input name="name"       type="text" placeholder="Votre nom" required/>`,
+        `<input name="email"      type="email" placeholder="Votre email" required/>`,
+        `<input name="phone"      type="tel" placeholder="Votre téléphone"/>`,
+        `<textarea name="address" placeholder="Votre adresse"></textarea>`
+      ].join('');
+    }
+  })();
+
+  /* 2) LAYOUT — applique les règles (image gauche + form droite ; B visible si image ET vidéo) */
+  (function layout(){
+    const pairA = $('#pair-a');
+    const blockB= $('#block-b');
+    const argu  = $('#argu-grid');
+
+    const imgA  = $('#img-a');
+    const vidA  = $('#vid-a');
+    const embA  = $('#emb-a');
+    const vidB  = $('#vid-b');
+    const embB  = $('#emb-b');
+
+    const hasImg = !!(imgA && imgA.src && imgA.src.startsWith('http'));
+    const hasVid = !!((vidA && vidA.src && vidA.src.startsWith('http')) || (vidB && vidB.src && vidB.src.startsWith('http')));
+    const hasEmb = !!((embA && has(embA.src)) || (embB && has(embB.src)));
+    const anyVideo = hasVid || hasEmb;
+
+    // reset
+    [vidA,embA,vidB,embB].forEach(el=>{ if(!el) return; el.classList.add('hide'); el.style.display='none'; });
+    blockB && blockB.classList.add('hide');
+    argu && argu.classList.remove('two-cols','center');
+
+    // Aucun média → form centré
+    if (!hasImg && !anyVideo){
+      pairA && (pairA.classList.remove('two-cols'), pairA.classList.add('center'));
+      return;
+    }
+
+    // Image seule → A=image + form ; B caché
+    if (hasImg && !anyVideo){
+      pairA && (pairA.classList.remove('center'), pairA.classList.add('two-cols'));
+      imgA && (imgA.style.display='block');
+      return;
+    }
+
+    // Vidéo seule → A=vidéo + form ; B caché
+    if (!hasImg && anyVideo){
+      pairA && (pairA.classList.remove('center'), pairA.classList.add('two-cols'));
+      if (vidA && vidA.src && vidA.src.startsWith('http')) { vidA.classList.remove('hide'); vidA.style.display='block'; }
+      else if (embA && has(embA.src)) { embA.classList.remove('hide'); embA.style.display='block'; }
+      else if (vidB && vidB.src && vidB.src.startsWith('http')) { vidA.src = vidB.src; vidA.classList.remove('hide'); vidA.style.display='block'; }
+      else if (embB && has(embB.src)) { embA.src = embB.src; embA.classList.remove('hide'); embA.style.display='block'; }
+      return;
+    }
+
+    // Image ET (vidéo|embed) → A=image + B=vidéo
+    if (hasImg && anyVideo){
+      pairA && (pairA.classList.remove('center'), pairA.classList.add('two-cols'));
+      imgA && (imgA.style.display='block');
+      blockB && blockB.classList.remove('hide');
+
+      let mediaB=false;
+      if (vidB && vidB.src && vidB.src.startsWith('http')) { vidB.classList.remove('hide'); vidB.style.display='block'; mediaB=true; }
+      else if (vidA && vidA.src && vidA.src.startsWith('http')) { vidB.src=vidA.src; vidB.classList.remove('hide'); vidB.style.display='block'; mediaB=true; }
+      else if (embB && has(embB.src)) { embB.classList.remove('hide'); embB.style.display='block'; mediaB=true; }
+      else if (embA && has(embA.src)) { embB.src=embA.src; embB.classList.remove('hide'); embB.style.display='block'; mediaB=true; }
+
+      const hasText = ['#prob','#sol','#ben','#bul'].some(sel=> has($(sel)?.textContent||''));
+      if (mediaB && argu){ argu.classList.add(hasText ? 'two-cols' : 'center'); }
+    }
+  })();
+
+  /* 3) GARANTIE / TÉMOIGNAGES / FAQ — affichage forcé si contenu présent (texte, HTML ou JSON) */
+/* ... à la place du bloc "garantie" existant ... */
+(function(){
+  const wrap = document.getElementById('gua');
+  if (!wrap) return;
+  const em = wrap.querySelector('em');
+  if (!em) return;
+  const txt = (em.textContent||'').trim();
+  const alt = (em.getAttribute('data-alt') || wrap.getAttribute('data-alt') || '').trim();
+  const isToken = (s)=>/\{\{[^}]+\}\}/.test(s||'');
+  const final = (!txt || isToken(txt)) ? (isToken(alt)? '' : alt) : txt;
+  if (final){ em.textContent = final; wrap.classList.remove('hide'); }
+})();
+
+  function showFromRaw(wrapSel, bodySel, mapJsonToHtml){
+    const wrap=$(wrapSel), body=$(bodySel); if(!wrap||!body) return;
+    let raw=(body.textContent||'').trim();
+    if (!has(raw)) raw=(body.getAttribute('data-alt')||'').trim();
+    if (!has(raw)) return;
+    let html='';
+    try{
+      const data=JSON.parse(raw);
+      html = mapJsonToHtml(data);
+    }catch(_){ html=raw; }
+    if (has(html)){ body.innerHTML = html; wrap.classList.remove('hide'); }
+  }
+
+  showFromRaw('#testi','#testi-body', arr => Array.isArray(arr)
+    ? arr.map(t=>`<div class="testimonial-item">“${(t&&t.text?t.text:t)||''}”</div>`).join('')
+    : ''
+  );
+
+  showFromRaw('#faq','#faq-body', arr => Array.isArray(arr)
+    ? arr.map(x=>`<div class="faq-item"><strong>${(x&&x.q?x.q:(x&&x.question?x.question:''))}</strong><br/>${(x&&x.a?x.a:(x&&x.answer?x.answer:''))}</div>`).join('')
+    : ''
+  );
+
+  /* 4) TIMER — evergreen / deadline */
+  (function timer(){
+    const t = document.getElementById('timer'); if(!t) return;
+    const evergreen = parseInt('{{timers.evergreenMinutes}}',10)||0;
+    const deadlineISO = '{{timers.deadlineISO}}'.trim();
+    let total=0;
+    if (evergreen>0) total=evergreen*60;
+    else if (deadlineISO && !isNaN(Date.parse(deadlineISO))) total=Math.max(0,Math.floor((new Date(deadlineISO)-new Date())/1000));
+    if (total>0){
+      t.classList.remove('hide');
+      (function tick(){ 
+        if (total<=0){ t.textContent='Offre expirée'; return; }
+        const m=Math.floor(total/60), s=total%60;
+        t.textContent = 'Offre expire dans '+m+'m '+('0'+s).slice(-2)+'s';
+        total--; setTimeout(tick,1000);
+      })();
+    }
+  })();
+})();
+</script>
 </body>
 </html>
