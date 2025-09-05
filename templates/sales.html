@@ -279,38 +279,37 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
  <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const val     = (s)=> (s||"").toString().trim();
-  const isToken = (s)=> /\{\{[^}]+\}\}/.test(s||"");
-  const isHttp  = (u)=>{ try{ const x=new URL((u||'').trim()); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
-  const isRel   = (u)=> /^(\/|\.\/|\.\.\/)/.test((u||"").trim());
-  const goodImg = (u)=> /^data:image/i.test(u||"") || isHttp(u) || isRel(u);
+  const cleanText = (s) => (s||"").toString().trim();
+  const isHttp = (u)=>{ try{ const x=new URL((u||'').trim()); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
+  const isToken = (s)=> /\{\{[^}]+\}\}/.test((s||"").toString());
 
-  // même sources pour les 2 blocs (adapte ici si tu as d'autres champs pour le bloc 2)
-  const mp4Src = val('{{media.videoMp4}}');
-  const embSrc = val('{{media.videoEmbed}}');
+  // Récupération des sources vidéo/embed depuis les champs GPT
+  const mp4Src = cleanText('{{media.videoMp4}}');
+  const embSrc = cleanText('{{media.videoEmbed}}');
 
   function setupMedia(block){
     const wrap = document.getElementById(`media-${block}`);
     if (!wrap) return;
 
-    const img  = document.getElementById(`media-img-${block}`);
-    const vid  = document.getElementById(`media-video-${block}`);
-    const emb  = document.getElementById(`media-emb-${block}`);
+    const img = document.getElementById(`media-img-${block}`);
+    const vid = document.getElementById(`media-video-${block}`);
+    const emb = document.getElementById(`media-emb-${block}`);
 
-    const imgSrc = val(img?.getAttribute('src'));
-
-    const hasImg = !!imgSrc && !isToken(imgSrc) && goodImg(imgSrc);
-    const hasVid = !!mp4Src && !isToken(mp4Src) && (isHttp(mp4Src) || isRel(mp4Src));
-    const hasEmb = !!embSrc && !isToken(embSrc) && (isHttp(embSrc) || isRel(embSrc));
+    const imgSrc = img?.getAttribute('src') || '';
+    const hasImg = !!imgSrc && !isToken(imgSrc) && isHttp(imgSrc);
+    const hasVid = !!mp4Src && !isToken(mp4Src) && isHttp(mp4Src);
+    const hasEmb = !!embSrc && !isToken(embSrc) && isHttp(embSrc);
 
     let shown = false;
 
+    // Gestion des priorités : vidéo > embed > image
     if (hasVid && vid){
       vid.src = mp4Src;
       vid.classList.remove('hide');
       vid.style.display = 'block';
       shown = true;
     } else if (hasEmb && emb){
+      emb.src = embSrc;
       emb.classList.remove('hide');
       emb.style.display = 'block';
       shown = true;
@@ -331,6 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
     wrap.style.display = shown ? 'flex' : 'none';
   }
 
+  // Applique la logique aux deux blocs
   setupMedia(1);
   setupMedia(2);
 });
