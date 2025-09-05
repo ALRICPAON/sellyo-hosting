@@ -6,11 +6,7 @@
   <meta name="description" content="{{seo.metaDescription}}" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root{
-      --bg: {{ui.mainColor}};
-      --btn: {{ui.buttonColor}};
-      --text:#fff;
-    }
+    :root{ --bg: {{ui.mainColor}}; --btn: {{ui.buttonColor}}; --text:#fff }
     *{box-sizing:border-box}
     body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
     main{max-width:1100px;margin:0 auto;padding:24px}
@@ -19,7 +15,6 @@
     #logo{max-height:56px;display:none}
 
     .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
-
     .hero{text-align:center;margin-bottom:16px}
     .hero h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0}
     .hero .sub{opacity:.9;margin:0}
@@ -27,24 +22,22 @@
     .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
     form input,form textarea,form select{width:100%;padding:12px;border-radius:10px;border:0;margin:8px 0;background:#ffffff12;color:#fff}
 
-    .grid{display:grid;gap:18px}
-
-    /* ===== Bloc A : image|vid + formulaire ===== */
+    /* ===== Grids ===== */
     #block-a{max-width:1100px;margin:0 auto}
-    #pair-a{display:grid;gap:12px;grid-template-columns:1fr}
+    #pair-a{display:grid;gap:18px;grid-template-columns:1fr}
     @media(min-width:880px){ #pair-a.two-cols{ grid-template-columns:1fr 1fr; } }
+    #pair-a.center .media-a{display:none}
+    #pair-a.center #form-col{max-width:460px;margin:0 auto}
 
     .media img,.media video{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
     .media iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:12px;display:block}
 
-    /* ===== Bloc B : texte à gauche + vidéo à droite ===== */
-    #argu-grid{display:grid;gap:14px;grid-template-columns:1fr}
-    @media(min-width:880px){ #argu-grid.two-cols{ grid-template-columns:1fr 0.9fr; } }
+    #argu-grid{display:grid;gap:18px;grid-template-columns:1fr}
+    @media(min-width:880px){ #argu-grid.two-cols{ grid-template-columns:1fr 0.95fr; align-items:start } }
+    #argu-grid.center video,#argu-grid.center iframe{max-width:720px;margin:0 auto;display:block}
 
     .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
     .hide{display:none}
-    .text-center{text-align:center}
-    .fun{background:linear-gradient(135deg,#ffffff12,#ffffff08)}
   </style>
 </head>
 <body>
@@ -64,15 +57,15 @@
       <div id="desc">{{copy.productDescription}}</div>
     </section>
 
-    <!-- ===== Bloc A : Image/Video (si pas d’image) + Formulaire ===== -->
+    <!-- ===== Bloc A : Média (gauche) + Formulaire (droite) ===== -->
     <section class="card" id="block-a">
       <div id="pair-a">
-        <!-- Média A (image OU vidéo si pas d’image) -->
-        <div class="media" id="media-a">
-  <img id="img-a" src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
-  <!-- La vidéo n'est créée que si nécessaire -->
-  <video id="vid-a" controls playsinline class="hide" onerror="this.style.display='none'"></video>
-</div>
+        <!-- Média A -->
+        <div class="media media-a" id="media-a">
+          <img   id="img-a" src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
+          <video id="vid-a" src="{{media.videoMp4}}" controls playsinline class="hide" onerror="this.style.display='none'"></video>
+          <iframe id="emb-a" src="{{media.videoEmbed}}" class="hide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
 
         <!-- Formulaire -->
         <div id="form-col">
@@ -90,7 +83,6 @@
             <input type="hidden" id="nextUrl-hidden" name="nextUrl" value="" />
 
             <button type="submit" class="btn" id="cta-btn">{{copy.ctaText}}</button>
-
             <div id="gua" class="hide" style="margin-top:10px"><em>{{copy.guarantee}}</em></div>
           </form>
 
@@ -100,8 +92,8 @@
       </div>
     </section>
 
-    <!-- ===== Bloc B : Texte à gauche + Vidéo à droite ===== -->
-    <section class="card" id="block-b">
+    <!-- ===== Bloc B : Texte (gauche) + Vidéo (droite) — seulement si image ET (vidéo|embed) ===== -->
+    <section class="card hide" id="block-b">
       <div id="argu-grid">
         <div id="argu-left">
           <div id="prob">{{copy.problem}}</div>
@@ -110,7 +102,7 @@
           <div id="bul">{{copy.bullets}}</div>
         </div>
         <div class="media" id="argu-video">
-          <video id="vid-b" src="{{media.videoMp4}}" controls playsinline onerror="this.style.display='none'"></video>
+          <video id="vid-b" src="{{media.videoMp4}}" controls playsinline class="hide" onerror="this.style.display='none'"></video>
           <iframe id="emb-b" src="{{media.videoEmbed}}" class="hide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
       </div>
@@ -133,7 +125,19 @@
   <script type="module" src="https://alricpaon.github.io/sellyo-hosting/js/save-lead-tunnel.js"></script>
 
   <script>
-    // Anti-parasites
+    /* ---------- Helpers ---------- */
+    const cleanText = (s) => (s||"").toString().replace(/^['"\\s]+|['"\\s]+$/g,'').trim();
+    const isHttp = (u)=>{ try{ const x=new URL((u||'').trim()); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
+
+    // Couleur de fond fallback (au cas où token non remplacé)
+    (function(){
+      const v=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
+      if (!v || v==='{{ui.mainColor}}'){
+        document.documentElement.style.setProperty('--bg', '#111');
+      }
+    })();
+
+    // Nettoyage des éventuels ``` fuites
     (function(){
       const kill = (s)=> (s||'').replace(/```html?/gi,'').replace(/```/g,'');
       ['desc','prob','sol','ben','bul','testi','faq'].forEach(id=>{
@@ -141,17 +145,6 @@
         el.innerHTML = kill(el.innerHTML||'');
       });
     })();
-
-    const cleanText = (s) => (s||"").toString().replace(/^['"\\s]+|['"\\s]+$/g,'').trim();
-    const isHttp = (u)=>{ try{ const x=new URL(u); return x.protocol==='http:'||x.protocol==='https:'; }catch(e){ return false; } };
-
-    // Couleur de fond fallback
-    (function(){
-  const v=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
-  if (!v || v==='{{ui.mainColor}}'){
-    document.documentElement.style.setProperty('--bg', '{{ui.mainColor}}'.trim() || '#111');
-  }
-})();
 
     // Logo + blocs vides
     (function(){
@@ -168,15 +161,11 @@
 
     // Form fields: accepte array | objet flags | string "email,name"
     (function(){
-  const host = document.getElementById('form-visible');
-  const raw  = document.getElementById('form-fields-json')?.textContent || '[]';
+      const host = document.getElementById('form-visible');
+      const raw  = document.getElementById('form-fields-json')?.textContent || '[]';
+      const looksLikeToken = /\{\{[^}]+\}\}/.test(raw);
+      if (!raw || looksLikeToken) { host.innerHTML = `<input name="email" type="email" placeholder="Votre email" required/>`; return; }
 
-  // ✅ AJOUT : Fallback si Make n’a pas remplacé {{formFields}}
-  const looksLikeToken = /\{\{[^}]+\}\}/.test(raw);
-  if (!raw || looksLikeToken) {
-    host.innerHTML = `<input name="email" type="email" placeholder="Votre email" required/>`;
-    return;
-  }
       function input(type, name, placeholder, required=true, options=null){
         const req = required ? 'required' : '';
         if (type==='textarea') return `<textarea name="${name}" placeholder="${placeholder}" ${req}></textarea>`;
@@ -196,7 +185,7 @@
       function fromObject(obj){
         const order=['firstname','name','email','phone','address'];
         const keys=order.filter(k=>obj[k]).concat(Object.keys(obj).filter(k=>!order.includes(k) && obj[k]));
-        if (keys.length===0) return '';
+        if (!keys.length) return '';
         return keys.map(k=>{
           const key=k.toLowerCase();
           if (key==='email') return input('email','email','Votre email');
@@ -219,146 +208,140 @@
       else if (fields && typeof fields==='object') html=fromObject(fields);
       else if (typeof fields==='string') html=fromString(fields);
 
-      if (!html) html=input('email','email','Votre email');
+      if (!html) html=`<input name="email" type="email" placeholder="Votre email" required/>`;
       host.innerHTML=html;
     })();
 
-    /* === Layout logique (REMPLACE L'ANCIEN BLOC ENTIER) ===
-   - Bloc A : image ; si pas d'image mais vidéo/iframe en B -> on DÉPLACE le média de B vers A (pas de copie).
-   - Bloc B : si aucun média après déplacement -> texte pleine largeur. */
-(function(){
-  const mediaA   = document.getElementById('media-a');
-  const imgA     = document.getElementById('img-a');
-  const vidA     = document.getElementById('vid-a'); // placeholder (reste caché si on déplace)
-  const pairA    = document.getElementById('pair-a');
+    /* ========== LOGIQUE LAYOUT DÉTERMINISTE ========== */
+    (function(){
+      const pairA   = document.getElementById('pair-a');
+      const mediaA  = document.getElementById('media-a');
+      const imgA    = document.getElementById('img-a');
+      const vidA    = document.getElementById('vid-a');
+      const embA    = document.getElementById('emb-a');
 
-  const vidB     = document.getElementById('vid-b');
-  const embB     = document.getElementById('emb-b');
-  const arguGrid = document.getElementById('argu-grid');
-  const arguWrap = document.getElementById('argu-video');
+      const blockB  = document.getElementById('block-b');
+      const argu    = document.getElementById('argu-grid');
+      const vidB    = document.getElementById('vid-b');
+      const embB    = document.getElementById('emb-b');
+      const arguLeft= document.getElementById('argu-left');
 
-  const isHttp = (u)=>{ try{ const x=new URL((u||'').trim()); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
+      // Présences
+      const hasImg   = isHttp(imgA?.getAttribute('src')||'');
+      const hasVid   = isHttp(vidA?.getAttribute('src')||'') || isHttp(vidB?.getAttribute('src')||'');
+      const hasEmb   = isHttp(embA?.getAttribute('src')||'') || isHttp(embB?.getAttribute('src')||'');
+      const hasAnyVideo = hasVid || hasEmb;
 
-  const imgUrl = (imgA?.getAttribute('src')||'').trim();
-  const hasImg = isHttp(imgUrl);
-  const hasVidB = isHttp(vidB?.getAttribute('src')||'');
-  const hasEmbB = isHttp(embB?.getAttribute('src')||'');
+      const txtProb = cleanText(document.getElementById('prob')?.textContent);
+      const txtSol  = cleanText(document.getElementById('sol')?.textContent);
+      const txtBen  = cleanText(document.getElementById('ben')?.textContent);
+      const txtBul  = cleanText(document.getElementById('bul')?.textContent);
+      const hasText = !!(txtProb || txtSol || txtBen || txtBul);
 
-  // 1) Si pas d'image mais média en B -> DÉPLACER (move) la <video> ou l'<iframe> de B vers A
-  if (!hasImg && (hasVidB || hasEmbB)) {
-    // vider A et masquer l'image
-    if (mediaA) {
-      mediaA.innerHTML = '';
-      if (imgA) imgA.style.display = 'none';
-    }
+      // Réinitialise états
+      [vidA, embA, vidB, embB].forEach(el=>{ if(!el) return; el.classList.add('hide'); el.style.display='none'; });
+      if (mediaA) mediaA.style.display = 'block';
+      if (blockB) blockB.classList.add('hide');
+      if (argu)   argu.classList.remove('two-cols','center');
 
-    if (hasVidB && vidB && mediaA) {
-      mediaA.appendChild(vidB);                 // MOVE
-      vidB.style.display = 'block';
-      vidB.classList.remove('hide');
-    } else if (hasEmbB && embB && mediaA) {
-      mediaA.appendChild(embB);                 // MOVE
-      embB.style.display = 'block';
-      embB.classList.remove('hide');
-    }
+      // 1) Cas "aucun média" => formulaire centré
+      if (!hasImg && !hasAnyVideo) {
+        pairA?.classList.remove('two-cols');
+        pairA?.classList.add('center');
+        return;
+      }
 
-    // masquer totalement le conteneur vidéo de B
-    if (arguWrap) arguWrap.style.display = 'none';
-    if (arguGrid) arguGrid.classList.remove('two-cols');
+      // 2) Cas "image ET (vidéo|embed)" => A=image + B=vidéo
+      if (hasImg && hasAnyVideo) {
+        // Bloc A
+        pairA?.classList.remove('center');
+        pairA?.classList.add('two-cols');
+        if (imgA) imgA.style.display='block';
+        // On masque les vidéos d'A
+        if (vidA){ vidA.removeAttribute('src'); }
+        if (embA){ embA.removeAttribute('src'); }
+        // Bloc B
+        blockB?.classList.remove('hide');
+        let hasMediaB=false;
+        if (isHttp(vidB?.getAttribute('src')||'')) { vidB.classList.remove('hide'); vidB.style.display='block'; hasMediaB=true; }
+        else if (isHttp(vidA?.getAttribute('src')||'')) { /* si Make n’a rempli que A, fallback */ vidB.setAttribute('src', vidA.getAttribute('src')); vidB.classList.remove('hide'); vidB.style.display='block'; hasMediaB=true; }
+        else if (isHttp(embB?.getAttribute('src')||'')) { embB.classList.remove('hide'); embB.style.display='block'; hasMediaB=true; }
+        else if (isHttp(embA?.getAttribute('src')||'')) { embB.setAttribute('src', embA.getAttribute('src')); embB.classList.remove('hide'); embB.style.display='block'; hasMediaB=true; }
 
-    // 2 colonnes pour A (média + formulaire)
-    if (pairA) pairA.classList.add('two-cols');
+        if (hasMediaB && hasText) {
+          argu?.classList.add('two-cols');
+        } else if (hasMediaB && !hasText) {
+          argu?.classList.add('center');
+        } else {
+          // pas de média utilisable en B → on cache B
+          blockB?.classList.add('hide');
+        }
+        return;
+      }
 
-    // placeholder vid-a reste caché
-    if (vidA) { vidA.removeAttribute('src'); vidA.style.display='none'; vidA.classList.add('hide'); }
-    return; // fin cas "déplacement"
-  }
+      // 3) Cas "image seule" => A=image + form ; B caché
+      if (hasImg && !hasAnyVideo) {
+        pairA?.classList.remove('center');
+        pairA?.classList.add('two-cols');
+        if (imgA) imgA.style.display='block';
+        blockB?.classList.add('hide');
+        return;
+      }
 
-  // 2) Cas standard : image en A ?
-  const hasMediaA = hasImg;
-  if (pairA) {
-    if (hasMediaA) { pairA.classList.add('two-cols'); }
-    else { pairA.classList.remove('two-cols'); if (mediaA) mediaA.style.display='none'; }
-  }
+      // 4) Cas "(vidéo|embed) seul(e)" => A=vidéo + form ; B caché
+      if (!hasImg && hasAnyVideo) {
+        pairA?.classList.remove('center');
+        pairA?.classList.add('two-cols');
+        // Affiche priorité MP4 puis embed
+        if (isHttp(vidA?.getAttribute('src')||'')) { vidA.classList.remove('hide'); vidA.style.display='block'; }
+        else if (isHttp(embA?.getAttribute('src')||'')) { embA.classList.remove('hide'); embA.style.display='block'; }
+        else if (isHttp(vidB?.getAttribute('src')||'')) { vidA.setAttribute('src', vidB.getAttribute('src')); vidA.classList.remove('hide'); vidA.style.display='block'; }
+        else if (isHttp(embB?.getAttribute('src')||'')) { embA.setAttribute('src', embB.getAttribute('src')); embA.classList.remove('hide'); embA.style.display='block'; }
+        blockB?.classList.add('hide');
+        return;
+      }
+    })();
 
-  // 3) Bloc B : afficher vidéo mp4 ou, à défaut, l’embed
-  let hasMediaB = false;
-  if (hasVidB && vidB) {
-    vidB.style.display = 'block';
-    vidB.classList.remove('hide');
-    hasMediaB = true;
-  } else if (hasEmbB && embB) {
-    embB.style.display = 'block';
-    embB.classList.remove('hide');
-    hasMediaB = true;
-  } else if (arguWrap) {
-    arguWrap.style.display = 'none';
-  }
+    // CTA / nextHref (optin)
+    (function(){
+      const rawAction = cleanText('{{cta.action}}').toLowerCase();
+      const ctaAction = (rawAction === 'checkout') ? 'paiement'
+                     : (rawAction === 'url')     ? 'lien'
+                     : (rawAction === 'next')    ? 'capture'
+                     : rawAction;
 
-  if (arguGrid) {
-    if (hasMediaB) arguGrid.classList.add('two-cols');
-    else arguGrid.classList.remove('two-cols');
-  }
+      const payLink   = cleanText('{{payment.paymentLink}}');
+      const ctaUrl    = cleanText('{{cta.paymentLink}}');
+      const payOrUrl  = ctaUrl || payLink;
 
-  // placeholder vid-a caché si non utilisé
-  if (vidA && !vidA.getAttribute('src')) {
-    vidA.style.display = 'none';
-    vidA.classList.add('hide');
-  }
-})();
+      const ns1 = cleanText('{{nextHref}}');
+      const ns2 = cleanText('{{flow.nextHref}}');
+      const ns3 = cleanText('{{cta.nextSlug}}');
+      const ns4 = cleanText('{{flow.nextSlug}}');
+      let nextHref = ns1 || ns2 || '';
+      if (nextHref === '.html') nextHref = '';
+      if (!nextHref){
+        const slug = ns3 || ns4;
+        if (slug) nextHref = slug.endsWith('.html') ? slug : (slug + '.html');
+      }
 
-// === Gestion CTA / nextHref (optin) ===
-(function(){
-  const cleanText = (s) => (s||"").toString().trim();
-  const isHttp = (u)=>{ try{ const x=new URL(u); return x.protocol==='http:'||x.protocol==='https:'; }catch(e){ return false; } };
+      const hidden = document.getElementById('nextUrl-hidden');
+      if (hidden) hidden.value = nextHref || '';
 
-  // Valeurs envoyées par submit-tunnel.js : "next" | "url" | "checkout"
-  const rawAction = cleanText('{{cta.action}}').toLowerCase();
+      const form = document.getElementById('lead-form');
+      const link = document.getElementById('cta-link');
+      if (form) form.setAttribute('data-next', nextHref || '');
 
-  // Normalisation interne (compatibilité backward)
-  const ctaAction = (rawAction === 'checkout') ? 'paiement'
-                   : (rawAction === 'url')     ? 'lien'
-                   : (rawAction === 'next')    ? 'capture'
-                   : rawAction;
+      if (ctaAction === 'paiement' || ctaAction === 'lien') {
+        form.classList.add('hide');
+        link.classList.remove('hide');
+        link.href = (ctaAction === 'paiement' && isHttp(payOrUrl)) ? payOrUrl : (nextHref || '#');
+      } else {
+        form.classList.remove('hide');
+        link.classList.add('hide');
+      }
+    })();
 
-  // Récupère les liens potentiels
-  const payLink   = cleanText('{{payment.paymentLink}}'); // lien Stripe officiel
-  const ctaUrl    = cleanText('{{cta.paymentLink}}');     // si un lien est défini côté Make
-  const payOrUrl  = ctaUrl || payLink;
-
-  // Récupère le nextHref → slug HTML de la page suivante
-  const ns1 = cleanText('{{nextHref}}');
-  const ns2 = cleanText('{{flow.nextHref}}');
-  const ns3 = cleanText('{{cta.nextSlug}}');
-  const ns4 = cleanText('{{flow.nextSlug}}');
-
-  let nextHref = ns1 || ns2 || '';
-  if (nextHref === '.html') nextHref = '';
-  if (!nextHref){
-    const slug = ns3 || ns4;
-    if (slug) nextHref = slug.endsWith('.html') ? slug : (slug + '.html');
-  }
-
-  // Injecte le nextHref dans le champ caché pour save-lead-tunnel.js
-  const hidden = document.getElementById('nextUrl-hidden');
-  if (hidden) hidden.value = nextHref || '';
-
-  // On sélectionne les bons boutons
-  const form = document.getElementById('lead-form');
-  const link = document.getElementById('cta-link');
-  if (form) form.setAttribute('data-next', nextHref || '');
-
-  if (ctaAction === 'paiement' || ctaAction === 'lien') {
-    // Cas paiement Stripe OU lien externe
-    form.classList.add('hide');
-    link.classList.remove('hide');
-    link.href = (ctaAction === 'paiement' && isHttp(payOrUrl)) ? payOrUrl : (nextHref || '#');
-  } else {
-    // Cas capture → on montre le formulaire
-    form.classList.remove('hide');
-    link.classList.add('hide');
-  }
-})();
     // Témoignages / FAQ / Timer
     (function(){
       const gua = document.getElementById('gua');
@@ -380,8 +363,7 @@
       if(total>0){ t.classList.remove('hide'); (function tick(){ render(total--); if(total>=0) setTimeout(tick,1000); })(); }
     })();
 
-
-    // Pixels
+    // Pixels (facultatif)
     (function(){
       const fb='{{analytics.fbPixelId}}'.trim();
       if (fb){
