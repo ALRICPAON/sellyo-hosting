@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>test sales1</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    :root { --bg: #450e59; --btn: #0056d6; --text: #fff; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, Roboto, sans-serif; }
+    main { max-width: 900px; margin: 40px auto; padding: 24px; }
+    header { display:flex; justify-content:center; padding: 8px 0 16px; }
+    header img { max-width: 160px; display:block; }
+
+    .hero { text-align:center; margin-bottom: 16px; }
+    .hero h1 { font-size: clamp(28px,3.5vw,42px); margin: 8px 0; }
+    .hero .sub { opacity:.9; margin: 0; }
+
+    .card { background:#ffffff10; border:1px solid #ffffff14; border-radius: 16px; padding: 20px; margin: 16px 0; }
+    .btn { display:inline-block; padding: 14px 20px; background: var(--btn); color:#fff; font-weight: 800; text-decoration: none; border-radius: 12px; margin-top: 12px; transition:.2s ease; text-align:center; }
+    .btn:hover { opacity:.9; }
+    .btn-alt { background:#ffffff22; }
+
+    .stack { display:grid; gap:10px; justify-items:center; }
+    .hide { display:none; }
+  </style>
+</head>
+<body>
+
+  <main>
+    <!-- Logo -->
+    <header>
+        <img id="logo" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-sales1-zi17l%2Flogo-1757085770145?alt=media&token=eab599f4-2dad-4f9d-82b1-ba7bd172b0a1" alt="Logo" onerror="this.style.display='none'" />
+    </header>
+
+    <!-- Hero / Merci -->
+    <section class="hero card">
+      <h1>Merci 🎉</h1>
+      <p class="sub">Votre contenu est prêt.</p>
+    </section>
+
+    <!-- Zone de texte dynamique (thankyouText + productRecap) -->
+    <section id="desc-wrap" class="card">
+      <div id="desc">merci</div>
+      <div id="recap"></div>
+    </section>
+
+    <!-- Téléchargements / Accès en ligne -->
+    <section id="bonus" class="card hide">
+      <div class="stack">
+        <h3>Vos accès</h3>
+        <a id="btn-file" class="btn hide" href="#" download>Télécharger le fichier</a>
+        <a id="btn-url"  class="btn hide" href="#" target="_blank" rel="nofollow noopener">Accéder en ligne</a>
+      </div>
+    </section>
+
+    <!-- Bouton retour au début du tunnel -->
+    <div class="card" style="text-align:center">
+      <a id="homeBtn" href="/" class="btn btn-alt">Revenir au début</a>
+    </div>
+  </main>
+
+  <script>
+    (function(){
+      // Fail-safe couleurs si tokens vides
+      var root=document.documentElement; var get=n=>getComputedStyle(root).getPropertyValue(n).trim();
+      if(!get('--bg')  || get('--bg') ==='{{ui.mainColor}}')  root.style.setProperty('--bg','#0b1220');
+      if(!get('--btn') || get('--btn')==='{{ui.buttonColor}}') root.style.setProperty('--btn','#3b82f6');
+    })();
+
+    const clean = (s)=> (s||"").toString().trim();
+    const isHttp = (u)=>{ try{ const x=new URL(clean(u)); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
+
+    // Anti-parasites : enlève les backticks éventuels
+    (function(){
+      const kill = (s)=> (s||"").replace(/```html?/gi,'').replace(/```/g,'');
+      ['desc','recap'].forEach(id=>{ const el=document.getElementById(id); if(el) el.innerHTML = kill(el.innerHTML||''); });
+      // Cache le bloc desc si totalement vide
+      const d=document.getElementById('desc'); const r=document.getElementById('recap');
+      const wrap=document.getElementById('desc-wrap');
+      const has = (el)=> !!clean(el?.textContent||'');
+      if(!has(d) && !has(r)) wrap?.classList.add('hide');
+    })();
+
+    // Boutons d'accès : affiche fichier ET URL si les deux existent
+    (function(){
+      const file1 = clean('');
+      const file2 = clean('https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-sales1-zi17l%2Fdelivery-product-1757085770760?alt=media&token=f4563052-fb1d-4c94-acba-278e02ca5c57');
+      const url   = clean('https://sellyo.fr/form-tunnel');
+
+      const btnFile = document.getElementById('btn-file');
+      const btnUrl  = document.getElementById('btn-url');
+      const bonus   = document.getElementById('bonus');
+
+      let shown = false;
+      const uniq = new Set();
+
+      // Fichier prioritaire (productUrl peut être un fichier)
+      [file1, file2].forEach(href=>{
+        if(isHttp(href) && !uniq.has(href)){
+          uniq.add(href);
+          if(btnFile){ btnFile.href = href; btnFile.classList.remove('hide'); shown = true; }
+        }
+      });
+
+      // URL en ligne
+      if(isHttp(url) && !uniq.has(url)){
+        uniq.add(url);
+        if(btnUrl){ btnUrl.href = url; btnUrl.classList.remove('hide'); shown = true; }
+      }
+
+      if(shown) bonus.classList.remove('hide');
+    })();
+
+    // Retour à la page 1 du tunnel : calcule automatiquement depuis l'URL courante
+    (function(){
+      try{
+        const a = document.getElementById('homeBtn');
+        if(!a) return;
+        const path = location.pathname; // /sellyo-hosting/tunnels/<uid>/<slug>-p4.html
+        const target = path.replace(/-p(\d+)\.html$/i, '-p1.html');
+        if(target && target!==path){ a.href = target; }
+        else { a.href = './'; }
+      }catch(_){ /* no-op */ }
+    })();
+  </script>
+</body>
+</html>
