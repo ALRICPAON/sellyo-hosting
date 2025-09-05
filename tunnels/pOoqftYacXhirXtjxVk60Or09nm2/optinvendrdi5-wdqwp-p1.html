@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>meta</title>
+  <meta name="description" content="meta" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{ --bg: #61177c; --btn: #00a3d7; --text:#fff }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    main{max-width:1100px;margin:0 auto;padding:24px}
+
+    header{display:flex;justify-content:center;padding:16px 0}
+    #logo{max-height:56px;display:none}
+
+    .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
+    .hero{text-align:center;margin-bottom:16px}
+    .hero h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0}
+    .hero .sub{opacity:.9;margin:0}
+
+    .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
+    form input,form textarea,form select{width:100%;padding:12px;border-radius:10px;border:0;margin:8px 0;background:#ffffff12;color:#fff}
+
+    /* ===== Grids ===== */
+    #block-a{max-width:1100px;margin:0 auto}
+    #pair-a{display:grid;gap:18px;grid-template-columns:1fr}
+    @media(min-width:880px){ #pair-a.two-cols{ grid-template-columns:1fr 1fr; } }
+    #pair-a.center .media-a{display:none}
+    #pair-a.center #form-col{max-width:460px;margin:0 auto}
+
+    .media img,.media video{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
+    .media iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:12px;display:block}
+
+    #argu-grid{display:grid;gap:18px;grid-template-columns:1fr}
+    @media(min-width:880px){ #argu-grid.two-cols{ grid-template-columns:1fr 0.95fr; align-items:start } }
+    #argu-grid.center video,#argu-grid.center iframe{max-width:720px;margin:0 auto;display:block}
+
+    .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
+    .hide{display:none}
+    .muted{opacity:.85}
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <img id="logo" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Foptinvendrdi5-wdqwp%2Flogo-1757080531321?alt=media&token=b36ac718-18ae-429f-9f5c-16e30e3a596e" alt="Logo" onerror="this.style.display='none'">
+    </header>
+
+    <!-- 1) Hero -->
+    <section class="hero" id="hero">
+      <h1 id="title">test</h1>
+      <p class="sub" id="subtitle">test</p>
+    </section>
+
+    <!-- 2) Description -->
+    <section class="card" id="desc-wrap">
+      <div id="desc">description</div>
+    </section>
+
+    <!-- ===== Bloc A : Média (gauche) + Formulaire (droite) ===== -->
+    <section class="card" id="block-a">
+      <div id="pair-a">
+        <!-- Média A -->
+        <div class="media media-a" id="media-a">
+          <img   id="img-a" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Foptinvendrdi5-wdqwp%2Fpage1-hero-1757080541250?alt=media&token=338466a7-5a3a-4519-8060-da429d316699" alt="" onerror="this.style.display='none'">
+          <video id="vid-a" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Foptinvendrdi5-wdqwp%2Fpage1-video-1757080543056?alt=media&token=9e581b2c-c18a-4b38-9570-63de41cb03de" controls playsinline class="hide" onerror="this.style.display='none'"></video>
+          <iframe id="emb-a" src="" class="hide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+
+        <!-- Formulaire -->
+        <div id="form-col">
+          <div id="timer" class="timer hide"></div>
+
+          <script id="form-fields-json" type="application/json">{"name":true,"firstname":true,"email":true,"phone":true,"address":true}</script>
+
+          <form id="lead-form" data-role="capture" data-next="optinvendrdi5-wdqwp-p2.html">
+            <div id="form-visible"></div>
+
+            <input type="hidden" name="userId" value="pOoqftYacXhirXtjxVk60Or09nm2" />
+            <input type="hidden" name="pageSlug" value="optinvendrdi5-wdqwp-p1" />
+            <input type="hidden" name="slug" value="optinvendrdi5-wdqwp-p1" />
+            <input type="hidden" name="type" value="tunnel" />
+            <input type="hidden" id="nextUrl-hidden" name="nextUrl" value="optinvendrdi5-wdqwp-p2.html" />
+
+            <button type="submit" class="btn" id="cta-btn">je test</button>
+            <div id="gua" class="hide muted" style="margin-top:10px"><em data-alt="garantie">garantie</em></div>
+          </form>
+
+          <!-- Remplacement si cta.action = paiement|lien -->
+          <a id="cta-link" class="btn hide" href="#" rel="nofollow noopener">je test</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Bloc B : Texte (gauche) + Vidéo (droite) — seulement si image ET (vidéo|embed) ===== -->
+    <section class="card hide" id="block-b">
+      <div id="argu-grid">
+        <div id="argu-left">
+          <div id="prob" data-alt="probleme">probleme</div>
+          <div id="sol"  data-alt="solution">solution</div>
+          <div id="ben"  data-alt="benefits">benefice</div>
+          <div id="bul"  data-alt="bullets">clé</div>
+        </div>
+        <div class="media" id="argu-video">
+          <video id="vid-b" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Foptinvendrdi5-wdqwp%2Fpage1-video-1757080543056?alt=media&token=9e581b2c-c18a-4b38-9570-63de41cb03de" controls playsinline class="hide" onerror="this.style.display='none'"></video>
+          <iframe id="emb-b" src="" class="hide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- Témoignages + FAQ -->
+    <section class="card hide" id="testi">
+      <h3>Témoignages</h3>
+      <div id="testi-body" data-alt="temoin">temoin</div>
+    </section>
+
+    <section class="card hide" id="faq">
+      <h3>FAQ</h3>
+      <div id="faq-body" data-alt="question">question</div>
+    </section>
+  </main>
+
+  <!-- Firebase + capture -->
+  <script type="module" src="https://alricpaon.github.io/sellyo-hosting/firebase-init.js"></script>
+  <script type="module" src="https://alricpaon.github.io/sellyo-hosting/js/save-lead-tunnel.js"></script>
+
+  <script>
+    /* ---------- Helpers ---------- */
+    const cleanText = (s) => (s||"").toString().replace(/^['"\\s]+|['"\\s]+$/g,'').trim();
+    const isHttp = (u)=>{ try{ const x=new URL((u||'').trim()); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
+    const isToken = (s)=> /\{\{[^}]+\}\}/.test((s||"").toString());
+
+    // Couleur de fond fallback
+    (function(){
+      const v=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
+      if (!v || v==='{{ui.mainColor}}'){ document.documentElement.style.setProperty('--bg', '#111'); }
+    })();
+
+    // Nettoyage de code fences éventuels
+    (function(){
+      const kill = (s)=> (s||'').replace(/```html?/gi,'').replace(/```/g,'');
+      ['desc','prob','sol','ben','bul','testi-body','faq-body'].forEach(id=>{
+        const el=document.getElementById(id); if(!el) return;
+        el.innerHTML = kill(el.innerHTML||'');
+      });
+    })();
+
+    // Logo + hero + description visibles si non vides
+    (function(){
+      const logo=document.getElementById('logo');
+      if (logo && cleanText(logo.getAttribute('src'))) logo.style.display='block';
+
+      const title=document.getElementById('title');
+      const subtitle=document.getElementById('subtitle');
+      const desc=document.getElementById('desc');
+      if (!cleanText(title.textContent) && !cleanText(subtitle.textContent)) document.getElementById('hero').style.display='none';
+      if (!cleanText(subtitle.textContent) || isToken(subtitle.textContent)) subtitle.style.display='none';
+      if (!cleanText(desc.textContent) || isToken(desc.textContent)) document.getElementById('desc-wrap').style.display='none';
+    })();
+
+    // ===== Form fields: array | object | string. Fallback = 5 champs =====
+    (function(){
+      const host = document.getElementById('form-visible');
+      const raw  = document.getElementById('form-fields-json')?.textContent || '[]';
+      const looksLikeToken = isToken(raw);
+      function input(type, name, placeholder, required=true, options=null){
+        const req = required ? 'required' : '';
+        if (type==='textarea') return `<textarea name="${name}" placeholder="${placeholder}" ${req}></textarea>`;
+        if (type==='select' && Array.isArray(options)){
+          const opts=options.map(o=>`<option value="${(o.value??o)}">${(o.label??o)}</option>`).join('');
+          return `<select name="${name}" ${req}>${opts}</select>`;
+        }
+        return `<input name="${name}" type="${type}" placeholder="${placeholder}" ${req}/>`;
+      }
+      function defaults(){
+        return [
+          input('text','firstname','Votre prénom'),
+          input('text','name','Votre nom'),
+          input('email','email','Votre email'),
+          input('tel','phone','Votre téléphone'),
+          input('textarea','address','Votre adresse',false)
+        ].join('');
+      }
+      if (!raw || looksLikeToken){ host.innerHTML = defaults(); return; }
+
+      let fields; try{ fields=JSON.parse(raw); }catch(e){ fields=raw; }
+      let html='';
+      if (Array.isArray(fields)){
+        html = fields.map(f=>{
+          const t=(f.type||'text').toLowerCase(), n=f.name||'field', ph=f.placeholder||f.label||n;
+          return input(t,n,ph,!!f.required,Array.isArray(f.options)?f.options:null);
+        }).join('');
+      } else if (fields && typeof fields==='object'){
+        const order=['firstname','name','email','phone','address'];
+        const keys=order.filter(k=>fields[k]).concat(Object.keys(fields).filter(k=>!order.includes(k) && fields[k]));
+        html = keys.map(k=>{
+          const key=k.toLowerCase();
+          if (key==='email') return input('email','email','Votre email');
+          if (key==='phone') return input('tel','phone','Votre téléphone');
