@@ -6,370 +6,185 @@
   <meta name="description" content="{{seo.metaDescription}}" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root {
-      --bg: {{ui.mainColor}};
-      --btn: {{ui.buttonColor}};
-      --text: #fff;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-    }
-    main {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 32px 16px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-      gap: 32px;
-    }
-    header{display:flex;justify-content:center;align-items:center;padding:16px 0;margin-bottom:32px}
-#logo{max-height:60px;display:none} /* caché tant qu'on n'a pas validé l'URL */
-    .content h1 {
-      font-size: 2rem;
-      margin-bottom: 16px;
-    }
-    .content p { font-size: 1rem; margin-bottom: 12px; }
-    .bullets ul { padding-left: 20px; margin-bottom: 16px; }
-    .bullets li { margin-bottom: 8px; list-style: disc; }
+    :root { --bg: {{ui.mainColor}}; --btn: {{ui.buttonColor}}; --text:#fff }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.5}
+    main{max-width:1100px;margin:0 auto;padding:24px}
 
-   /* Conteneur principal simple */
-main{
-  max-width:1100px;
-  margin:0 auto;
-  padding:32px 16px;
-}
+    header{display:flex;justify-content:center;align-items:center;padding:16px 0}
+    #logo{max-height:56px;display:none}
 
-/* === Blocs alternés texte / média === */
-.sales-block{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  align-items:center;
-  gap:32px;
-  margin-bottom:48px;
-}
+    .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px;margin-bottom:24px}
+    .hero{text-align:center;margin-bottom:16px}
+    .hero h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0}
+    .hero .sub{opacity:.9;margin:0}
 
-.sales-content{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
+    .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer;margin-top:12px}
+    .bullets ul{padding-left:18px;margin:12px 0}
+    .bullets li{margin-bottom:8px;list-style:disc}
 
-/* Zone média (image + vidéo + embed) */
-.sales-media{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  justify-content:center;
-  align-items:center;
-}
-.sales-media img,
-.sales-media video,
-.sales-media iframe{
-  width:100%;
-  max-height:420px;
-  object-fit:cover;
-  border-radius:12px;
-  display:block;
-}
+    .media img,.media video,.media iframe{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
+    .media iframe{aspect-ratio:16/9;border:0}
 
-/* Bloc 2 inversé sur desktop */
-.sales-block.alt{
-  direction:rtl;
-}
-.sales-block.alt .sales-content,
-.sales-block.alt .sales-media{
-  direction:ltr;
-}
+    #pair-a{display:grid;gap:18px;grid-template-columns:1fr}
+    @media(min-width:880px){ #pair-a.two-cols{ grid-template-columns:1fr 1fr; } }
+    #pair-a.center .media-a{display:none}
+    #pair-a.center #text-col{max-width:600px;margin:0 auto;text-align:center}
 
-/* Responsive */
-@media(max-width:880px){
-  .sales-block{
-    grid-template-columns:1fr;
-    text-align:center;
-  }
-  .sales-media{ order:-1; } /* média au-dessus du texte sur mobile */
-}
-.hide{display:none!important;}
-
-    button.cta {
-      background: var(--btn); color: #fff; font-weight: bold;
-      padding: 14px; border: none; border-radius: 6px;
-      font-size: 1.1rem; cursor: pointer; transition: background 0.3s ease;
-      text-align: center; margin-top: 16px;
-    }
-    button.cta:hover { background: #2563eb; }
-
-    .testimonials, .faqs { margin-top: 32px; }
-    .testimonial-item, .faq-item {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 12px; margin-bottom: 10px; border-radius: 6px;
-    }
-    .download-btn {
-      display: inline-block; margin-top: 16px; padding: 12px 16px;
-      background: var(--btn); color: #fff; text-decoration: none;
-      border-radius: 8px; font-weight: bold;
-    }
-    footer { text-align: center; margin-top: 40px; opacity: 0.6; font-size: 0.9rem; }
-
-    /* Timer */
     .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
-    .hide { display: none !important; }
+    .hide{display:none!important}
   </style>
   <script src="https://js.stripe.com/v3"></script>
 </head>
 <body>
-  <header>
-  <img id="logo" src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'">
-</header>
-<script>
-document.addEventListener('DOMContentLoaded', ()=>{
-  const logo = document.getElementById('logo');
-  const src = (logo?.getAttribute('src') || '').trim();
-  // on affiche si on a quelque chose d'exploitable (http/https ou data:)
-  const looksValid = /^(https?:|data:image)/i.test(src);
-  if (logo && looksValid) logo.style.display = 'block';
-});
-</script>
+  <main>
+    <header>
+      <img id="logo" src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'">
+    </header>
 
- <main>
-  <!-- === Bloc 1 : Texte à gauche | Média à droite === -->
-  <section class="sales-block">
-    <div class="sales-content">
-      <h1>{{copy.title}}</h1>
-      <p>{{copy.subtitle}}</p>
-      <p>{{copy.productDescription}}</p>
+    <!-- Section principale Hero -->
+    <section class="hero" id="hero">
+      <h1 id="title">{{copy.title}}</h1>
+      <p class="sub" id="subtitle">{{copy.subtitle}}</p>
+    </section>
 
-      <div class="bullets">
-        {{copy.bullets}}
+    <!-- Bloc principal : Média gauche + Contenu droite -->
+    <section class="card" id="block-a">
+      <div id="pair-a">
+        <!-- Média -->
+        <div class="media media-a" id="media-a">
+          <img id="img-a" src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
+          <video id="vid-a" src="{{media.videoMp4}}" controls playsinline class="hide" onerror="this.style.display='none'"></video>
+          <iframe id="emb-a" src="{{media.videoEmbed}}" class="hide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+
+        <!-- Texte / contenu -->
+        <div id="text-col">
+          <div id="desc">{{copy.productDescription}}</div>
+          <div class="bullets">{{copy.bullets}}</div>
+          <div id="prob">{{copy.problem}}</div>
+          <div id="sol">{{copy.solution}}</div>
+          <div id="ben">{{copy.benefits}}</div>
+          <div id="gua"><em>{{copy.guarantee}}</em></div>
+          <div id="timer" class="timer hide"></div>
+          <button class="btn" id="cta-btn">{{copy.ctaText}}</button>
+        </div>
       </div>
+    </section>
 
-      <div id="prob">{{copy.problem}}</div>
-      <div id="sol">{{copy.solution}}</div>
-      <div id="ben">{{copy.benefits}}</div>
-      <div id="gua"><em>{{copy.guarantee}}</em></div>
+    <!-- Témoignages + FAQ -->
+    <section class="card hide" id="testi">
+      <h3>Témoignages</h3>
+      <div id="testi-body">{{copy.testimonials}}</div>
+    </section>
 
-      <div id="timer" class="timer" style="display:none"></div>
-      <button class="cta">{{copy.ctaText}}</button>
+    <section class="card hide" id="faq">
+      <h3>FAQ</h3>
+      <div id="faq-body">{{copy.faq}}</div>
+    </section>
 
-      {{#if delivery.productFile}}
-        <a class="download-btn" href="{{delivery.productFile}}" download>Télécharger le produit</a>
-      {{else if delivery.productUrl}}
-        <a class="download-btn" href="{{delivery.productUrl}}" target="_blank">Accéder au produit</a>
-      {{/if}}
+    <footer>
+      <p>&copy; {{seo.metaTitle}} - Tous droits réservés.</p>
+    </footer>
+  </main>
 
-      {{#if pageProductFile}}
-        <a class="download-btn" href="{{pageProductFile}}" download>Télécharger le fichier bonus</a>
-      {{else if pageProductUrl}}
-        <a class="download-btn" href="{{pageProductUrl}}" target="_blank">Voir le bonus</a>
-      {{/if}}
-    </div>
-
-    <div class="sales-media" id="media-1">
-      <img   id="media-img-1"  src="{{media.imageUrl}}" alt="Image" onerror="this.style.display='none'">
-      <video id="media-video-1" controls playsinline class="hide" onerror="this.style.display='none'"></video>
-      <iframe id="media-emb-1"  src="{{media.videoEmbed}}" class="hide"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen onerror="this.style.display='none'"></iframe>
-    </div>
-  </section>
-
-  <!-- === Bloc 2 : Média à gauche | Texte à droite === -->
-  <section class="sales-block alt">
-    <div class="sales-media" id="media-2">
-      <img   id="media-img-2"  src="{{media.imageUrl}}" alt="Image" onerror="this.style.display='none'">
-      <video id="media-video-2" controls playsinline class="hide" onerror="this.style.display='none'"></video>
-      <iframe id="media-emb-2"  src="{{media.videoEmbed}}" class="hide"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen onerror="this.style.display='none'"></iframe>
-    </div>
-
-    <div class="sales-content">
-      <h2>{{copy.secondaryTitle}}</h2>
-      <p>{{copy.secondaryDescription}}</p>
-      <div class="testimonials">{{testimonials}}</div>
-      <div class="faqs">{{faqs}}</div>
-      <button class="cta">{{copy.ctaText}}</button>
-    </div>
-  </section>
-</main>
-
-  <footer>
-    <p>&copy; {{seo.metaTitle}} - Tous droits réservés.</p>
-  </footer>
-
- <!-- Gestion dynamique du CTA (robuste) -->
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const btn = document.querySelector("button.cta");
-    if (!btn) return;
+// Logo visible uniquement si src valide
+(function(){
+  const logo=document.getElementById('logo');
+  if(logo && logo.src && /^(https?:|data:image)/.test(logo.src)){
+    logo.style.display='block';
+  }
+})();
 
-    const clean   = (s)=> (s||"").toString().trim();
-    const isToken = (s)=> /\{\{[^}]+\}\}/.test(s||"");
-    const withSlash = (u)=> u ? (u.endsWith('/') ? u : (u + '/')) : "";
+// Gestion dynamique médias (même logique Optin)
+(function(){
+  const pair=document.getElementById('pair-a');
+  const img=document.getElementById('img-a');
+  const vid=document.getElementById('vid-a');
+  const emb=document.getElementById('emb-a');
+  const isHttp=u=>{ try{ return new URL(u).protocol.startsWith('http'); }catch(_){ return false; } };
 
-    // === Données (1.* = global webhook) ===
-    const pk       = clean("{{1.payment.stripePublishableKey}}");
-    const priceId  = clean("{{1.payment.stripePriceId}}");
-    const payLink  = clean("{{1.payment.paymentLink}}");
-    const baseUrl0 = clean("{{1.baseUrl}}");                 // ABSOLU requis par Stripe
-    const baseUrl  = withSlash(baseUrl0);
+  const hasImg=isHttp(img?.src||'');
+  const hasVid=isHttp(vid?.src||'');
+  const hasEmb=isHttp(emb?.src||'');
+  const hasAny=hasVid||hasEmb;
 
-    // Cibles de navigation (merci / suite)
-    const nextSlug = clean("{{133.flow.nextSlug}}");
-    const rawNext  = clean("{{flow.nextHref}}");
-    const nextHref = (!isToken(rawNext) && rawNext) || (nextSlug ? (nextSlug + ".html") : "");
+  [vid,emb].forEach(el=>{ if(el){ el.classList.add('hide'); el.style.display='none'; }});
 
-    // URL directe et download (si jamais)
-    const url      = clean("{{cta.url}}");
-    const download = clean("{{download.url}}");
-
-    // Mode (par défaut, payment)
-    let rawMode = "{{cta.action}}";
-    let mode = (!rawMode || isToken(rawMode)) ? "payment" : clean(rawMode).toLowerCase();
-    if (mode === "checkout") mode = "payment";
-
-    // --- Priorité: Stripe Checkout (pk+priceId+nextHref) > Payment Link > next > url > download ---
-    if (mode === "payment" && pk && priceId && nextHref) {
-      // Stripe Checkout client-only (redirection auto vers la page merci)
-      const stripe = Stripe(pk);
-      btn.onclick = async (e) => {
-        e.preventDefault();
-        const successUrl = baseUrl + nextHref;   // doit être ABSOLU
-        const cancelUrl  = window.location.href;
-        const { error } = await stripe.redirectToCheckout({
-          lineItems: [{ price: priceId, quantity: 1 }],
-          mode: "payment",
-          successUrl,
-          cancelUrl
-        });
-        if (error) console.warn("Stripe error:", error.message);
-      };
-      return;
-    }
-
-    if (mode === "payment" && payLink && !isToken(payLink)) {
-      // Fallback: Payment Link
-      btn.onclick = (e) => { e.preventDefault(); window.location.href = payLink; };
-      return;
-    }
-
-    if (mode === "next" && nextHref) {
-      btn.onclick = (e) => { e.preventDefault(); window.location.href = nextHref; };
-      return;
-    }
-
-    if (mode === "url" && url && !isToken(url)) {
-      btn.onclick = (e) => { e.preventDefault(); window.location.href = url; };
-      return;
-    }
-
-    if (download && !isToken(download)) {
-      btn.onclick = (e) => { e.preventDefault(); window.location.href = download; };
-      return;
-    }
-
-    // Sinon, on cache le bouton
-    btn.style.display = "none";
-  });
-</script>
-
- <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const cleanText = (s) => (s||"").toString().trim();
-  const isHttp = (u)=>{ try{ const x=new URL((u||'').trim()); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
-  const isToken = (s)=> /\{\{[^}]+\}\}/.test((s||"").toString());
-
-  // Récupération des sources vidéo/embed depuis les champs GPT
-  const mp4Src = cleanText('{{media.videoMp4}}');
-  const embSrc = cleanText('{{media.videoEmbed}}');
-
-  function setupMedia(block){
-    const wrap = document.getElementById(`media-${block}`);
-    if (!wrap) return;
-
-    const img = document.getElementById(`media-img-${block}`);
-    const vid = document.getElementById(`media-video-${block}`);
-    const emb = document.getElementById(`media-emb-${block}`);
-
-    const imgSrc = img?.getAttribute('src') || '';
-    const hasImg = !!imgSrc && !isToken(imgSrc) && isHttp(imgSrc);
-    const hasVid = !!mp4Src && !isToken(mp4Src) && isHttp(mp4Src);
-    const hasEmb = !!embSrc && !isToken(embSrc) && isHttp(embSrc);
-
-    let shown = false;
-
-    // Gestion des priorités : vidéo > embed > image
-    if (hasVid && vid){
-      vid.src = mp4Src;
-      vid.classList.remove('hide');
-      vid.style.display = 'block';
-      shown = true;
-    } else if (hasEmb && emb){
-      emb.src = embSrc;
-      emb.classList.remove('hide');
-      emb.style.display = 'block';
-      shown = true;
-    } else {
-      if (vid) { vid.classList.add('hide'); vid.style.display='none'; }
-      if (emb) { emb.classList.add('hide'); emb.style.display='none'; }
-    }
-
-    if (hasImg && img){
-      img.classList.remove('hide');
-      img.style.display = 'block';
-      shown = true;
-    } else if (img){
-      img.classList.add('hide');
-      img.style.display = 'none';
-    }
-
-    wrap.style.display = shown ? 'flex' : 'none';
+  if(!hasImg && !hasAny){
+    pair.classList.add('center');
+    return;
   }
 
-  // Applique la logique aux deux blocs
-  setupMedia(1);
-  setupMedia(2);
+  if(hasImg && hasAny){
+    pair.classList.add('two-cols');
+    img.style.display='block';
+    if(hasVid){ vid.classList.remove('hide'); vid.style.display='block'; }
+    else if(hasEmb){ emb.classList.remove('hide'); emb.style.display='block'; }
+    return;
+  }
+
+  if(hasImg && !hasAny){
+    pair.classList.add('two-cols');
+    img.style.display='block';
+    return;
+  }
+
+  if(!hasImg && hasAny){
+    pair.classList.add('two-cols');
+    if(hasVid){ vid.classList.remove('hide'); vid.style.display='block'; }
+    else if(hasEmb){ emb.classList.remove('hide'); emb.style.display='block'; }
+    return;
+  }
+})();
+</script>
+
+<!-- Stripe : gestion paiement + redirection -->
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+  const btn=document.getElementById("cta-btn");
+  if(!btn)return;
+  const clean=s=>(s||"").toString().trim();
+  const isToken=s=>/\{\{[^}]+\}\}/.test(s||"");
+  const withSlash=u=>u?(u.endsWith('/')?u:(u+'/')):"";
+  const pk=clean("{{1.payment.stripePublishableKey}}");
+  const priceId=clean("{{1.payment.stripePriceId}}");
+  const payLink=clean("{{1.payment.paymentLink}}");
+  const baseUrl=withSlash(clean("{{1.baseUrl}}"));
+  const nextSlug=clean("{{133.flow.nextSlug}}");
+  const rawNext=clean("{{flow.nextHref}}");
+  const nextHref=(!isToken(rawNext)&&rawNext)||(nextSlug?(nextSlug+".html"):"");
+
+  if(pk && priceId && nextHref){
+    const stripe=Stripe(pk);
+    btn.onclick=async(e)=>{
+      e.preventDefault();
+      const successUrl=baseUrl+nextHref;
+      const cancelUrl=window.location.href;
+      const {error}=await stripe.redirectToCheckout({lineItems:[{price:priceId,quantity:1}],mode:"payment",successUrl,cancelUrl});
+      if(error)console.warn("Stripe:",error.message);
+    };
+    return;
+  }
+  if(payLink&&!isToken(payLink))btn.onclick=(e)=>{e.preventDefault();window.location.href=payLink};
+  else if(nextHref)btn.onclick=(e)=>{e.preventDefault();window.location.href=nextHref};
 });
 </script>
 
-  <!-- Timer (evergreen ou deadline ISO) -->
-  <script>
-    (function(){
-      const clean = (s)=> (s||"").toString().trim();
-      const t = document.getElementById('timer');
-      if(!t) return;
-
-      const evergreen = parseInt('{{timers.evergreenMinutes}}',10) || 0;
-      const deadlineISO = clean('{{timers.deadlineISO}}');
-
-      function render(sec){
-        if(sec<=0){ t.textContent='Offre expirée'; return; }
-        const m=Math.floor(sec/60), s=sec%60;
-        t.textContent='Offre expire dans '+m+'m '+('0'+s).slice(-2)+'s';
-      }
-
-      let total=0;
-      if(evergreen>0) total=evergreen*60;
-      else if(deadlineISO && !isNaN(Date.parse(deadlineISO))) {
-        total=Math.max(0,Math.floor((new Date(deadlineISO)-new Date())/1000));
-      }
-
-      if(total>0){
-        t.style.display='block';
-        (function tick(){ render(total--); if(total>=0) setTimeout(tick,1000); })();
-      }
-    })();
-  </script>
-  
-
-  <!-- Scripts Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
-  <script src="./firebase-init.js" type="module"></script>
+<!-- Timer dynamique -->
+<script>
+(function(){
+  const t=document.getElementById('timer');if(!t)return;
+  const clean=s=>(s||"").toString().trim();
+  const evergreen=parseInt('{{timers.evergreenMinutes}}',10)||0;
+  const deadlineISO=clean('{{timers.deadlineISO}}');
+  function render(sec){if(sec<=0){t.textContent='Offre expirée';return;}const m=Math.floor(sec/60),s=sec%60;t.textContent='Offre expire dans '+m+'m '+('0'+s).slice(-2)+'s'}
+  let total=0;
+  if(evergreen>0)total=evergreen*60;
+  else if(deadlineISO&&!isNaN(Date.parse(deadlineISO)))total=Math.max(0,Math.floor((new Date(deadlineISO)-new Date())/1000));
+  if(total>0){t.classList.remove('hide');(function tick(){render(total--);if(total>=0)setTimeout(tick,1000)})();}
+})();
+</script>
 </body>
 </html>
