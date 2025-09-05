@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>vendredi23</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      --bg: #61177c;
+      --btn: #0042aa;
+      --text:#fff;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    main{max-width:1100px;margin:0 auto;padding:24px}
+
+    header{display:flex;justify-content:center;padding:16px 0}
+    #logo{max-height:56px;display:none}
+
+    .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
+
+    .hero{text-align:center;margin-bottom:16px}
+    .hero h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0}
+    .hero .sub{opacity:.9;margin:0}
+
+    .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
+    form input,form textarea,form select{width:100%;padding:12px;border-radius:10px;border:0;margin:8px 0;background:#ffffff12;color:#fff}
+
+    .grid{display:grid;gap:18px}
+
+    /* ===== Bloc A : image|vid + formulaire ===== */
+    #block-a{max-width:1100px;margin:0 auto}
+    #pair-a{display:grid;gap:12px;grid-template-columns:1fr}
+    @media(min-width:880px){ #pair-a.two-cols{ grid-template-columns:1fr 1fr; } }
+
+    .media img,.media video{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
+    .media iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:12px;display:block}
+
+    /* ===== Bloc B : texte à gauche + vidéo à droite ===== */
+    #argu-grid{display:grid;gap:14px;grid-template-columns:1fr}
+    @media(min-width:880px){ #argu-grid.two-cols{ grid-template-columns:1fr 0.9fr; } }
+
+    .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
+    .hide{display:none}
+    .text-center{text-align:center}
+    .fun{background:linear-gradient(135deg,#ffffff12,#ffffff08)}
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <img id="logo" src="" alt="Logo" onerror="this.style.display='none'">
+    </header>
+
+    <!-- 1) Hero -->
+    <section class="hero" id="hero">
+      <h1 id="title">test</h1>
+      <p class="sub" id="subtitle">test</p>
+    </section>
+
+    <!-- 2) Description -->
+    <section class="card" id="desc-wrap">
+      <div id="desc">test</div>
+    </section>
+
+    <!-- ===== Bloc A : Image/Video (si pas d’image) + Formulaire ===== -->
+    <section class="card" id="block-a">
+      <div id="pair-a">
+        <!-- Média A (image OU vidéo si pas d’image) -->
+        <div class="media" id="media-a">
+  <img id="img-a" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fvendredi23-jl7z4%2Fpage1-hero-1757059045024?alt=media&token=9c8b6d79-b790-4583-a22e-524a9cd0b68c" alt="" onerror="this.style.display='none'">
+  <!-- La vidéo n'est créée que si nécessaire -->
+  <video id="vid-a" controls playsinline class="hide" onerror="this.style.display='none'"></video>
+</div>
+
+        <!-- Formulaire -->
+        <div id="form-col">
+          <div id="timer" class="timer hide"></div>
+
+          <script id="form-fields-json" type="application/json">{"name":true,"firstname":true,"email":true,"phone":false,"address":false}</script>
+
+          <form id="lead-form" data-role="capture" data-next="">
+            <div id="form-visible"></div>
+
+            <input type="hidden" name="userId" value="pOoqftYacXhirXtjxVk60Or09nm2" />
+            <input type="hidden" name="pageSlug" value="vendredi23-jl7z4-p1" />
+            <input type="hidden" name="slug" value="vendredi23-jl7z4-p1" />
+            <input type="hidden" name="type" value="tunnel" />
+            <input type="hidden" id="nextUrl-hidden" name="nextUrl" value="" />
+
+            <button type="submit" class="btn" id="cta-btn">je test</button>
+
+            <div id="gua" class="hide" style="margin-top:10px"><em></em></div>
+          </form>
+
+          <!-- Remplacement si cta.action = paiement|lien -->
+          <a id="cta-link" class="btn hide" href="#" rel="nofollow noopener">je test</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Bloc B : Texte à gauche + Vidéo à droite ===== -->
+    <section class="card" id="block-b">
+      <div id="argu-grid">
+        <div id="argu-left">
+          <div id="prob"></div>
+          <div id="sol"></div>
+          <div id="ben"></div>
+          <div id="bul"></div>
+        </div>
+        <div class="media" id="argu-video">
+          <video id="vid-b" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fvendredi23-jl7z4%2Fpage1-video-1757059046159?alt=media&token=1c881ba4-4af2-4026-8f90-a9a3a2a9da48" controls playsinline onerror="this.style.display='none'"></video>
+          <iframe id="emb-b" src="" class="hide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- Témoignages + FAQ -->
+    <section class="card hide" id="testi">
+      <h3>Témoignages</h3>
+      <div></div>
+    </section>
+
+    <section class="card hide" id="faq">
+      <h3>FAQ</h3>
+      <div></div>
+    </section>
+  </main>
+
+  <!-- Firebase + capture -->
+  <script type="module" src="https://alricpaon.github.io/sellyo-hosting/firebase-init.js"></script>
+  <script type="module" src="https://alricpaon.github.io/sellyo-hosting/js/save-lead-tunnel.js"></script>
+
+  <script>
+    // Anti-parasites
+    (function(){
+      const kill = (s)=> (s||'').replace(/```html?/gi,'').replace(/```/g,'');
+      ['desc','prob','sol','ben','bul','testi','faq'].forEach(id=>{
+        const el=document.getElementById(id); if(!el) return;
+        el.innerHTML = kill(el.innerHTML||'');
+      });
+    })();
+
+    const cleanText = (s) => (s||"").toString().replace(/^['"\\s]+|['"\\s]+$/g,'').trim();
+    const isHttp = (u)=>{ try{ const x=new URL(u); return x.protocol==='http:'||x.protocol==='https:'; }catch(e){ return false; } };
+
+    // Couleur de fond fallback
+    (function(){
+  const v=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
+  if (!v || v==='{{ui.mainColor}}'){
+    document.documentElement.style.setProperty('--bg', '{{ui.mainColor}}'.trim() || '#111');
+  }
+})();
+
+    // Logo + blocs vides
+    (function(){
+      const logo=document.getElementById('logo');
+      if (logo && cleanText(logo.getAttribute('src'))) logo.style.display='block';
+
+      const title=document.getElementById('title');
+      const subtitle=document.getElementById('subtitle');
+      const desc=document.getElementById('desc');
+      if (!cleanText(title.textContent) && !cleanText(subtitle.textContent)) document.getElementById('hero').style.display='none';
+      if (!cleanText(subtitle.textContent)) subtitle.style.display='none';
+      if (!cleanText(desc.textContent)) document.getElementById('desc-wrap').style.display='none';
+    })();
+
+    // Form fields: accepte array | objet flags | string "email,name"
+    (function(){
+  const host = document.getElementById('form-visible');
+  const raw  = document.getElementById('form-fields-json')?.textContent || '[]';
+
+  // ✅ AJOUT : Fallback si Make n’a pas remplacé {{formFields}}
+  const looksLikeToken = /\{\{[^}]+\}\}/.test(raw);
+  if (!raw || looksLikeToken) {
+    host.innerHTML = `<input name="email" type="email" placeholder="Votre email" required/>`;
+    return;
+  }
+      function input(type, name, placeholder, required=true, options=null){
+        const req = required ? 'required' : '';
+        if (type==='textarea') return `<textarea name="${name}" placeholder="${placeholder}" ${req}></textarea>`;
+        if (type==='select' && Array.isArray(options)){
+          const opts=options.map(o=>`<option value="${(o.value??o)}">${(o.label??o)}</option>`).join('');
+          return `<select name="${name}" ${req}>${opts}</select>`;
+        }
+        return `<input name="${name}" type="${type}" placeholder="${placeholder}" ${req}/>`;
+      }
+      function fromArray(arr){
+        if (!Array.isArray(arr)) return '';
+        return arr.map(f=>{
+          const t=(f.type||'text').toLowerCase(), n=f.name||'field', ph=f.placeholder||f.label||n;
+          return input(t,n,ph,!!f.required,Array.isArray(f.options)?f.options:null);
+        }).join('');
+      }
+      function fromObject(obj){
+        const order=['firstname','name','email','phone','address'];
+        const keys=order.filter(k=>obj[k]).concat(Object.keys(obj).filter(k=>!order.includes(k) && obj[k]));
+        if (keys.length===0) return '';
+        return keys.map(k=>{
+          const key=k.toLowerCase();
+          if (key==='email') return input('email','email','Votre email');
+          if (key==='phone') return input('tel','phone','Votre téléphone');
+          if (key==='address') return input('textarea','address','Votre adresse');
+          if (key==='firstname') return input('text','firstname','Votre prénom');
+          if (key==='name'||key==='lastname') return input('text','name','Votre nom');
+          return input('text',key,key);
+        }).join('');
+      }
+      function fromString(str){
+        const parts=(str||'').split(',').map(s=>s.trim()).filter(Boolean);
+        if (!parts.length) return '';
+        return fromObject(Object.fromEntries(parts.map(p=>[p,true])));
+      }
+
+      let fields; try{ fields=JSON.parse(raw); }catch(e){ fields=raw; }
+      let html='';
+      if (Array.isArray(fields)) html=fromArray(fields);
+      else if (fields && typeof fields==='object') html=fromObject(fields);
+      else if (typeof fields==='string') html=fromString(fields);
+
+      if (!html) html=input('email','email','Votre email');
+      host.innerHTML=html;
+    })();
+
+    /* === Layout logique (REMPLACE L'ANCIEN BLOC ENTIER) ===
+   - Bloc A : image ; si pas d'image mais vidéo/iframe en B -> on DÉPLACE le média de B vers A (pas de copie).
+   - Bloc B : si aucun média après déplacement -> texte pleine largeur. */
+(function(){
+  const mediaA   = document.getElementById('media-a');
+  const imgA     = document.getElementById('img-a');
+  const vidA     = document.getElementById('vid-a'); // placeholder (reste caché si on déplace)
+  const pairA    = document.getElementById('pair-a');
+
+  const vidB     = document.getElementById('vid-b');
+  const embB     = document.getElementById('emb-b');
+  const arguGrid = document.getElementById('argu-grid');
+  const arguWrap = document.getElementById('argu-video');
+
+  const isHttp = (u)=>{ try
