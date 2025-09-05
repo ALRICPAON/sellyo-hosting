@@ -36,13 +36,29 @@
     .bullets ul { padding-left: 20px; margin-bottom: 16px; }
     .bullets li { margin-bottom: 8px; list-style: disc; }
 
-    .media {
-      display: flex; justify-content: center; align-items: center;
-    }
-    .media img, .media video {
-      max-width: 100%; border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    }
+    /* Empiler vidéo + image comme dans Optin */
+.media{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:12px;
+}
+.media img,.media video{
+  width:100%;
+  max-height:420px;
+  object-fit:cover;
+  border-radius:12px;
+  display:block;
+}
+.media iframe{
+  width:100%;
+  aspect-ratio:16/9;
+  border:0;
+  border-radius:12px;
+  display:block;
+}
+.hide{display:none!important;}
 
     button.cta {
       background: var(--btn); color: #fff; font-weight: bold;
@@ -132,11 +148,11 @@ document.addEventListener('DOMContentLoaded', ()=>{
       </div>
     </div>
 
-  <!-- Colonne droite : image / vidéo / embed (même logique qu'optin) -->
-<div class="media" id="media-a">
-  <img id="img-a" src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
-  <video id="vid-a" controls playsinline class="hide" onerror="this.style.display='none'"></video>
-  <iframe id="emb-a" src="{{media.videoEmbed}}" class="hide"
+  <!-- Colonne droite : image ou vidéo (même logique que Optin) -->
+<div class="media" id="media">
+  <img id="media-img" src="{{media.imageUrl}}" alt="Image" onerror="this.style.display='none'">
+  <video id="media-video" controls playsinline autoplay muted loop class="hide" onerror="this.style.display='none'"></video>
+  <iframe id="media-emb" src="{{media.videoEmbed}}" class="hide"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen onerror="this.style.display='none'"></iframe>
 </div>
@@ -224,57 +240,58 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
   <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const val = (s)=> (s||"").toString().trim();
+  const val     = (s)=> (s||"").toString().trim();
   const isToken = (s)=> /\{\{[^}]+\}\}/.test(s||"");
-  const isHttp = (u)=>{ try{ const x=new URL((u||'').trim()); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
-  const isRel  = (u)=> /^(\/|\.\/|\.\.\/)/.test((u||"").trim()); // accepte les chemins relatifs
+  const isHttp  = (u)=>{ try{ const x=new URL((u||'').trim()); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
+  const isRel   = (u)=> /^(\/|\.\/|\.\.\/)/.test((u||"").trim()); // chemins relatifs OK
 
-  const wrap = document.getElementById('media-a');
-  const img  = document.getElementById('img-a');
-  const vid  = document.getElementById('vid-a');
-  const emb  = document.getElementById('emb-a');
+  const wrap  = document.getElementById('media');
+  const img   = document.getElementById('media-img');
+  const vid   = document.getElementById('media-video');
+  const emb   = document.getElementById('media-emb');
 
   const imgSrc = val(img?.getAttribute('src'));
-  const mp4Src = val("{{media.videoMp4}}");
+  const mp4Src = val('{{media.videoMp4}}');
   const embSrc = val(emb?.getAttribute('src'));
 
   const hasImg = !!imgSrc && !isToken(imgSrc) && (isHttp(imgSrc) || isRel(imgSrc) || /^data:image/i.test(imgSrc));
   const hasVid = !!mp4Src && !isToken(mp4Src) && (isHttp(mp4Src) || isRel(mp4Src));
   const hasEmb = !!embSrc && !isToken(embSrc) && (isHttp(embSrc) || isRel(embSrc));
 
-  // Priorité A=Image, B=Vidéo MP4, C=Embed (comme optin)
-  if (hasImg) {
-    if (img)  { img.style.display='block'; img.classList.remove('hide'); }
-    if (vid)  { vid.removeAttribute('src'); vid.style.display='none'; vid.classList.add('hide'); }
-    if (emb)  { emb.style.display='none';  emb.classList.add('hide'); }
-    wrap.style.display='flex';
-    return;
-  }
+  if (!wrap) return;
 
-  if (hasVid && vid) {
+  // ——— LOGIQUE TYPE OPTIN ———
+  // 1) Vidéo mp4 prioritaire. Si pas de mp4, on tente l'embed. L'image s'affiche en plus si dispo.
+  let showed = false;
+
+  if (hasVid) {
     vid.src = mp4Src;
-    vid.style.display='block';
     vid.classList.remove('hide');
-    if (img) { img.style.display='none'; img.classList.add('hide'); }
-    if (emb) { emb.style.display='none'; emb.classList.add('hide'); }
-    wrap.style.display='flex';
-    return;
-  }
-
-  if (hasEmb && emb) {
-    emb.style.display='block';
+    vid.style.display = 'block';
+    showed = true;
+  } else if (hasEmb) {
     emb.classList.remove('hide');
-    if (img) { img.style.display='none'; img.classList.add('hide'); }
-    if (vid) { vid.removeAttribute('src'); vid.style.display='none'; vid.classList.add('hide'); }
-    wrap.style.display='flex';
-    return;
+    emb.style.display = 'block';
+    showed = true;
+  } else {
+    // ni mp4 ni embed -> on laissera seulement l'image si présente
+    if (vid)   { vid.classList.add('hide');  vid.style.display = 'none'; }
+    if (emb)   { emb.classList.add('hide');  emb.style.display = 'none'; }
   }
 
-  // Rien à afficher
-  if (wrap) wrap.style.display='none';
+  if (hasImg) {
+    img.classList.remove('hide');
+    img.style.display = 'block';
+    showed = true;
+  } else {
+    if (img) { img.classList.add('hide'); img.style.display = 'none'; }
+  }
+
+  // 2) Rien à montrer ? on masque le conteneur
+  if (!showed) wrap.style.display = 'none';
+  else wrap.style.display = 'flex';
 });
 </script>
-
 
   <!-- Timer (evergreen ou deadline ISO) -->
   <script>
