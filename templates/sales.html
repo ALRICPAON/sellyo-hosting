@@ -132,12 +132,13 @@ document.addEventListener('DOMContentLoaded', ()=>{
       </div>
     </div>
 
-   <!-- Colonne droite : image ou vidéo -->
-<div class="media" id="media">
-  <img id="media-img" src="{{media.imageUrl}}" alt="Image" onerror="this.style.display='none'" style="display:none" />
-  <video id="media-video" controls autoplay muted loop class="hide" style="display:none">
-    <source id="media-video-src" src="{{media.videoMp4}}" type="video/mp4">
-  </video>
+  <!-- Colonne droite : image / vidéo / embed (même logique qu'optin) -->
+<div class="media" id="media-a">
+  <img id="img-a" src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
+  <video id="vid-a" controls playsinline class="hide" onerror="this.style.display='none'"></video>
+  <iframe id="emb-a" src="{{media.videoEmbed}}" class="hide"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen onerror="this.style.display='none'"></iframe>
 </div>
   </main>
 
@@ -225,33 +226,52 @@ document.addEventListener('DOMContentLoaded', ()=>{
 document.addEventListener('DOMContentLoaded', () => {
   const val = (s)=> (s||"").toString().trim();
   const isToken = (s)=> /\{\{[^}]+\}\}/.test(s||"");
-  const isImgLike = (u)=> /^(https?:|data:image)/i.test(u||""); // tolère http/https + data:
+  const isHttp = (u)=>{ try{ const x=new URL((u||'').trim()); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
+  const isRel  = (u)=> /^(\/|\.\/|\.\.\/)/.test((u||"").trim()); // accepte les chemins relatifs
 
-  const vidSrc = val("{{media.videoMp4}}");
-  const imgSrc = val("{{media.imageUrl}}");
+  const wrap = document.getElementById('media-a');
+  const img  = document.getElementById('img-a');
+  const vid  = document.getElementById('vid-a');
+  const emb  = document.getElementById('emb-a');
 
-  const wrap   = document.getElementById('media');
-  const img    = document.getElementById('media-img');
-  const video  = document.getElementById('media-video');
-  const source = document.getElementById('media-video-src');
+  const imgSrc = val(img?.getAttribute('src'));
+  const mp4Src = val("{{media.videoMp4}}");
+  const embSrc = val(emb?.getAttribute('src'));
 
-  if (!wrap) return;
+  const hasImg = !!imgSrc && !isToken(imgSrc) && (isHttp(imgSrc) || isRel(imgSrc) || /^data:image/i.test(imgSrc));
+  const hasVid = !!mp4Src && !isToken(mp4Src) && (isHttp(mp4Src) || isRel(mp4Src));
+  const hasEmb = !!embSrc && !isToken(embSrc) && (isHttp(embSrc) || isRel(embSrc));
 
-  const hasVid = !!vidSrc && !isToken(vidSrc);
-  const hasImg = !!imgSrc && !isToken(imgSrc) && isImgLike(imgSrc);
-
-  if (hasVid) {
-    if (source) source.src = vidSrc;
-    if (video) { video.classList.remove('hide'); video.style.display = 'block'; video.load(); }
-    if (img)   { img.classList.add('hide'); img.style.display = 'none'; }
-    wrap.style.display = 'flex';
-  } else if (hasImg) {
-    if (img)   { img.src = imgSrc; img.classList.remove('hide'); img.style.display = 'block'; }
-    if (video) { video.classList.add('hide'); video.style.display = 'none'; }
-    wrap.style.display = 'flex';
-  } else {
-    wrap.style.display = 'none';
+  // Priorité A=Image, B=Vidéo MP4, C=Embed (comme optin)
+  if (hasImg) {
+    if (img)  { img.style.display='block'; img.classList.remove('hide'); }
+    if (vid)  { vid.removeAttribute('src'); vid.style.display='none'; vid.classList.add('hide'); }
+    if (emb)  { emb.style.display='none';  emb.classList.add('hide'); }
+    wrap.style.display='flex';
+    return;
   }
+
+  if (hasVid && vid) {
+    vid.src = mp4Src;
+    vid.style.display='block';
+    vid.classList.remove('hide');
+    if (img) { img.style.display='none'; img.classList.add('hide'); }
+    if (emb) { emb.style.display='none'; emb.classList.add('hide'); }
+    wrap.style.display='flex';
+    return;
+  }
+
+  if (hasEmb && emb) {
+    emb.style.display='block';
+    emb.classList.remove('hide');
+    if (img) { img.style.display='none'; img.classList.add('hide'); }
+    if (vid) { vid.removeAttribute('src'); vid.style.display='none'; vid.classList.add('hide'); }
+    wrap.style.display='flex';
+    return;
+  }
+
+  // Rien à afficher
+  if (wrap) wrap.style.display='none';
 });
 </script>
 
