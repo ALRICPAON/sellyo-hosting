@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>meta</title>
+  <meta name="description" content="meta" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #450e59;
+      --btn: #0056d6;
+      --text: #fff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 16px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 32px;
+    }
+    header{display:flex;justify-content:center;align-items:center;padding:16px 0;margin-bottom:32px}
+#logo{max-height:60px;display:none} /* caché tant qu'on n'a pas validé l'URL */
+    .content h1 {
+      font-size: 2rem;
+      margin-bottom: 16px;
+    }
+    .content p { font-size: 1rem; margin-bottom: 12px; }
+    .bullets ul { padding-left: 20px; margin-bottom: 16px; }
+    .bullets li { margin-bottom: 8px; list-style: disc; }
+
+   /* Conteneur principal simple */
+main{
+  max-width:1100px;
+  margin:0 auto;
+  padding:32px 16px;
+}
+
+/* === Blocs alternés texte / média === */
+.sales-block{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  align-items:center;
+  gap:32px;
+  margin-bottom:48px;
+}
+
+.sales-content{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+/* Zone média (image + vidéo + embed) */
+.sales-media{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  justify-content:center;
+  align-items:center;
+}
+.sales-media img,
+.sales-media video,
+.sales-media iframe{
+  width:100%;
+  max-height:420px;
+  object-fit:cover;
+  border-radius:12px;
+  display:block;
+}
+
+/* Bloc 2 inversé sur desktop */
+.sales-block.alt{
+  direction:rtl;
+}
+.sales-block.alt .sales-content,
+.sales-block.alt .sales-media{
+  direction:ltr;
+}
+
+/* Responsive */
+@media(max-width:880px){
+  .sales-block{
+    grid-template-columns:1fr;
+    text-align:center;
+  }
+  .sales-media{ order:-1; } /* média au-dessus du texte sur mobile */
+}
+.hide{display:none!important;}
+
+    button.cta {
+      background: var(--btn); color: #fff; font-weight: bold;
+      padding: 14px; border: none; border-radius: 6px;
+      font-size: 1.1rem; cursor: pointer; transition: background 0.3s ease;
+      text-align: center; margin-top: 16px;
+    }
+    button.cta:hover { background: #2563eb; }
+
+    .testimonials, .faqs { margin-top: 32px; }
+    .testimonial-item, .faq-item {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 12px; margin-bottom: 10px; border-radius: 6px;
+    }
+    .download-btn {
+      display: inline-block; margin-top: 16px; padding: 12px 16px;
+      background: var(--btn); color: #fff; text-decoration: none;
+      border-radius: 8px; font-weight: bold;
+    }
+    footer { text-align: center; margin-top: 40px; opacity: 0.6; font-size: 0.9rem; }
+
+    /* Timer */
+    .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
+    .hide { display: none !important; }
+  </style>
+  <script src="https://js.stripe.com/v3"></script>
+</head>
+<body>
+  <header>
+  <img id="logo" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-sales1-zi17l%2Flogo-1757085770145?alt=media&token=eab599f4-2dad-4f9d-82b1-ba7bd172b0a1" alt="Logo" onerror="this.style.display='none'">
+</header>
+<script>
+document.addEventListener('DOMContentLoaded', ()=>{
+  const logo = document.getElementById('logo');
+  const src = (logo?.getAttribute('src') || '').trim();
+  // on affiche si on a quelque chose d'exploitable (http/https ou data:)
+  const looksValid = /^(https?:|data:image)/i.test(src);
+  if (logo && looksValid) logo.style.display = 'block';
+});
+</script>
+
+ <main>
+  <!-- === Bloc 1 : Texte à gauche | Média à droite === -->
+  <section class="sales-block">
+    <div class="sales-content">
+      <h1>titre</h1>
+      <p>soustitre</p>
+      <p>description</p>
+
+      <div class="bullets">
+        clé
+      </div>
+
+      <div id="prob">probleme</div>
+      <div id="sol">solution</div>
+      <div id="ben">benefice</div>
+      <div id="gua"><em>garantie</em></div>
+
+      <div id="timer" class="timer" style="display:none"></div>
+      <button class="cta">je vend</button>
+
+        <a class="download-btn" href="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-sales1-zi17l%2Flogo-1757085770145?alt=media&token=eab599f4-2dad-4f9d-82b1-ba7bd172b0a1" target="_blank">Accéder au produit</a>
+
+    </div>
+
+    <div class="sales-media" id="media-1">
+      <img   id="media-img-1"  src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-sales1-zi17l%2Fpage2-hero-1757085772958?alt=media&token=37daddbc-b681-45bb-9f24-923a6e6f7cfa" alt="Image" onerror="this.style.display='none'">
+      <video id="media-video-1" controls playsinline class="hide" onerror="this.style.display='none'"></video>
+      <iframe id="media-emb-1"  src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-sales1-zi17l%2Fpage2-video-1757085774079?alt=media&token=4f938cff-3be7-4ba4-afbf-a26d86a9bebd" class="hide"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen onerror="this.style.display='none'"></iframe>
+    </div>
+  </section>
+
+  <!-- === Bloc 2 : Média à gauche | Texte à droite === -->
+  <section class="sales-block alt">
+    <div class="sales-media" id="media-2">
+      <img   id="media-img-2"  src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-sales1-zi17l%2Fpage2-hero-1757085772958?alt=media&token=37daddbc-b681-45bb-9f24-923a6e6f7cfa" alt="Image" onerror="this.style.display='none'">
+      <video id="media-video-2" controls playsinline class="hide" onerror="this.style.display='none'"></video>
+      <iframe id="media-emb-2"  src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-sales1-zi17l%2Fpage2-video-1757085774079?alt=media&token=4f938cff-3be7-4ba4-afbf-a26d86a9bebd" class="hide"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen onerror="this.style.display='none'"></iframe>
+    </div>
+
+    <div class="sales-content">
+      <h2>{{copy.secondaryTitle}}</h2>
+      <p>{{copy.secondaryDescription}}</p>
+      <div class="testimonials">temoin</div>
+      <div class="faqs">question</div>
+      <button class="cta">je vend</button>
+    </div>
+  </section>
+</main>
+
+  <footer>
+    <p>&copy; meta - Tous droits réservés.</p>
+  </footer>
+
+ <!-- Gestion dynamique du CTA (robuste) -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.querySelector("button.cta");
+    if (!btn) return;
+
+    const clean   = (s)=> (s||"").toString().trim();
+    const isToken = (s)=> /\{\{[^}]+\}\}/.test(s||"");
+    const withSlash = (u)=> u ? (u.endsWith('/') ? u : (u + '/')) : "";
+
+    // === Données (1.* = global webhook) ===
+    const pk       = clean("pk_test_51RVsTD4PUVU3ejcHlK1AAkobBcOKPp3k0l9AHMmq68d7OdSDjyVKLtA9XpMGqiUIeIgtMvhSTUDrMl9rPityqi5u002UMlmdET");
+    const priceId  = clean("price_1Rx31U4PUVU3ejcHtRO3U55v");
+    const payLink  = clean("");
+    const baseUrl0 = clean("https://alricpaon.github.io/sellyo-hosting/tunnels/pOoqftYacXhirXtjxVk60Or09nm2");
+    const baseUrl  = withSlash(baseUrl0);
+
+    // Cibles de navigation (merci / suite)
+    const nextSlug = clean("test-sales1-zi17l-p3");
+    const rawNext  = clean("test-sales1-zi17l-p3.html");
+    const nextHref = (!isToken(rawNext) && rawNext) || (nextSlug ? (nextSlug + ".html") : "");
+
+    // URL directe et download (si jamais)
+    const url      = clean("");
+    const download = clean("https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-sales1-zi17l%2Fdelivery-product-1757085770760?alt=media&token=f4563052-fb1d-4c94-acba-278e02ca5c57");
+
+    // Mode (par défaut, payment)
+    let rawMode = "next";
+    let mode = (!rawMode || isToken(rawMode)) ? "payment" : clean(rawMode).toLowerCase();
+    if (mode === "checkout") mode = "payment";
+
+    // --- Priorité: Stripe Checkout (pk+priceId+nextHref) > Payment Link > next > url > download ---
+    if (mode === "payment" && pk && priceId && nextHref) {
+      // Stripe Checkout client-only (redirection auto vers la page merci)
+      const stripe = Stripe(pk);
+      btn.onclick = async (e) => {
+        e.preventDefault();
+        const successUrl = baseUrl + nextHref;   // doit être ABSOLU
+        const cancelUrl  = window.location.href;
+        const { error } = await stripe.redirectToCheckout({
+          lineItems: [{ price: priceId, quantity: 1 }],
+          mode: "payment",
+          successUrl,
+          cancelUrl
+        });
+        if (error) console.warn("Stripe error:", error.message);
+      };
+      return;
+    }
+
+    if (mode === "payment" && payLink && !isToken(payLink)) {
+      // Fallback: Payment Link
+      btn.onclick = (e) => { e.preventDefault(); window.location.href = payLink; };
+      return;
+    }
+
+    if (mode === "next" && nextHref) {
+      btn.onclick = (e) => { e.preventDefault(); window.location.href = nextHref; };
+      return;
+    }
+
+    if (mode === "url" && url && !isToken(url)) {
+      btn.onclick = (e) => { e.preventDefault(); window.location.href = url; };
+      return;
+    }
+
+    if (download && !isToken(download)) {
+      btn.onclick = (e) => { e.preventDefault(); window.location.href = download; };
+      return;
+    }
+
+    // Sinon, on cache le bouton
+    btn.style.display = "none";
+  });
+</script>
+
+ <script>
+document.addEventListener('DOMContentLoaded', () => {
+  const val     = (s)=> (s||"").toString().trim();
+  const isToken = (s)=> /\{\{[^}]+\}\}/.test(s||"");
+  const isHttp  = (u)=>{ try{ const x=new URL((u||'').trim()); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
+  const isRel   = (u)=> /^(\/|\.\/|\.\.\/)/.test((u||"").trim());
+  const goodImg = (u)=> /^data:image/i.test(u||"") || isHttp(u) || isRel(u);
+
+  // même sources pour les 2 blocs (adapte ici si tu as d'autres champs pour le bloc 2)
+  const mp4Src = val('https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-sales1-zi17l%2Fpage2-video-1757085774079?alt=media&token=4f938cff-3be7-4ba4-afbf-a26d86a9bebd');
+  const embSrc = val('https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Ftest-sales1-zi17l%2Fpage2-video-1757085774079?alt=media&token=4f938cff-3be7-4ba4-afbf-a26d86a9bebd');
+
+  function setupMedia(block){
+    const wrap = document.getElementById(`media-${block}`);
+    if (!wrap) return;
+
+    const img  = document.getElementById(`media-img-${block}`);
+    const vid  = document.getElementById(`media-video-${block}`);
+    const emb  = document.getElementById(`media-emb-${block}`);
+
+    const imgSrc = val(img?.getAttribute('src'));
+
+    const hasImg = !!imgSrc && !isToken(imgSrc) && goodImg(imgSrc);
+    const hasVid = !!mp4Src && !isToken(mp4Src) && (isHttp(mp4Src) || isRel(mp4Src));
+    const hasEmb = !!embSrc && !isToken(embSrc) && (isHttp(embSrc) || isRel(embSrc));
+
+    let shown = false;
+
+    if (hasVid && vid){
+      vid.src = mp4Src;
+      vid.classList.remove('hide');
+      vid.style.display = 'block';
+      shown = true;
+    } else if (hasEmb && emb){
+      emb.classList.remove('hide');
+      emb.style.display = 'block';
+      shown = true;
+    } else {
+      if (vid) { vid.classList.add('hide'); vid.style.display='none'; }
+      if (emb) { emb.classList.add('hide'); emb.style.display='none'; }
+    }
+
+    if (hasImg && img){
+      img.classList.remove('hide');
+      img.style.display = 'block';
+      shown = true;
+    } else if (img){
+      img.classList.add('hide');
+      img.style.display = 'none';
+    }
+
+    wrap.style.display = shown ? 'flex' : 'none';
+  }
+
+  setupMedia(1);
+  setupMedia(2);
+});
+</script>
+
+  <!-- Timer (evergreen ou deadline ISO) -->
+  <script>
+    (function(){
+      const clean = (s)=> (s||"").toString().trim();
+      const t = document.getElementById('timer');
+      if(!t) return;
+
+      const evergreen = parseInt('10',10) || 0;
+      const deadlineISO = clean('');
+
+      function render(sec){
+        if(sec<=0){ t.textContent='Offre expirée'; return; }
+        const m=Math.floor(sec/60), s=sec%60;
+        t.textContent='Offre expire dans '+m+'m '+('0'+s).slice(-2)+'s';
+      }
+
+      let total=0;
+      if(evergreen>0) total=evergreen*60;
+      else if(deadlineISO && !isNaN(Date.parse(deadlineISO))) {
+        total=Math.max(0,Math.floor((new Date(deadlineISO)-new Date())/1000));
+      }
+
+      if(total>0){
+        t.style.display='block';
+        (function tick(){ render(total--); if(total>=0) setTimeout(tick,1000); })();
+      }
+    })();
+  </script>
+  
+
+  <!-- Scripts Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+  <script src="./firebase-init.js" type="module"></script>
+</body>
+</html>
