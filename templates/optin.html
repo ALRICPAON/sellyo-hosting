@@ -38,6 +38,7 @@
 
     .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
     .hide{display:none}
+    .muted{opacity:.85}
   </style>
 </head>
 <body>
@@ -83,7 +84,7 @@
             <input type="hidden" id="nextUrl-hidden" name="nextUrl" value="" />
 
             <button type="submit" class="btn" id="cta-btn">{{copy.ctaText}}</button>
-            <div id="gua" class="hide" style="margin-top:10px"><em>{{copy.guarantee}}</em></div>
+            <div id="gua" class="hide muted" style="margin-top:10px"><em data-alt="{{guarantee}}">{{copy.guarantee}}</em></div>
           </form>
 
           <!-- Remplacement si cta.action = paiement|lien -->
@@ -96,10 +97,10 @@
     <section class="card hide" id="block-b">
       <div id="argu-grid">
         <div id="argu-left">
-          <div id="prob">{{copy.problem}}</div>
-          <div id="sol">{{copy.solution}}</div>
-          <div id="ben">{{copy.benefits}}</div>
-          <div id="bul">{{copy.bullets}}</div>
+          <div id="prob" data-alt="{{problem}}">{{copy.problem}}</div>
+          <div id="sol"  data-alt="{{solution}}">{{copy.solution}}</div>
+          <div id="ben"  data-alt="{{benefits}}">{{copy.benefits}}</div>
+          <div id="bul"  data-alt="{{bullets}}">{{copy.bullets}}</div>
         </div>
         <div class="media" id="argu-video">
           <video id="vid-b" src="{{media.videoMp4}}" controls playsinline class="hide" onerror="this.style.display='none'"></video>
@@ -111,12 +112,12 @@
     <!-- Témoignages + FAQ -->
     <section class="card hide" id="testi">
       <h3>Témoignages</h3>
-      <div>{{copy.testimonials}}</div>
+      <div id="testi-body" data-alt="{{testimonials}}">{{copy.testimonials}}</div>
     </section>
 
     <section class="card hide" id="faq">
       <h3>FAQ</h3>
-      <div>{{copy.faq}}</div>
+      <div id="faq-body" data-alt="{{faq}}">{{copy.faq}}</div>
     </section>
   </main>
 
@@ -128,25 +129,24 @@
     /* ---------- Helpers ---------- */
     const cleanText = (s) => (s||"").toString().replace(/^['"\\s]+|['"\\s]+$/g,'').trim();
     const isHttp = (u)=>{ try{ const x=new URL((u||'').trim()); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
+    const isToken = (s)=> /\{\{[^}]+\}\}/.test((s||"").toString());
 
-    // Couleur de fond fallback (au cas où token non remplacé)
+    // Couleur de fond fallback
     (function(){
       const v=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
-      if (!v || v==='{{ui.mainColor}}'){
-        document.documentElement.style.setProperty('--bg', '#111');
-      }
+      if (!v || v==='{{ui.mainColor}}'){ document.documentElement.style.setProperty('--bg', '#111'); }
     })();
 
-    // Nettoyage des éventuels ``` fuites
+    // Nettoyage de code fences éventuels
     (function(){
       const kill = (s)=> (s||'').replace(/```html?/gi,'').replace(/```/g,'');
-      ['desc','prob','sol','ben','bul','testi','faq'].forEach(id=>{
+      ['desc','prob','sol','ben','bul','testi-body','faq-body'].forEach(id=>{
         const el=document.getElementById(id); if(!el) return;
         el.innerHTML = kill(el.innerHTML||'');
       });
     })();
 
-    // Logo + blocs vides
+    // Logo + hero + description visibles si non vides
     (function(){
       const logo=document.getElementById('logo');
       if (logo && cleanText(logo.getAttribute('src'))) logo.style.display='block';
@@ -155,17 +155,15 @@
       const subtitle=document.getElementById('subtitle');
       const desc=document.getElementById('desc');
       if (!cleanText(title.textContent) && !cleanText(subtitle.textContent)) document.getElementById('hero').style.display='none';
-      if (!cleanText(subtitle.textContent)) subtitle.style.display='none';
-      if (!cleanText(desc.textContent)) document.getElementById('desc-wrap').style.display='none';
+      if (!cleanText(subtitle.textContent) || isToken(subtitle.textContent)) subtitle.style.display='none';
+      if (!cleanText(desc.textContent) || isToken(desc.textContent)) document.getElementById('desc-wrap').style.display='none';
     })();
 
-    // Form fields: accepte array | objet flags | string "email,name"
+    // ===== Form fields: array | object | string. Fallback = 5 champs =====
     (function(){
       const host = document.getElementById('form-visible');
       const raw  = document.getElementById('form-fields-json')?.textContent || '[]';
-      const looksLikeToken = /\{\{[^}]+\}\}/.test(raw);
-      if (!raw || looksLikeToken) { host.innerHTML = `<input name="email" type="email" placeholder="Votre email" required/>`; return; }
-
+      const looksLikeToken = isToken(raw);
       function input(type, name, placeholder, required=true, options=null){
         const req = required ? 'required' : '';
         if (type==='textarea') return `<textarea name="${name}" placeholder="${placeholder}" ${req}></textarea>`;
@@ -175,47 +173,54 @@
         }
         return `<input name="${name}" type="${type}" placeholder="${placeholder}" ${req}/>`;
       }
-      function fromArray(arr){
-        if (!Array.isArray(arr)) return '';
-        return arr.map(f=>{
+      function defaults(){
+        return [
+          input('text','firstname','Votre prénom'),
+          input('text','name','Votre nom'),
+          input('email','email','Votre email'),
+          input('tel','phone','Votre téléphone'),
+          input('textarea','address','Votre adresse',false)
+        ].join('');
+      }
+      if (!raw || looksLikeToken){ host.innerHTML = defaults(); return; }
+
+      let fields; try{ fields=JSON.parse(raw); }catch(e){ fields=raw; }
+      let html='';
+      if (Array.isArray(fields)){
+        html = fields.map(f=>{
           const t=(f.type||'text').toLowerCase(), n=f.name||'field', ph=f.placeholder||f.label||n;
           return input(t,n,ph,!!f.required,Array.isArray(f.options)?f.options:null);
         }).join('');
-      }
-      function fromObject(obj){
+      } else if (fields && typeof fields==='object'){
         const order=['firstname','name','email','phone','address'];
-        const keys=order.filter(k=>obj[k]).concat(Object.keys(obj).filter(k=>!order.includes(k) && obj[k]));
-        if (!keys.length) return '';
-        return keys.map(k=>{
+        const keys=order.filter(k=>fields[k]).concat(Object.keys(fields).filter(k=>!order.includes(k) && fields[k]));
+        html = keys.map(k=>{
           const key=k.toLowerCase();
           if (key==='email') return input('email','email','Votre email');
           if (key==='phone') return input('tel','phone','Votre téléphone');
-          if (key==='address') return input('textarea','address','Votre adresse');
+          if (key==='address') return input('textarea','address','Votre adresse',false);
           if (key==='firstname') return input('text','firstname','Votre prénom');
           if (key==='name'||key==='lastname') return input('text','name','Votre nom');
           return input('text',key,key);
         }).join('');
+      } else if (typeof fields==='string'){
+        const parts=(fields||'').split(',').map(s=>s.trim()).filter(Boolean);
+        html = parts.length ? parts.map(p=>{
+          const key=p.toLowerCase();
+          if (key==='email') return input('email','email','Votre email');
+          if (key==='phone') return input('tel','phone','Votre téléphone');
+          if (key==='address') return input('textarea','address','Votre adresse',false);
+          if (key==='firstname') return input('text','firstname','Votre prénom');
+          if (key==='name'||key==='lastname') return input('text','name','Votre nom');
+          return input('text',key,key);
+        }).join('') : '';
       }
-      function fromString(str){
-        const parts=(str||'').split(',').map(s=>s.trim()).filter(Boolean);
-        if (!parts.length) return '';
-        return fromObject(Object.fromEntries(parts.map(p=>[p,true])));
-      }
-
-      let fields; try{ fields=JSON.parse(raw); }catch(e){ fields=raw; }
-      let html='';
-      if (Array.isArray(fields)) html=fromArray(fields);
-      else if (fields && typeof fields==='object') html=fromObject(fields);
-      else if (typeof fields==='string') html=fromString(fields);
-
-      if (!html) html=`<input name="email" type="email" placeholder="Votre email" required/>`;
-      host.innerHTML=html;
+      host.innerHTML = html || defaults();
     })();
 
     /* ========== LOGIQUE LAYOUT DÉTERMINISTE ========== */
     (function(){
       const pairA   = document.getElementById('pair-a');
-      const mediaA  = document.getElementById('media-a');
       const imgA    = document.getElementById('img-a');
       const vidA    = document.getElementById('vid-a');
       const embA    = document.getElementById('emb-a');
@@ -224,85 +229,72 @@
       const argu    = document.getElementById('argu-grid');
       const vidB    = document.getElementById('vid-b');
       const embB    = document.getElementById('emb-b');
-      const arguLeft= document.getElementById('argu-left');
 
-      // Présences
       const hasImg   = isHttp(imgA?.getAttribute('src')||'');
-      const hasVid   = isHttp(vidA?.getAttribute('src')||'') || isHttp(vidB?.getAttribute('src')||'');
-      const hasEmb   = isHttp(embA?.getAttribute('src')||'') || isHttp(embB?.getAttribute('src')||'');
-      const hasAnyVideo = hasVid || hasEmb;
+      const hasVidA  = isHttp(vidA?.getAttribute('src')||'');
+      const hasEmbA  = isHttp(embA?.getAttribute('src')||'');
+      const hasVidB  = isHttp(vidB?.getAttribute('src')||'');
+      const hasEmbB  = isHttp(embB?.getAttribute('src')||'');
+      const hasAnyVideo = hasVidA || hasEmbA || hasVidB || hasEmbB;
 
-      const txtProb = cleanText(document.getElementById('prob')?.textContent);
-      const txtSol  = cleanText(document.getElementById('sol')?.textContent);
-      const txtBen  = cleanText(document.getElementById('ben')?.textContent);
-      const txtBul  = cleanText(document.getElementById('bul')?.textContent);
-      const hasText = !!(txtProb || txtSol || txtBen || txtBul);
-
-      // Réinitialise états
+      // reset visibilités
       [vidA, embA, vidB, embB].forEach(el=>{ if(!el) return; el.classList.add('hide'); el.style.display='none'; });
-      if (mediaA) mediaA.style.display = 'block';
-      if (blockB) blockB.classList.add('hide');
-      if (argu)   argu.classList.remove('two-cols','center');
+      blockB.classList.add('hide');
+      argu.classList.remove('two-cols','center');
 
-      // 1) Cas "aucun média" => formulaire centré
-      if (!hasImg && !hasAnyVideo) {
-        pairA?.classList.remove('two-cols');
-        pairA?.classList.add('center');
+      // 1) Aucun média => form centré
+      if (!hasImg && !hasAnyVideo){
+        pairA.classList.remove('two-cols');
+        pairA.classList.add('center');
         return;
       }
 
-      // 2) Cas "image ET (vidéo|embed)" => A=image + B=vidéo
-      if (hasImg && hasAnyVideo) {
-        // Bloc A
-        pairA?.classList.remove('center');
-        pairA?.classList.add('two-cols');
-        if (imgA) imgA.style.display='block';
-        // On masque les vidéos d'A
-        if (vidA){ vidA.removeAttribute('src'); }
-        if (embA){ embA.removeAttribute('src'); }
-        // Bloc B
-        blockB?.classList.remove('hide');
+      // 2) Image ET (vidéo|embed) => A=image + B=vidéo
+      if (hasImg && hasAnyVideo){
+        pairA.classList.remove('center');
+        pairA.classList.add('two-cols');
+        imgA.style.display='block';
+        blockB.classList.remove('hide');
         let hasMediaB=false;
-        if (isHttp(vidB?.getAttribute('src')||'')) { vidB.classList.remove('hide'); vidB.style.display='block'; hasMediaB=true; }
-        else if (isHttp(vidA?.getAttribute('src')||'')) { /* si Make n’a rempli que A, fallback */ vidB.setAttribute('src', vidA.getAttribute('src')); vidB.classList.remove('hide'); vidB.style.display='block'; hasMediaB=true; }
-        else if (isHttp(embB?.getAttribute('src')||'')) { embB.classList.remove('hide'); embB.style.display='block'; hasMediaB=true; }
-        else if (isHttp(embA?.getAttribute('src')||'')) { embB.setAttribute('src', embA.getAttribute('src')); embB.classList.remove('hide'); embB.style.display='block'; hasMediaB=true; }
-
-        if (hasMediaB && hasText) {
-          argu?.classList.add('two-cols');
-        } else if (hasMediaB && !hasText) {
-          argu?.classList.add('center');
-        } else {
-          // pas de média utilisable en B → on cache B
-          blockB?.classList.add('hide');
+        if (hasVidB){ vidB.classList.remove('hide'); vidB.style.display='block'; hasMediaB=true; }
+        else if (hasEmbB){ embB.classList.remove('hide'); embB.style.display='block'; hasMediaB=true; }
+        else if (hasVidA){ vidB.setAttribute('src', vidA.getAttribute('src')); vidB.classList.remove('hide'); vidB.style.display='block'; hasMediaB=true; }
+        else if (hasEmbA){ embB.setAttribute('src', embA.getAttribute('src')); embB.classList.remove('hide'); embB.style.display='block'; hasMediaB=true; }
+        if (hasMediaB){
+          // texte présent ?
+          const txtProb = document.getElementById('prob').textContent;
+          const txtSol  = document.getElementById('sol').textContent;
+          const txtBen  = document.getElementById('ben').textContent;
+          const txtBul  = document.getElementById('bul').textContent;
+          const hasText = [txtProb,txtSol,txtBen,txtBul].some(t=> cleanText(t) && !isToken(t));
+          argu.classList.add(hasText ? 'two-cols' : 'center');
         }
         return;
       }
 
-      // 3) Cas "image seule" => A=image + form ; B caché
-      if (hasImg && !hasAnyVideo) {
-        pairA?.classList.remove('center');
-        pairA?.classList.add('two-cols');
-        if (imgA) imgA.style.display='block';
-        blockB?.classList.add('hide');
+      // 3) Image seule => A=image + form ; B caché
+      if (hasImg && !hasAnyVideo){
+        pairA.classList.remove('center');
+        pairA.classList.add('two-cols');
+        imgA.style.display='block';
+        blockB.classList.add('hide');
         return;
       }
 
-      // 4) Cas "(vidéo|embed) seul(e)" => A=vidéo + form ; B caché
-      if (!hasImg && hasAnyVideo) {
-        pairA?.classList.remove('center');
-        pairA?.classList.add('two-cols');
-        // Affiche priorité MP4 puis embed
-        if (isHttp(vidA?.getAttribute('src')||'')) { vidA.classList.remove('hide'); vidA.style.display='block'; }
-        else if (isHttp(embA?.getAttribute('src')||'')) { embA.classList.remove('hide'); embA.style.display='block'; }
-        else if (isHttp(vidB?.getAttribute('src')||'')) { vidA.setAttribute('src', vidB.getAttribute('src')); vidA.classList.remove('hide'); vidA.style.display='block'; }
-        else if (isHttp(embB?.getAttribute('src')||'')) { embA.setAttribute('src', embB.getAttribute('src')); embA.classList.remove('hide'); embA.style.display='block'; }
-        blockB?.classList.add('hide');
+      // 4) (Vidéo|embed) seul(e) => A=vidéo + form ; B caché
+      if (!hasImg && hasAnyVideo){
+        pairA.classList.remove('center');
+        pairA.classList.add('two-cols');
+        if (hasVidA){ vidA.classList.remove('hide'); vidA.style.display='block'; }
+        else if (hasEmbA){ embA.classList.remove('hide'); embA.style.display='block'; }
+        else if (hasVidB){ vidA.setAttribute('src', vidB.getAttribute('src')); vidA.classList.remove('hide'); vidA.style.display='block'; }
+        else if (hasEmbB){ embA.setAttribute('src', embB.getAttribute('src')); embA.classList.remove('hide'); embA.style.display='block'; }
+        blockB.classList.add('hide');
         return;
       }
     })();
 
-    // CTA / nextHref (optin)
+    // ===== Normalisation CTA / nextHref (optin) =====
     (function(){
       const rawAction = cleanText('{{cta.action}}').toLowerCase();
       const ctaAction = (rawAction === 'checkout') ? 'paiement'
@@ -325,9 +317,7 @@
         if (slug) nextHref = slug.endsWith('.html') ? slug : (slug + '.html');
       }
 
-      const hidden = document.getElementById('nextUrl-hidden');
-      if (hidden) hidden.value = nextHref || '';
-
+      const hidden = document.getElementById('nextUrl-hidden'); if (hidden) hidden.value = nextHref || '';
       const form = document.getElementById('lead-form');
       const link = document.getElementById('cta-link');
       if (form) form.setAttribute('data-next', nextHref || '');
@@ -342,25 +332,76 @@
       }
     })();
 
-    // Témoignages / FAQ / Timer
+    // ===== Affichage Garantie / Témoignages / FAQ / Timer =====
     (function(){
-      const gua = document.getElementById('gua');
-      if (gua && cleanText(gua.textContent)) gua.classList.remove('hide');
+      // Garantie
+      (function(){
+        const el = document.querySelector('#gua');
+        if (!el) return;
+        const txt = cleanText(el.textContent);
+        const alt = cleanText(el.getAttribute('data-alt'));
+        const final = (!txt || isToken(txt)) ? (isToken(alt)? '' : alt) : txt;
+        if (final) { el.firstElementChild.textContent = final; el.classList.remove('hide'); }
+      })();
 
-      ['testi','faq'].forEach(id=>{
-        const el=document.getElementById(id); if(!el) return;
-        const inner=el.querySelector('div'); const txt=cleanText(inner? inner.textContent: '');
-        if (txt) el.classList.remove('hide');
-      });
+      // Témoignages
+      (function(){
+        const wrap = document.getElementById('testi');
+        const body = document.getElementById('testi-body');
+        if (!wrap || !body) return;
+        let raw = body.textContent.trim();
+        if (!raw || isToken(raw)) raw = body.getAttribute('data-alt')||'';
+        raw = raw.trim();
+        if (!raw || isToken(raw)) return;
 
-      const evergreen = parseInt('{{timers.evergreenMinutes}}',10)||0;
-      const deadlineISO = cleanText('{{timers.deadlineISO}}');
-      const t = document.getElementById('timer');
-      function render(sec){ if(sec<=0){ t.textContent='Offre expirée'; return; } const m=Math.floor(sec/60), s=sec%60; t.textContent='Offre expire dans '+m+'m '+('0'+s).slice(-2)+'s'; }
-      let total=0;
-      if(evergreen>0) total=evergreen*60;
-      else if(deadlineISO && !isNaN(Date.parse(deadlineISO))) total=Math.max(0,Math.floor((new Date(deadlineISO)-new Date())/1000));
-      if(total>0){ t.classList.remove('hide'); (function tick(){ render(total--); if(total>=0) setTimeout(tick,1000); })(); }
+        let html = '';
+        try {
+          const data = JSON.parse(raw);
+          if (Array.isArray(data)) {
+            html = data.map(t=>`<div class="testimonial-item">“${cleanText(t?.text||t)}”</div>`).join('');
+          }
+        } catch(_){
+          html = raw; // déjà HTML ou texte simple
+        }
+        if (html) { body.innerHTML = html; wrap.classList.remove('hide'); }
+      })();
+
+      // FAQ
+      (function(){
+        const wrap = document.getElementById('faq');
+        const body = document.getElementById('faq-body');
+        if (!wrap || !body) return;
+        let raw = body.textContent.trim();
+        if (!raw || isToken(raw)) raw = body.getAttribute('data-alt')||'';
+        raw = raw.trim();
+        if (!raw || isToken(raw)) return;
+
+        let html = '';
+        try {
+          const data = JSON.parse(raw);
+          if (Array.isArray(data)) {
+            html = data.map(item=>{
+              const q=cleanText(item.q||item.question||''); const a=cleanText(item.a||item.answer||'');
+              return `<div class="faq-item"><strong>${q}</strong><br/>${a}</div>`;
+            }).join('');
+          }
+        } catch(_){
+          html = raw; // déjà HTML
+        }
+        if (html) { body.innerHTML = html; wrap.classList.remove('hide'); }
+      })();
+
+      // Timer
+      (function(){
+        const evergreen = parseInt('{{timers.evergreenMinutes}}',10)||0;
+        const deadlineISO = cleanText('{{timers.deadlineISO}}');
+        const t = document.getElementById('timer');
+        function render(sec){ if(sec<=0){ t.textContent='Offre expirée'; return; } const m=Math.floor(sec/60), s=sec%60; t.textContent='Offre expire dans '+m+'m '+('0'+s).slice(-2)+'s'; }
+        let total=0;
+        if(evergreen>0) total=evergreen*60;
+        else if(deadlineISO && !isNaN(Date.parse(deadlineISO))) total=Math.max(0,Math.floor((new Date(deadlineISO)-new Date())/1000));
+        if(total>0){ t.classList.remove('hide'); (function tick(){ render(total--); if(total>=0) setTimeout(tick,1000); })(); }
+      })();
     })();
 
     // Pixels (facultatif)
