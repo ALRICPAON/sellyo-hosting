@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title></title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{ --bg: #450e59; --btn: #0042aa; --text:#fff }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    main{max-width:1100px;margin:0 auto;padding:24px}
+
+    header{display:flex;justify-content:center;padding:16px 0}
+    #logo{max-height:56px;display:none}
+
+    .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
+    .hero{text-align:center;margin-bottom:16px}
+    .hero h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0}
+    .hero .sub{opacity:.9;margin:0}
+
+    .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
+    form input,form textarea,form select{width:100%;padding:12px;border-radius:10px;border:0;margin:8px 0;background:#ffffff12;color:#fff}
+
+    /* ===== Grids ===== */
+    #block-a{max-width:1100px;margin:0 auto}
+    #pair-a{display:grid;gap:18px;grid-template-columns:1fr}
+    @media(min-width:880px){ #pair-a.two-cols{ grid-template-columns:1fr 1fr; } }
+    #pair-a.center .media-a{display:none}
+    #pair-a.center #form-col{max-width:460px;margin:0 auto}
+
+    .media img,.media video{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
+    .media iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:12px;display:block}
+
+    #argu-grid{display:grid;gap:18px;grid-template-columns:1fr}
+    @media(min-width:880px){ #argu-grid.two-cols{ grid-template-columns:1fr 0.95fr; align-items:start } }
+    #argu-grid.center video,#argu-grid.center iframe{max-width:720px;margin:0 auto;display:block}
+
+    .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
+    .hide{display:none}
+    .muted{opacity:.85}
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <img id="logo" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fcheck1-32yr0%2Flogo-1757515048812?alt=media&token=847c6b08-cc42-43d2-91f8-c3c1ef0bfd99" alt="Logo" onerror="this.style.display='none'">
+    </header>
+
+    <!-- 1) Hero -->
+    <section class="hero" id="hero">
+      <h1 id="title">titre capture</h1>
+      <p class="sub" id="subtitle">sous titre</p>
+    </section>
+
+    <!-- 2) Description -->
+    <section class="card" id="desc-wrap">
+      <div id="desc">description</div>
+    </section>
+
+    <!-- ===== Bloc A : Média (gauche) + Formulaire (droite) ===== -->
+    <section class="card" id="block-a">
+      <div id="pair-a">
+        <!-- Média A -->
+        <div class="media media-a" id="media-a">
+          <img   id="img-a" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fcheck1-32yr0%2Fpage1-hero-1757515050222?alt=media&token=38a63e3e-fb71-4afc-8b13-91093639a77d" alt="" onerror="this.style.display='none'">
+          <video id="vid-a" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fcheck1-32yr0%2Fpage1-video-1757515051252?alt=media&token=98319f8d-713f-49f1-97d0-77b9079c9c00" controls playsinline class="hide" onerror="this.style.display='none'"></video>
+          <iframe id="emb-a" src="" class="hide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+
+        <!-- Formulaire -->
+        <div id="form-col">
+          <div id="timer" class="timer hide"></div>
+
+          <script id="form-fields-json" type="application/json">{"name":true,"firstname":true,"email":true,"phone":false,"address":false}</script>
+
+          <form id="lead-form" data-role="capture" data-next="check1-32yr0-p2.html">
+            <div id="form-visible"></div>
+
+            <input type="hidden" name="userId" value="pOoqftYacXhirXtjxVk60Or09nm2" />
+            <input type="hidden" name="pageSlug" value="check1-32yr0-p1" />
+            <input type="hidden" name="slug" value="check1-32yr0-p1" />
+            <input type="hidden" name="type" value="tunnel" />
+            <input type="hidden" id="nextUrl-hidden" name="nextUrl" value="" />
+
+            <button type="submit" class="btn" id="cta-btn">je m'abonne</button>
+            <div id="gua" class="hide muted" style="margin-top:10px"><em data-alt="">></em></div>
+          </form>
+
+          <!-- Remplacement si cta.action = paiement|lien -->
+          <a id="cta-link" class="btn hide" href="#" rel="nofollow noopener">je m'abonne</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Bloc B : Texte (gauche) + Vidéo (droite) — seulement si image ET (vidéo|embed) ===== -->
+    <section class="card hide" id="block-b">
+      <div id="argu-grid">
+        <div id="argu-left">
+          <div id="prob" data-alt=""></div>
+          <div id="sol"  data-alt=""></div>
+          <div id="ben"  data-alt=""></div>
+          <div id="bul"  data-alt=""></div>
+        </div>
+        <div class="media" id="argu-video">
+          <video id="vid-b" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fcheck1-32yr0%2Fpage1-video-1757515051252?alt=media&token=98319f8d-713f-49f1-97d0-77b9079c9c00" controls playsinline class="hide" onerror="this.style.display='none'"></video>
+          <iframe id="emb-b" src="" class="hide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- Témoignages + FAQ -->
+    <section class="card hide" id="testi">
+      <h3>Témoignages</h3>
+      <div id="testi-body" data-alt=""></div>
+    </section>
+
+    <section class="card hide" id="faq">
+      <h3>FAQ</h3>
+      <div id="faq-body" data-alt=""></div>
+    </section>
+  </main>
+
+  <!-- Firebase + capture -->
+  <script type="module" src="https://alricpaon.github.io/sellyo-hosting/firebase-init.js"></script>
+  <script type="module" src="https://alricpaon.github.io/sellyo-hosting/js/save-lead-tunnel.js"></script>
+
+  <script>
+    /* ---------- Helpers ---------- */
+    const cleanText = (s) => (s||"").toString().replace(/^['"\\s]+|['"\\s]+$/g,'').trim();
+    const isHttp = (u)=>{ try{ const x=new URL((u||'').trim()); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
+    const isToken = (s)=> /\{\{[^}]+\}\}/.test((s||"").toString());
+
+    // Couleur de fond fallback
+    (function(){
+      const v=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
+      if (!v || v==='{{ui.mainColor}}'){ document.documentElement.style.setProperty('--bg', '#111'); }
+    })();
+
+    // Nettoyage de code fences éventuels
+    (function(){
+      const kill = (s)=> (s||'').replace(/```html?/gi,'').replace(/```/g,'');
+      ['desc','prob','sol','ben','bul','testi-body','faq-body'].forEach(id=>{
+        const el=document.getElementById(id); if(!el) return;
+        el.innerHTML = kill(el.innerHTML||'');
+      });
+    })();
+
+    // Logo + hero + description visibles si non vides
+    (function(){
+      const logo=document.getElementById('logo');
+      if (logo && cleanText(logo.getAttribute('src'))) logo.style.display='block';
+
+      const title=document.getElementById('title');
+      const subtitle=document.getElementById('subtitle');
+      const desc=document.getElementById('desc');
+      if (!cleanText(title.textContent) && !cleanText(subtitle.textContent)) document.getElementById('hero').style.display='none';
+      if (!cleanText(subtitle.textContent) || isToken(subtitle.textContent)) subtitle.style.display='none';
+      if (!cleanText(desc.textContent) || isToken(desc.textContent)) document.getElementById('desc-wrap').style.display='none';
+    })();
+
+    // ===== Form fields: array | object | string. Fallback = 5 champs =====
+    (function(){
+      const host = document.getElementById('form-visible');
+      const raw  = document.getElementById('form-fields-json')?.textContent || '[]';
+      const looksLikeToken = isToken(raw);
+      function input(type, name, placeholder, required=true, options=null){
+        const req = required ? 'required' : '';
+        if (type==='textarea') return `<textarea name="${name}" placeholder="${placeholder}" ${req}></textarea>`;
+        if (type==='select' && Array.isArray(options)){
+          const opts=options.map(o=>`<option value="${(o.value??o)}">${(o.label??o)}</option>`).join('');
+          return `<select name="${name}" ${req}>${opts}</select>`;
+        }
+        return `<input name="${name}" type="${type}" placeholder="${placeholder}" ${req}/>`;
+      }
+      function defaults(){
+        return [
+          input('text','firstname','Votre prénom'),
+          input('text','name','Votre nom'),
+          input('email','email','Votre email'),
+          input('tel','phone','Votre téléphone'),
+          input('textarea','address','Votre adresse',false)
+        ].join('');
+      }
+      if (!raw || looksLikeToken){ host.innerHTML = defaults(); return; }
+
+      let fields; try{ fields=JSON.parse(raw); }catch(e){ fields=raw; }
+      let html='';
+      if (Array.isArray(fields)){
+        html = fields.map(f=>{
+          const t=(f.type||'text').toLowerCase(), n=f.name||'field', ph=f.placeholder||f.label||n;
+          return input(t,n,ph,!!f.required,Array.isArray(f.options)?f.options:null);
+        }).join('');
+      } else if (fields && typeof fields==='object'){
+        const order=['firstname','name','email','phone','address'];
+        const keys=order.filter(k=>fields[k]).concat(Object.keys(fields).filter(k=>!order.includes(k) && fields[k]));
+        html = keys.map(k=>{
+          const key=k.toLowerCase();
+          if (key==='email') return input('email','email','Votre email');
+          if (key==='phone') return input('tel','phone','Votre téléphone');
+          if (key==='address') return input('textarea','address','Votre adresse',false);
+          if (key==='firstname') return input('text','firstname','Votre prénom');
+          if (key==='name'||key==='lastname') return input('text','name','Votre nom');
+          return input('text',key,key);
+        }).join('');
+      } else if (typeof fields==='string'){
+        const parts=(fields||'').split(',').map(s=>s.trim()).filter(Boolean);
+        html = parts.length ? parts.map(p=>{
+          const key=p.toLowerCase();
+          if (key==='email') return input('email','email','Votre email');
+          if (key==='phone') return input('tel','phone','Votre téléphone');
+          if (key==='address') return input('textarea','address','Votre adresse',false);
+          if (key==='firstname') return input('text','firstname','Votre prénom');
+          if (key==='name'||key==='lastname') return input('text','name','Votre nom');
+          return input('text',key,key);
+        }).join('') : '';
+      }
+      host.innerHTML = html || defaults();
+    })();
+
+    /* ========== LOGIQUE LAYOUT DÉTERMINISTE ========== */
+    (function(){
+      const pairA   = document.getElementById('pair-a');
+      const imgA    = document.getElementById('img-a');
+      const vidA    = document.getElementById('vid-a');
+      const embA    = document.getElementById('emb-a');
+
+      const blockB  = document.getElementById('block-b');
+      const argu    = document.getElementById('argu-grid');
+      const vidB    = document.getElementById('vid-b');
+      const embB    = document.getElementById('emb-b');
+
+      const hasImg   = isHttp(imgA?.getAttribute('src')||'');
+      const hasVidA  = isHttp(vidA?.getAttribute('src')||'');
+      const hasEmbA  = isHttp(embA?.getAttribute('src')||'');
+      const hasVidB  = isHttp(vidB?.getAttribute('src')||'');
+      const hasEmbB  = isHttp(embB?.getAttribute('src')||'');
+      const hasAnyVideo = hasVidA || hasEmbA || hasVidB || hasEmbB;
+
+      // reset visibilités
+      [vidA, embA, vidB, embB].forEach(el=>{ if(!el) return; el.classList.add('hide'); el.style.display='none'; });
+      blockB.classList.add('hide');
+      argu.classList.remove('two-cols','center');
+
+      // 1) Aucun média => form centré
+      if (!hasImg && !hasAnyVideo){
+        pairA.classList.remove('two-cols');
+        pairA.classList.add('center');
+        return;
+      }
+
+      // 2) Image ET (vidéo|embed) => A=image + B=vidéo
+      if (hasImg && hasAnyVideo){
+        pairA.classList.remove('center');
+        pairA.classList.add('two-cols');
+        imgA.style.display='block';
+        blockB.classList.remove('hide');
+        let hasMediaB=false;
+        if (hasVidB){ vidB.classList.remove('hide'); vidB.style.display='block'; hasMediaB=true; }
+        else if (hasEmbB){ embB.classList.remove('hide'); embB.style.display='block'; hasMediaB=true; }
+        else if (hasVidA){ vidB.setAttribute('src', vidA.getAttribute('src')); vidB.classList.remove('hide'); vidB.style.display='block'; hasMediaB=true; }
+        else if (hasEmbA){ embB.setAttribute('src', embA.getAttribute('src')); embB.classList.remove('hide'); embB.style.display='block'; hasMediaB=true; }
+        if (hasMediaB){
+          // texte présent ?
+          const txtProb = document.getElementById('prob').textContent;
+          const txtSol  = document.getElementById('sol').textContent;
+          const txtBen  = document.getElementById('ben').textContent;
+          const txtBul  = document.getElementById('bul').textContent;
+          const hasText = [txtProb,txtSol,txtBen,txtBul].some(t=> cleanText(t) && !isToken(t));
+          argu.classList.add(hasText ? 'two-cols' : 'center');
+        }
+        return;
+      }
+
+      // 3) Image seule => A=image + form ; B caché
+      if (hasImg && !hasAnyVideo){
+        pairA.classList.remove('center');
+        pairA.classList.add('two-cols');
+        imgA.style.display='block';
+        blockB.classList.add('hide');
+        return;
+      }
+
+      // 4) (Vidéo|embed) seul(e) => A=vidéo + form ; B caché
+      if (!hasImg && hasAnyVideo){
+        pairA.classList.remove('center');
+        pairA.classList.add('two-cols');
+        if (hasVidA){ vidA.classList.remove('hide'); vidA.style.display='block'; }
+        else if (hasEmbA){ embA.classList.remove('hide'); embA.style.display='block'; }
+        else if (hasVidB){ vidA.setAttribute('src', vidB.getAttribute('src')); vidA.classList.remove('hide'); vidA.style.display='block'; }
+        else if (hasEmbB){ embA.setAttribute('src', embB.getAttribute('src')); embA.classList.remove('hide'); embA.style.display='block'; }
+        blockB.classList.add('hide');
+        return;
+      }
+    })();
+
+    // ===== Normalisation CTA / nextHref (optin) =====
+    (function(){
+      const rawAction = cleanText('').toLowerCase();
+      const ctaAction = (rawAction === 'checkout') ? 'paiement'
+                     : (rawAction === 'url')     ? 'lien'
+                     : (rawAction === 'next')    ? 'capture'
+                     : rawAction;
+
+      const payLink   = cleanText('');
+      const ctaUrl    = cleanText('');
+      const payOrUrl  = ctaUrl || payLink;
+
+      const ns1 = cleanText('');
+      const ns2 = cleanText('check1-32yr0-p2.html');
+      const ns3 = cleanText('');
+      const ns4 = cleanText('');
+      let nextHref = ns1 || ns2 || '';
+      if (nextHref === '.html') nextHref = '';
+      if (!nextHref){
+        const slug = ns3 || ns4;
+        if (slug) nextHref = slug.endsWith('.html') ? slug : (slug + '.html');
+      }
+
+      const hidden = document.getElementById('nextUrl-hidden'); if (hidden) hidden.value = nextHref || '';
+      const form = document.getElementById('lead-form');
+      const link = document.getElementById('cta-link');
+      if (form) form.setAttribute('data-next', nextHref || '');
+
+      if (ctaAction === 'paiement' || ctaAction === 'lien') {
+        form.classList.add('hide');
+        link.classList.remove('hide');
+        link.href = (ctaAction === 'paiement' && isHttp(payOrUrl)) ? payOrUrl : (nextHref || '#');
+      } else {
+        form.classList.remove('hide');
+        link.classList.add('hide');
+      }
+    })();
+
+    // ===== Affichage Garantie / Témoignages / FAQ / Timer =====
+/* ... à la place du bloc "garantie" existant ... */
+(function(){
+  const wrap = document.getElementById('gua');
+  if (!wrap) return;
+  const em = wrap.querySelector('em');
+  if (!em) return;
+  const txt = (em.textContent||'').trim();
+  const alt = (em.getAttribute('data-alt') || wrap.getAttribute('data-alt') || '').trim();
+  const isToken = (s)=>/\{\{[^}]+\}\}/.test(s||'');
+  const final = (!txt || isToken(txt)) ? (isToken(alt)? '' : alt) : txt;
+  if (final){ em.textContent = final; wrap.classList.remove('hide'); }
+})();
+
+
+      // Témoignages
+      (function(){
+        const wrap = document.getElementById('testi');
+        const body = document.getElementById('testi-body');
+        if (!wrap || !body) return;
+        let raw = body.textContent.trim();
+        if (!raw || isToken(raw)) raw = body.getAttribute('data-alt')||'';
+        raw = raw.trim();
+        if (!raw || isToken(raw)) return;
+
+        let html = '';
+        try {
+          const data = JSON.parse(raw);
+          if (Array.isArray(data)) {
+            html = data.map(t=>`<div class="testimonial-item">“${cleanText(t?.text||t)}”</div>`).join('');
+          }
+        } catch(_){
+          html = raw; // déjà HTML ou texte simple
+        }
+        if (html) { body.innerHTML = html; wrap.classList.remove('hide'); }
+      })();
+
+      // FAQ
+      (function(){
+        const wrap = document.getElementById('faq');
+        const body = document.getElementById('faq-body');
+        if (!wrap || !body) return;
+        let raw = body.textContent.trim();
+        if (!raw || isToken(raw)) raw = body.getAttribute('data-alt')||'';
+        raw = raw.trim();
+        if (!raw || isToken(raw)) return;
+
+        let html = '';
+        try {
+          const data = JSON.parse(raw);
+          if (Array.isArray(data)) {
+            html = data.map(item=>{
+              const q=cleanText(item.q||item.question||''); const a=cleanText(item.a||item.answer||'');
+              return `<div class="faq-item"><strong>${q}</strong><br/>${a}</div>`;
+            }).join('');
+          }
+        } catch(_){
+          html = raw; // déjà HTML
+        }
+        if (html) { body.innerHTML = html; wrap.classList.remove('hide'); }
+      })();
+
+      // Timer
+      (function(){
+        const evergreen = parseInt('',10)||0;
+        const deadlineISO = cleanText('');
+        const t = document.getElementById('timer');
+        function render(sec){ if(sec<=0){ t.textContent='Offre expirée'; return; } const m=Math.floor(sec/60), s=sec%60; t.textContent='Offre expire dans '+m+'m '+('0'+s).slice(-2)+'s'; }
+        let total=0;
+        if(evergreen>0) total=evergreen*60;
+        else if(deadlineISO && !isNaN(Date.parse(deadlineISO))) total=Math.max(0,Math.floor((new Date(deadlineISO)-new Date())/1000));
+        if(total>0){ t.classList.remove('hide'); (function tick(){ render(total--); if(total>=0) setTimeout(tick,1000); })(); }
+      })();
+    })();
+
+    // Pixels (facultatif)
+    (function(){
+      const fb=''.trim();
+      if (fb){
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+          n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;
+          n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
+          s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script');
+        fbq('init', fb); fbq('track','PageView');
+      }
+      const gtm=''.trim();
+      if (gtm){
+        var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+encodeURIComponent(gtm);
+        document.head.appendChild(s);
+      }
+    })();
+  </script>
+  <!-- ===== FIX PACK — Optin Hardening (ajouter juste avant </body>) ===== -->
+<script>
+(function FIX_OPTIN_HARDENING(){
+  const $  = (s)=>document.querySelector(s);
+  const $$ = (s)=>Array.from(document.querySelectorAll(s));
+  const has = (v)=>!!(v && (""+v).trim() && !/\{\{[^}]+\}\}/.test(""+v));
+
+  if (window.__optinFixApplied) return; window.__optinFixApplied = true;
+
+  /* 1) FORMULAIRE — fallback si vide */
+  (function ensureForm(){
+    const host = $('#form-visible');
+    if (!host) return;
+    const empty = !host.innerHTML || host.innerHTML.trim()==='';
+    if (empty){
+      host.innerHTML = [
+        `<input name="firstname" type="text" placeholder="Votre prénom" required/>`,
+        `<input name="name"       type="text" placeholder="Votre nom" required/>`,
+        `<input name="email"      type="email" placeholder="Votre email" required/>`,
+        `<input name="phone"      type="tel" placeholder="Votre téléphone"/>`,
+        `<textarea name="address" placeholder="Votre adresse"></textarea>`
+      ].join('');
+    }
+  })();
+
+  /* 2) LAYOUT — applique les règles (image gauche + form droite ; B visible si image ET vidéo) */
+  (function layout(){
+    const pairA = $('#pair-a');
+    const blockB= $('#block-b');
+    const argu  = $('#argu-grid');
+
+    const imgA  = $('#img-a');
+    const vidA  = $('#vid-a');
+    const embA  = $('#emb-a');
+    const vidB  = $('#vid-b');
+    const embB  = $('#emb-b');
+
+    const hasImg = !!(imgA && imgA.src && imgA.src.startsWith('http'));
+    const hasVid = !!((vidA && vidA.src && vidA.src.startsWith('http')) || (vidB && vidB.src && vidB.src.startsWith('http')));
+    const hasEmb = !!((embA && has(embA.src)) || (embB && has(embB.src)));
+    const anyVideo = hasVid || hasEmb;
+
+    // reset
+    [vidA,embA,vidB,embB].forEach(el=>{ if(!el) return; el.classList.add('hide'); el.style.display='none'; });
+    blockB && blockB.classList.add('hide');
+    argu && argu.classList.remove('two-cols','center');
+
+    // Aucun média → form centré
+    if (!hasImg && !anyVideo){
+      pairA && (pairA.classList.remove('two-cols'), pairA.classList.add('center'));
+      return;
+    }
+
+    // Image seule → A=image + form ; B caché
+    if (hasImg && !anyVideo){
+      pairA && (pairA.classList.remove('center'), pairA.classList.add('two-cols'));
+      imgA && (imgA.style.display='block');
+      return;
+    }
+
+    // Vidéo seule → A=vidéo + form ; B caché
+    if (!hasImg && anyVideo){
+      pairA && (pairA.classList.remove('center'), pairA.classList.add('two-cols'));
+      if (vidA && vidA.src && vidA.src.startsWith('http')) { vidA.classList.remove('hide'); vidA.style.display='block'; }
+      else if (embA && has(embA.src)) { embA.classList.remove('hide'); embA.style.display='block'; }
+      else if (vidB && vidB.src && vidB.src.startsWith('http')) { vidA.src = vidB.src; vidA.classList.remove('hide'); vidA.style.display='block'; }
+      else if (embB && has(embB.src)) { embA.src = embB.src; embA.classList.remove('hide'); embA.style.display='block'; }
+      return;
+    }
+
+    // Image ET (vidéo|embed) → A=image + B=vidéo
+    if (hasImg && anyVideo){
+      pairA && (pairA.classList.remove('center'), pairA.classList.add('two-cols'));
+      imgA && (imgA.style.display='block');
+      blockB && blockB.classList.remove('hide');
+
+      let mediaB=false;
+      if (vidB && vidB.src && vidB.src.startsWith('http')) { vidB.classList.remove('hide'); vidB.style.display='block'; mediaB=true; }
+      else if (vidA && vidA.src && vidA.src.startsWith('http')) { vidB.src=vidA.src; vidB.classList.remove('hide'); vidB.style.display='block'; mediaB=true; }
+      else if (embB && has(embB.src)) { embB.classList.remove('hide'); embB.style.display='block'; mediaB=true; }
+      else if (embA && has(embA.src)) { embB.src=embA.src; embB.classList.remove('hide'); embB.style.display='block'; mediaB=true; }
+
+      const hasText = ['#prob','#sol','#ben','#bul'].some(sel=> has($(sel)?.textContent||''));
+      if (mediaB && argu){ argu.classList.add(hasText ? 'two-cols' : 'center'); }
+    }
+  })();
+
+  /* 3) GARANTIE / TÉMOIGNAGES / FAQ — affichage forcé si contenu présent (texte, HTML ou JSON) */
+/* ... à la place du bloc "garantie" existant ... */
+(function(){
+  const wrap = document.getElementById('gua');
+  if (!wrap) return;
+  const em = wrap.querySelector('em');
+  if (!em) return;
+  const txt = (em.textContent||'').trim();
+  const alt = (em.getAttribute('data-alt') || wrap.getAttribute('data-alt') || '').trim();
+  const isToken = (s)=>/\{\{[^}]+\}\}/.test(s||'');
+  const final = (!txt || isToken(txt)) ? (isToken(alt)? '' : alt) : txt;
+  if (final){ em.textContent = final; wrap.classList.remove('hide'); }
+})();
+
+  function showFromRaw(wrapSel, bodySel, mapJsonToHtml){
+    const wrap=$(wrapSel), body=$(bodySel); if(!wrap||!body) return;
+    let raw=(body.textContent||'').trim();
+    if (!has(raw)) raw=(body.getAttribute('data-alt')||'').trim();
+    if (!has(raw)) return;
+    let html='';
+    try{
+      const data=JSON.parse(raw);
+      html = mapJsonToHtml(data);
+    }catch(_){ html=raw; }
+    if (has(html)){ body.innerHTML = html; wrap.classList.remove('hide'); }
+  }
+
+  showFromRaw('#testi','#testi-body', arr => Array.isArray(arr)
+    ? arr.map(t=>`<div class="testimonial-item">“${(t&&t.text?t.text:t)||''}”</div>`).join('')
+    : ''
+  );
+
+  showFromRaw('#faq','#faq-body', arr => Array.isArray(arr)
+    ? arr.map(x=>`<div class="faq-item"><strong>${(x&&x.q?x.q:(x&&x.question?x.question:''))}</strong><br/>${(x&&x.a?x.a:(x&&x.answer?x.answer:''))}</div>`).join('')
+    : ''
+  );
+
+  /* 4) TIMER — evergreen / deadline */
+  (function timer(){
+    const t = document.getElementById('timer'); if(!t) return;
+    const evergreen = parseInt('',10)||0;
+    const deadlineISO = ''.trim();
+    let total=0;
+    if (evergreen>0) total=evergreen*60;
+    else if (deadlineISO && !isNaN(Date.parse(deadlineISO))) total=Math.max(0,Math.floor((new Date(deadlineISO)-new Date())/1000));
+    if (total>0){
+      t.classList.remove('hide');
+      (function tick(){ 
+        if (total<=0){ t.textContent='Offre expirée'; return; }
+        const m=Math.floor(total/60), s=total%60;
+        t.textContent = 'Offre expire dans '+m+'m '+('0'+s).slice(-2)+'s';
+        total--; setTimeout(tick,1000);
+      })();
+    }
+  })();
+})();
+</script>
+</body>
+</html>
