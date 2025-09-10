@@ -26,10 +26,15 @@
     .col-2{grid-template-columns:1fr}
     @media(min-width:880px){ .col-2{ grid-template-columns:1fr 1fr; } }
 
-    /* Bloc B : si vidéo détectée → texte à gauche, média à droite */
+   /* Bloc B : si vidéo détectée → texte à gauche, média à droite (CSS Grid Areas) */
 @media (min-width: 880px){
-  #block-b.has-video #arguments { order: 1; }
-  #block-b.has-video #media-b   { order: 2; }
+  #grid-b.video-right{
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "arguments media";
+    align-items: start;
+  }
+  #grid-b.video-right #arguments{ grid-area: arguments; }
+  #grid-b.video-right #media-b  { grid-area: media; }
 }
 
     .media img,.media video{width:100%;max-height:440px;object-fit:cover;border-radius:12px;display:block}
@@ -152,39 +157,58 @@
       if(html){ wrap.innerHTML=html; wrap.classList.remove('hide'); }
     })();
 
-    // ===== Mise en page média / arguments =====
+  
+// ===== Mise en page média / arguments =====
 (function(){
-  const vidB=document.getElementById('vid-b');
-  const embB=document.getElementById('emb-b');
-  const gridB=document.getElementById('grid-b');
-  const args=document.getElementById('arguments');
+  try{
+    const vidB = document.getElementById('vid-b');
+    const embB = document.getElementById('emb-b');
+    const gridB = document.getElementById('grid-b');
+    const args  = document.getElementById('arguments');
+    const blk   = document.getElementById('block-b');
 
-  const mp4=clean('{{media.videoMp4}}');
-  const emb=clean('{{media.videoEmbed}}');
+    // Valeurs issues du templating (si Make a remplacé)
+    const mp4Tpl = clean('{{media.videoMp4}}');
+    const embTpl = clean('{{media.videoEmbed}}');
 
-  const hasVid = !!mp4 && !isToken(mp4) && isHttp(mp4);
-  const hasEmb = !!emb && !isToken(emb) && isHttp(emb);
+    // Fallback DOM : si le templating n'a pas remplacé, on lit l'attribut déjà dans le HTML
+    const mp4Dom = (vidB?.getAttribute('src') || '').trim();
+    const embDom = (embB?.getAttribute('src') || '').trim();
 
-  // Reset
-  [vidB,embB].forEach(el=>{ if(!el) return; el.classList.add('hide'); el.style.display='none'; });
+    const mp4 = (!isToken(mp4Tpl) && mp4Tpl) ? mp4Tpl : mp4Dom;
+    const emb = (!isToken(embTpl) && embTpl) ? embTpl : embDom;
 
-  if(hasVid){
-    vidB.src=mp4;
-    vidB.classList.remove('hide');
-    vidB.style.display='block';
-    document.getElementById('block-b')?.classList.add('has-video');   // ⬅ AJOUT ICI
-  }
-  else if(hasEmb){
-    embB.classList.remove('hide');
-    embB.style.display='block';
-    document.getElementById('block-b')?.classList.add('has-video');   // ⬅ AJOUT ICI
-  }
-  else {
-    // Pas de vidéo → mettre les arguments en pleine largeur
-    gridB.classList.remove('col-2');
-    gridB.style.gridTemplateColumns='1fr';
-    args.style.maxWidth='760px';
-    args.style.margin='0 auto';
+    const hasVid = !!mp4 && isHttp(mp4);
+    const hasEmb = !!emb && isHttp(emb);
+
+    // Reset d’affichage
+    [vidB, embB].forEach(el => {
+      if(!el) return;
+      el.classList.add('hide');
+      el.style.display = 'none';
+    });
+
+    if(hasVid){
+      if(vidB){ vidB.src = mp4; vidB.classList.remove('hide'); vidB.style.display = 'block'; }
+      gridB?.classList.add('video-right');   // → Vidéo à droite, texte à gauche
+      blk?.classList.add('has-video');       // (ok si tu veux garder cette classe)
+      return;
+    }
+
+    if(hasEmb){
+      if(embB){ embB.src = emb; embB.classList.remove('hide'); embB.style.display = 'block'; }
+      gridB?.classList.add('video-right');   // → Vidéo à droite, texte à gauche
+      blk?.classList.add('has-video');
+      return;
+    }
+
+    // Pas de vidéo : arguments pleine largeur (comme avant)
+    gridB?.classList.remove('col-2');
+    if(gridB) gridB.style.gridTemplateColumns = '1fr';
+    if(args){ args.style.maxWidth = '760px'; args.style.margin = '0 auto'; }
+  }catch(e){
+    console.warn('Bloc B error:', e);
+    // En cas d’erreur, on n’arrête pas le reste du script (témoignages/FAQ).
   }
 })();
 
