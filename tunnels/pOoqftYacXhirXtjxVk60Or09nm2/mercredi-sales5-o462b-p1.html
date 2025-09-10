@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>mercredi sales5</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { --bg: #2c1376; --btn: #9929bd; --text:#fff }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.5}
+    :root{ --bg: #2c1376; --btn: #9929bd; --text:#fff }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.45}
+    main{max-width:1100px;margin:0 auto;padding:24px}
+
+    header{display:flex;justify-content:center;align-items:center;padding:16px 0}
+    #logo{max-height:56px;display:none}
+
+    .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px;margin-bottom:24px}
+    .hero{text-align:center;margin-bottom:16px}
+    .hero h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0}
+    .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
+    .hero{text-align:left;margin-bottom:18px}
+    .hero h1{font-size:clamp(26px,3.4vw,40px);margin:6px 0}
+    .hero .sub{opacity:.9;margin:0}
+
+    .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer;margin-top:12px}
+    .bullets ul{padding-left:18px;margin:12px 0}
+    .bullets li{margin-bottom:8px;list-style:disc}
+    .btn,button.cta{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
+
+    .media img,.media video,.media iframe{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
+    .media iframe{aspect-ratio:16/9;border:0}
+    /* === Grilles === */
+    .grid{display:grid;gap:18px}
+    .col-2{grid-template-columns:1fr}
+    @media(min-width:880px){ .col-2{ grid-template-columns:1fr 1fr; } }
+
+    #pair-a{display:grid;gap:18px;grid-template-columns:1fr}
+    @media(min-width:880px){ #pair-a.two-cols{ grid-template-columns:1fr 1fr; } }
+    #pair-a.center .media-a{display:none}
+    #pair-a.center #text-col{max-width:600px;margin:0 auto;text-align:center}
+    .media img,.media video{width:100%;max-height:440px;object-fit:cover;border-radius:12px;display:block}
+    .media iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:12px;display:block}
+
+    .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
+    .section-title{font-weight:800;margin:8px 0 10px}
+    .muted{opacity:.85}
+    .hide{display:none!important}
+
+    /* Bloc B : inverser ordre sur desktop (texte à gauche, vidéo à droite) */
+@media (min-width: 880px){
+  #grid-b.video-right{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "arguments media";
+    align-items: start;
+  }
+  #grid-b.video-right #arguments{ grid-area: arguments; }
+  #grid-b.video-right #media-b{ grid-area: media; }
+}
+
+
+    /* Témoignages / FAQ */
+    .testimonial-item,.faq-item{background:#ffffff0f;border:1px solid #ffffff1a;border-radius:10px;padding:12px;margin:8px 0}
+
+    /* Timer */
+    .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
+  </style>
+  <script src="https://js.stripe.com/v3"></script>
+</head>
+<body>
+  <main>
+    <header>
+      <img id="logo" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fmercredi-sales5-o462b%2Flogo-1757489910707?alt=media&token=4f899e54-4e87-40ce-bb15-ece9e49bec9f" alt="Logo" onerror="this.style.display='none'">
+    </header>
+
+    <!-- Section principale Hero -->
+    <section class="hero" id="hero">
+    <!-- HERO -->
+    <section class="hero card">
+      <h1 id="title">titre</h1>
+      <p class="sub" id="subtitle">sous titre</p>
+    </section>
+
+    <!-- Bloc principal : Média gauche + Contenu droite -->
+    <section class="card" id="block-a">
+      <div id="pair-a">
+        <!-- Média -->
+        <div class="media media-a" id="media-a">
+    <!-- BLOC A : Image à gauche | Texte + CTA à droite -->
+    <section class="card">
+      <div class="grid col-2">
+        <div class="media" id="media-img-wrap">
+          <img id="img-a" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fmercredi-sales5-o462b%2Fpage1-hero-1757489912162?alt=media&token=bb8dee68-5d0e-4bfd-a3fe-4f66acdc9db2" alt="" onerror="this.style.display='none'">
+          <video id="vid-a" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fmercredi-sales5-o462b%2Fpage1-video-1757489913165?alt=media&token=aef427fa-a594-4358-8893-4fd3f58182ec" controls playsinline class="hide" onerror="this.style.display='none'"></video>
+          <iframe id="emb-a" src="" class="hide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+
+        <!-- Texte / contenu -->
+        <div id="text-col">
+        <div>
+          <div id="desc">description</div>
+          <div class="bullets">clé</div>
+          <div id="bul">clé</div>
+          <div id="gua"><em>garntie</em></div>
+          <div id="timer" class="timer hide"></div>
+          <button class="cta" id="cta-main">je test</button>
+
+          <!-- Boutons bonus/produit (affichés seulement si renseignés) -->
+          <div id="dl-wrap" class="hide" style="margin-top:10px"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLOC B : Vidéo (gauche) | Arguments (droite). Si pas de vidéo → arguments centrés en pleine largeur -->
+    <section class="card" id="block-b">
+      <div class="grid col-2" id="grid-b">
+        <div class="media" id="media-b">
+          <video id="vid-b" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fmercredi-sales5-o462b%2Fpage1-video-1757489913165?alt=media&token=aef427fa-a594-4358-8893-4fd3f58182ec" controls playsinline class="hide" onerror="this.style.display='none'"></video>
+          <iframe id="emb-b" src="" class="hide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+        <div id="arguments">
+          <div class="section-title">Problème</div>
+          <div id="prob">probl</div>
+          <div class="section-title">Solution</div>
+          <div id="sol">solut</div>
+          <div class="section-title">Bénéfices</div>
+          <div id="ben">benef</div>
+          <div id="gua"><em>garntie</em></div>
+          <div id="timer" class="timer hide"></div>
+          <button class="btn" id="cta-btn">je test</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Témoignages + FAQ -->
+    <!-- Témoignages -->
+    <section class="card hide" id="testi">
+      <h3>Témoignages</h3>
+      <div id="testi-body">supers</div>
+      <div id="testi-body" data-alt="supers">supers</div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="card hide" id="faq">
+      <h3>FAQ</h3>
+      <div id="faq-body">question</div>
+      <div id="faq-body" data-alt="question">question</div>
+    </section>
+
+    <footer>
+      <p>&copy; mercredi sales5 - Tous droits réservés.</p>
+    </footer>
+    <footer class="muted" style="text-align:center;margin-top:14px">&copy; mercredi sales5</footer>
+  </main>
+
+<script>
+// Logo visible uniquement si src valide
+(function(){
+  const logo=document.getElementById('logo');
+  if(logo && logo.src && /^(https?:|data:image)/.test(logo.src)){
+    logo.style.display='block';
+  }
+})();
+
+// Gestion dynamique médias (même logique Optin)
+(function(){
+  const pair=document.getElementById('pair-a');
+  const img=document.getElementById('img-a');
+  const vid=document.getElementById('vid-a');
+  const emb=document.getElementById('emb-a');
+  const isHttp=u=>{ try{ return new URL(u).protocol.startsWith('http'); }catch(_){ return false; } };
+
+  const hasImg=isHttp(img?.src||'');
+  const hasVid=isHttp(vid?.src||'');
+  const hasEmb=isHttp(emb?.src||'');
+  const hasAny=hasVid||hasEmb;
+
+  [vid,emb].forEach(el=>{ if(el){ el.classList.add('hide'); el.style.display='none'; }});
+
+  if(!hasImg && !hasAny){
+    pair.classList.add('center');
+    return;
+  }
+
+  if(hasImg && hasAny){
+    pair.classList.add('two-cols');
+    img.style.display='block';
+    if(hasVid){ vid.classList.remove('hide'); vid.style.display='block'; }
+    else if(hasEmb){ emb.classList.remove('hide'); emb.style.display='block'; }
+    return;
+  }
+
+  if(hasImg && !hasAny){
+    pair.classList.add('two-cols');
+    img.style.display='block';
+    return;
+  }
+
+  if(!hasImg && hasAny){
+    pair.classList.add('two-cols');
+    if(hasVid){ vid.classList.remove('hide'); vid.style.display='block'; }
+    else if(hasEmb){ emb.classList.remove('hide'); emb.style.display='block'; }
+    return;
+  }
+})();
+</script>
+
+<!-- Stripe : gestion paiement + redirection -->
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+  const btn=document.getElementById("cta-btn");
+  if(!btn)return;
+  const clean=s=>(s||"").toString().trim();
+  const isToken=s=>/\{\{[^}]+\}\}/.test(s||"");
+  const withSlash=u=>u?(u.endsWith('/')?u:(u+'/')):"";
+  const pk=clean("pk_test_51RVsTD4PUVU3ejcHlK1AAkobBcOKPp3k0l9AHMmq68d7OdSDjyVKLtA9XpMGqiUIeIgtMvhSTUDrMl9rPityqi5u002UMlmdET");
+  const priceId=clean("price_1Rx31U4PUVU3ejcHtRO
