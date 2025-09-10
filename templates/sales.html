@@ -26,6 +26,12 @@
     .col-2{grid-template-columns:1fr}
     @media(min-width:880px){ .col-2{ grid-template-columns:1fr 1fr; } }
 
+    /* Bloc B : si vidéo détectée → texte à gauche, média à droite */
+@media (min-width: 880px){
+  #block-b.has-video #arguments { order: 1; }
+  #block-b.has-video #media-b   { order: 2; }
+}
+
     .media img,.media video{width:100%;max-height:440px;object-fit:cover;border-radius:12px;display:block}
     .media iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:12px;display:block}
 
@@ -147,30 +153,41 @@
     })();
 
     // ===== Mise en page média / arguments =====
-    (function(){
-      const vidB=document.getElementById('vid-b');
-      const embB=document.getElementById('emb-b');
-      const gridB=document.getElementById('grid-b');
-      const args=document.getElementById('arguments');
+    // ===== Mise en page média / arguments =====
+(function(){
+  const vidB=document.getElementById('vid-b');
+  const embB=document.getElementById('emb-b');
+  const gridB=document.getElementById('grid-b');
+  const args=document.getElementById('arguments');
 
-      const mp4=clean('{{media.videoMp4}}');
-      const emb=clean('{{media.videoEmbed}}');
+  const mp4=clean('{{media.videoMp4}}');
+  const emb=clean('{{media.videoEmbed}}');
 
-      const hasVid = !!mp4 && !isToken(mp4) && isHttp(mp4);
-      const hasEmb = !!emb && !isToken(emb) && isHttp(emb);
+  const hasVid = !!mp4 && !isToken(mp4) && isHttp(mp4);
+  const hasEmb = !!emb && !isToken(emb) && isHttp(emb);
 
-      // Reset
-      [vidB,embB].forEach(el=>{ if(!el) return; el.classList.add('hide'); el.style.display='none'; });
+  // Reset
+  [vidB,embB].forEach(el=>{ if(!el) return; el.classList.add('hide'); el.style.display='none'; });
 
-      if(hasVid){ vidB.src=mp4; vidB.classList.remove('hide'); vidB.style.display='block'; }
-      else if(hasEmb){ embB.classList.remove('hide'); embB.style.display='block'; }
-      else {
-        // Pas de vidéo → mettre les arguments en pleine largeur
-        gridB.classList.remove('col-2');
-        gridB.style.gridTemplateColumns='1fr';
-        args.style.maxWidth='760px'; args.style.margin='0 auto';
-      }
-    })();
+  if(hasVid){
+    vidB.src=mp4;
+    vidB.classList.remove('hide');
+    vidB.style.display='block';
+    document.getElementById('block-b')?.classList.add('has-video');   // ⬅ AJOUT ICI
+  }
+  else if(hasEmb){
+    embB.classList.remove('hide');
+    embB.style.display='block';
+    document.getElementById('block-b')?.classList.add('has-video');   // ⬅ AJOUT ICI
+  }
+  else {
+    // Pas de vidéo → mettre les arguments en pleine largeur
+    gridB.classList.remove('col-2');
+    gridB.style.gridTemplateColumns='1fr';
+    args.style.maxWidth='760px';
+    args.style.margin='0 auto';
+  }
+})();
 
     // ===== Testimonials & FAQ (mêmes règles que l'optin) =====
     (function(){
