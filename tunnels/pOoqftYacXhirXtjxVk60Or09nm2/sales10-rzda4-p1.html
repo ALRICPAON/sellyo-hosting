@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>sales10</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{ --bg: #1a0a53; --btn: #831100; --text:#fff }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      line-height:1.45;
+    }
+    main{max-width:1100px;margin:0 auto;padding:24px}
+
+    header{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:16px 0
+    }
+    #logo{max-height:56px;display:none}
+
+    /* HERO */
+    .hero{
+      text-align:center;
+      margin-bottom:18px;
+    }
+    .hero h1{
+      font-size:clamp(28px,3.8vw,46px);
+      margin:6px 0;
+    }
+    .hero .sub{
+      opacity:.9;
+      margin:8px 0 0;
+      font-size:18px;
+    }
+
+    .card{
+      background:#ffffff10;
+      border:1px solid #ffffff14;
+      border-radius:16px;
+      padding:18px;
+      margin-bottom:24px;
+    }
+
+    .btn,button.cta{
+      display:inline-block;
+      width:100%;
+      padding:14px 18px;
+      border-radius:12px;
+      background:var(--btn);
+      color:#fff;
+      font-weight:800;
+      text-align:center;
+      text-decoration:none;
+      border:0;
+      cursor:pointer;
+      font-size:18px;
+    }
+
+    /* Grilles */
+    .grid{display:grid;gap:18px}
+    .col-2{grid-template-columns:1fr}
+    @media(min-width:880px){
+      .col-2{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
+    .media img,.media video{
+      width:100%;
+      max-height:440px;
+      object-fit:cover;
+      border-radius:12px;
+      display:block
+    }
+    .media iframe{
+      width:100%;
+      aspect-ratio:16/9;
+      border:0;
+      border-radius:12px;
+      display:block
+    }
+
+    /* TIMER amélioré */
+    .timer{
+      font-weight:900;
+      font-size:28px;
+      color:#ffcc00;
+      text-align:center;
+      margin:20px 0;
+    }
+
+    .muted{opacity:.85}
+    .hide{display:none!important}
+  </style>
+  <script src="https://js.stripe.com/v3"></script>
+</head>
+<body>
+  <main>
+    <!-- HEADER -->
+    <header>
+      <img id="logo" src="" alt="Logo" onerror="this.style.display='none'">
+    </header>
+
+    <!-- HERO -->
+    <section class="hero card">
+      <h1 id="title">titre</h1>
+      <p class="sub" id="subtitle">sous titre</p>
+    </section>
+
+    <!-- BLOC A : Image gauche | Texte + CTA droite -->
+    <section class="card" id="block-a">
+      <div class="grid col-2">
+        <div class="media" id="media-a">
+          <img id="img-a" src="" alt="" onerror="this.style.display='none'">
+        </div>
+        <div id="col-a-text">
+          <div id="desc">description</div>
+          <div id="bul"></div>
+          <div id="gua"><em></em></div>
+          <div id="timer" class="timer hide"></div>
+          <button class="cta" id="cta-main">je test</button>
+          <div id="dl-wrap" class="hide" style="margin-top:10px"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLOC B : Texte (gauche) | Vidéo (droite) -->
+    <section class="card" id="block-b">
+      <div class="grid col-2" id="grid-b">
+        <!-- Texte sans titres -->
+        <div id="arguments">
+          <div id="prob"></div>
+          <div id="sol"></div>
+          <div id="ben"></div>
+        </div>
+        <!-- Vidéo -->
+        <div class="media" id="media-b">
+          <video id="vid-b" src="" controls playsinline class="hide" onerror="this.style.display='none'"></video>
+          <iframe id="emb-b" src="" class="hide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- Témoignages -->
+    <section class="card hide" id="testi">
+      <h3>Témoignages</h3>
+      <div id="testi-body" data-alt=""></div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="card hide" id="faq">
+      <h3>FAQ</h3>
+      <div id="faq-body" data-alt=""></div>
+    </section>
+
+    <footer class="muted" style="text-align:center;margin-top:14px">
+      &copy; sales10
+    </footer>
+  </main>
+
+  <script>
+    const clean = (s)=> (s||"").toString().trim();
+    const isToken = (s)=> /\{\{[^}]+\}\}/.test((s||"").toString());
+    const isHttp = (u)=>{ try{ const x=new URL((u||'').trim()); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
+
+    // Logo visible uniquement si src exploitable
+    (function(){
+      const logo=document.getElementById('logo');
+      const src=clean(logo?.getAttribute('src'));
+      if (logo && src && !isToken(src) && (/^(https?:|data:image)/i.test(src))) logo.style.display='block';
+    })();
+
+    // Bullets JSON → <ul>
+    (function(){
+      const host=document.getElementById('bul'); if(!host) return;
+      const raw=clean(host.textContent);
+      if(!raw || isToken(raw)) return;
+      try{
+        const arr=JSON.parse(raw);
+        if(Array.isArray(arr)){
+          host.innerHTML = '<ul>' + arr.map(x=>'<li>'+clean(x)+'</li>').join('') + '</ul>';
+        }
+      }catch(_){}
+    })();
+
+    // Liens téléchargement produit/bonus
+    (function(){
+      const wrap=document.getElementById('dl-wrap'); if(!wrap) return;
+      const file = clean('');
+      const url  = clean('https://sellyo.fr/form-tunnel');
+      const pFile= clean('');
+      const pUrl = clean('');
+      let html='';
+      if(file && !isToken(file)) html += `<a class="btn" href="${file}" download>Télécharger le produit</a>`;
+      else if(url && !isToken(url)) html += `<a class="btn" href="${url}" target="_blank">Accéder au produit</a>`;
+      if(pFile && !isToken(pFile)) html += `<a class="btn" style="margin-top:8px" href="${pFile}" download>Télécharger le bonus</a>`;
+      else if(pUrl && !isToken(pUrl)) html += `<a class="btn" style="margin-top:8px" href="${pUrl}" target="_blank">Voir le bonus</a>`;
+      if(html){ wrap.innerHTML=html; wrap.classList.remove('hide'); }
+    })();
+
+    // Gestion vidéo bloc B
+    (function(){
+      const vidB=document.getElementById('vid-b');
+      const embB=document.getElementById('emb-b');
+      const gridB=document.getElementById('grid-b');
+      const args=document.getElementById('arguments');
+
+      const mp4=clean('');
+      const emb=clean('');
+
+      const hasVid = !!mp4 && !isToken(mp4) && isHttp(mp4);
+      const hasEmb = !!emb && !isToken(emb) && isHttp(emb);
+
+      [vidB,embB].forEach(el=>{ if(el){ el.classList.add('hide'); el.style.display='none'; }});
+
+      if(hasVid){ vidB.src=mp4; vidB.classList.remove('hide'); vidB.style.display='block'; }
+      else if(hasEmb){ embB.classList.remove('hide'); embB.style.display='block'; }
+      else {
+        gridB.classList.remove('col-2');
+        gridB.style.gridTemplateColumns='1fr';
+        args.style.maxWidth='760px';
+        args.style.margin='0 auto';
+      }
+    })();
+
+    // Témoignages & FAQ
+    (function(){
+      function has(v){ return !!(v && (""+v).trim() && !/\{\{[^}]+\}\}/.test(""+v)); }
+      function showFromRaw(wrapId, bodyId, mapJson){
+        const wrap=document.getElementById(wrapId), body=document.getElementById(bodyId);
+        if(!wrap||!body) return;
+        let raw=(body.textContent||'').trim();
+        if(!has(raw)) raw=(body.getAttribute('data-alt')||'').trim();
+        if(!has(raw)) return;
+        let html='';
+        try{ const data=JSON.parse(raw); html = mapJson(data); }catch(_){ html=raw; }
+        if(has(html)){ body.innerHTML=html; wrap.classList.remove('hide'); }
+      }
+      showFromRaw('testi','testi-body', arr => Array.isArray(arr) ? arr.map(t=>`<div class="testimonial-item">“${(t&&t.text?t.text:t)||''}”</div>`).join('') : '');
+      showFromRaw('faq','faq-body', arr => Array.isArray(arr) ? arr.map(x=>`<div class="faq-item"><strong>${(x&&x.q?x.q:(x&&x.question?x.question:''))}</strong><br/>${(x&&x.a?x.a:(x&&x.answer?x.answer:''))}</div>`).join('') : '');
+    })();
+  </script>
+
+  <script>
+(function(){
+  // === Sélection du bouton ===
+  const btn = document.getElementById('cta-main');
+  if(!btn) return;
+
+  // === Helpers ===
+  const clean   = (s)=> (s||"").toString().trim();
+  const isToken = (s)=> /\{\{[^}]+\}\}/.test((s||"").toString());
+  const isAbs   = (u)=> /^(https?:)?\/\//i.test(u||'');        // http(s):// ou //cdn...
+  const isRoot  = (u)=> /^\//.test(u||'');                     // /chemin/absolu
+  const withSlash=(u)=> u ? (u.endsWith('/') ? u : (u+'/')) : '';
+
+  // === Données templating (laisser tel quel, Make remplacera) ===
+  const pk       = clean('pk_test_51RVsTD4PUVU3ejcHlK1AAkobBcOKPp3k0l9AHMmq68d7OdSDjyVKLtA9XpMGqiUIeIgtMvhSTUDrMl9rPityqi5u002UMlmdET');
+  const priceId  = clean('price_1Rx31U4PUVU3ejcHtRO3U55v');
+  const payLink  = clean('');
+  const baseUrl  = withSlash(clean('https://alricpaon.github.io/sellyo-hosting/tunnels/pOoqftYacXhirXtjxVk60Or09nm2'));          // ex: https://domaine.com/tunnels/xyz/
+  const nextSlug = clean('sales10-rzda4-p2');             // ex: page-suivante
+  const rawNext  = clean('sales10-rzda4-p2.html');                  // ex: page-suivante.html
+
+  // nextHref déterministe
+  const nextHref = (!isToken(rawNext) && rawNext) || (nextSlug ? (nextSlug + '.html') : '');
+
+  // Construit une URL absolue à partir de baseUrl/nextHref
+  function toAbsolute(url){
+    if(!url) return '';
+    if (isAbs(url)) return url;                      // déjà absolu (http(s):// ou //)
+    if (isRoot(url)) return url;                     // /chemin absolu → laisser (le browser résout)
+    if (baseUrl && !isToken(baseUrl)) return baseUrl + url; // baseUrl fourni
+    // sinon on résout depuis le répertoire courant
+    try{
+      const cur = window.location.href.replace(/[^/]*$/, ''); // dossier courant
+      return new URL(url, cur).toString();
+    }catch(_){ return url; }
+  }
+
+  btn.addEventListener('click', async (e)=>{
+    e.preventDefault();
+
+    // 1) Lien de paiement direct prioritaire (si fourni)
+    if (payLink && !isToken(payLink)) {
+      window.location.href = payLink;
+      return;
+    }
+
+    // 2) Stripe Checkout si clés + price ok et qu’on sait où aller après
+    if (pk && !isToken(pk) && priceId && !isToken(priceId) && nextHref && !isToken(nextHref)) {
+      try{
+        const stripe = Stripe(pk);
+        const successUrl = toAbsolute(nextHref);
+        const cancelUrl  = window.location.href;
+        const { error } = await stripe.redirectToCheckout({
+          lineItems:[{ price: priceId, quantity:1 }],
+          mode:'payment',
+          successUrl,
+          cancelUrl
+        });
+        if (error) {
+          console.warn('Stripe error:', error.message);
+          // Fallback navigation
+          window.location.href = successUrl;
+        }
+      }catch(err){
+        console.warn('Stripe init error:', err);
+        const successUrl = toAbsolute(nextHref);
+        if (successUrl) window.location.href = successUrl;
+      }
+      return;
+    }
+
+    // 3) Fallback : si on a une page suivante, on y va quoi qu’il arrive
+    if (nextHref && !isToken(nextHref)) {
+      window.location.href = toAbsolute(nextHref);
+      return;
+    }
+
+    // 4) Rien de configuré (template pur) → optionnel: message
+    // alert('CTA non configuré (template). Renseignez paymentLink ou Stripe + nextHref.');
+  });
+})();
+</script>
+
+</body>
+</html>
