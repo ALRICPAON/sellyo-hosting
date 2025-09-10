@@ -6,6 +6,9 @@
   <meta name="description" content="{{seo.metaDescription}}" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+    :root { --bg: {{ui.mainColor}}; --btn: {{ui.buttonColor}}; --text:#fff }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.5}
     :root{ --bg: {{ui.mainColor}}; --btn: {{ui.buttonColor}}; --text:#fff }
     *{box-sizing:border-box}
     body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.45}
@@ -14,35 +17,50 @@
     header{display:flex;justify-content:center;align-items:center;padding:16px 0}
     #logo{max-height:56px;display:none}
 
+    .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px;margin-bottom:24px}
+    .hero{text-align:center;margin-bottom:16px}
+    .hero h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0}
     .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
     .hero{text-align:left;margin-bottom:18px}
     .hero h1{font-size:clamp(26px,3.4vw,40px);margin:6px 0}
     .hero .sub{opacity:.9;margin:0}
 
+    .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer;margin-top:12px}
+    .bullets ul{padding-left:18px;margin:12px 0}
+    .bullets li{margin-bottom:8px;list-style:disc}
     .btn,button.cta{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
 
+    .media img,.media video,.media iframe{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
+    .media iframe{aspect-ratio:16/9;border:0}
     /* === Grilles === */
     .grid{display:grid;gap:18px}
     .col-2{grid-template-columns:1fr}
     @media(min-width:880px){ .col-2{ grid-template-columns:1fr 1fr; } }
 
-   /* Bloc B : si vidéo détectée → texte à gauche, média à droite (CSS Grid Areas) */
+    #pair-a{display:grid;gap:18px;grid-template-columns:1fr}
+    @media(min-width:880px){ #pair-a.two-cols{ grid-template-columns:1fr 1fr; } }
+    #pair-a.center .media-a{display:none}
+    #pair-a.center #text-col{max-width:600px;margin:0 auto;text-align:center}
+    .media img,.media video{width:100%;max-height:440px;object-fit:cover;border-radius:12px;display:block}
+    .media iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:12px;display:block}
+
+    .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
+    .section-title{font-weight:800;margin:8px 0 10px}
+    .muted{opacity:.85}
+    .hide{display:none!important}
+
+    /* Bloc B : inverser ordre sur desktop (texte à gauche, vidéo à droite) */
 @media (min-width: 880px){
   #grid-b.video-right{
+    display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-areas: "arguments media";
     align-items: start;
   }
   #grid-b.video-right #arguments{ grid-area: arguments; }
-  #grid-b.video-right #media-b  { grid-area: media; }
+  #grid-b.video-right #media-b{ grid-area: media; }
 }
 
-    .media img,.media video{width:100%;max-height:440px;object-fit:cover;border-radius:12px;display:block}
-    .media iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:12px;display:block}
-
-    .section-title{font-weight:800;margin:8px 0 10px}
-    .muted{opacity:.85}
-    .hide{display:none!important}
 
     /* Témoignages / FAQ */
     .testimonial-item,.faq-item{background:#ffffff0f;border:1px solid #ffffff1a;border-radius:10px;padding:12px;margin:8px 0}
@@ -58,20 +76,33 @@
       <img id="logo" src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'">
     </header>
 
+    <!-- Section principale Hero -->
+    <section class="hero" id="hero">
     <!-- HERO -->
     <section class="hero card">
       <h1 id="title">{{copy.title}}</h1>
       <p class="sub" id="subtitle">{{copy.subtitle}}</p>
     </section>
 
+    <!-- Bloc principal : Média gauche + Contenu droite -->
+    <section class="card" id="block-a">
+      <div id="pair-a">
+        <!-- Média -->
+        <div class="media media-a" id="media-a">
     <!-- BLOC A : Image à gauche | Texte + CTA à droite -->
     <section class="card">
       <div class="grid col-2">
         <div class="media" id="media-img-wrap">
           <img id="img-a" src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
+          <video id="vid-a" src="{{media.videoMp4}}" controls playsinline class="hide" onerror="this.style.display='none'"></video>
+          <iframe id="emb-a" src="{{media.videoEmbed}}" class="hide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
+
+        <!-- Texte / contenu -->
+        <div id="text-col">
         <div>
           <div id="desc">{{copy.productDescription}}</div>
+          <div class="bullets">{{copy.bullets}}</div>
           <div id="bul">{{copy.bullets}}</div>
           <div id="gua"><em>{{copy.guarantee}}</em></div>
           <div id="timer" class="timer hide"></div>
@@ -97,33 +128,137 @@
           <div id="sol">{{copy.solution}}</div>
           <div class="section-title">Bénéfices</div>
           <div id="ben">{{copy.benefits}}</div>
+          <div id="gua"><em>{{copy.guarantee}}</em></div>
+          <div id="timer" class="timer hide"></div>
+          <button class="btn" id="cta-btn">{{copy.ctaText}}</button>
         </div>
       </div>
     </section>
 
+    <!-- Témoignages + FAQ -->
     <!-- Témoignages -->
     <section class="card hide" id="testi">
       <h3>Témoignages</h3>
+      <div id="testi-body">{{copy.testimonials}}</div>
       <div id="testi-body" data-alt="{{testimonials}}">{{testimonials}}</div>
     </section>
 
     <!-- FAQ -->
     <section class="card hide" id="faq">
       <h3>FAQ</h3>
+      <div id="faq-body">{{copy.faq}}</div>
       <div id="faq-body" data-alt="{{faqs}}">{{faqs}}</div>
     </section>
 
+    <footer>
+      <p>&copy; {{seo.metaTitle}} - Tous droits réservés.</p>
+    </footer>
     <footer class="muted" style="text-align:center;margin-top:14px">&copy; {{seo.metaTitle}}</footer>
   </main>
 
+<script>
+// Logo visible uniquement si src valide
+(function(){
+  const logo=document.getElementById('logo');
+  if(logo && logo.src && /^(https?:|data:image)/.test(logo.src)){
+    logo.style.display='block';
+  }
+})();
+
+// Gestion dynamique médias (même logique Optin)
+(function(){
+  const pair=document.getElementById('pair-a');
+  const img=document.getElementById('img-a');
+  const vid=document.getElementById('vid-a');
+  const emb=document.getElementById('emb-a');
+  const isHttp=u=>{ try{ return new URL(u).protocol.startsWith('http'); }catch(_){ return false; } };
+
+  const hasImg=isHttp(img?.src||'');
+  const hasVid=isHttp(vid?.src||'');
+  const hasEmb=isHttp(emb?.src||'');
+  const hasAny=hasVid||hasEmb;
+
+  [vid,emb].forEach(el=>{ if(el){ el.classList.add('hide'); el.style.display='none'; }});
+
+  if(!hasImg && !hasAny){
+    pair.classList.add('center');
+    return;
+  }
+
+  if(hasImg && hasAny){
+    pair.classList.add('two-cols');
+    img.style.display='block';
+    if(hasVid){ vid.classList.remove('hide'); vid.style.display='block'; }
+    else if(hasEmb){ emb.classList.remove('hide'); emb.style.display='block'; }
+    return;
+  }
+
+  if(hasImg && !hasAny){
+    pair.classList.add('two-cols');
+    img.style.display='block';
+    return;
+  }
+
+  if(!hasImg && hasAny){
+    pair.classList.add('two-cols');
+    if(hasVid){ vid.classList.remove('hide'); vid.style.display='block'; }
+    else if(hasEmb){ emb.classList.remove('hide'); emb.style.display='block'; }
+    return;
+  }
+})();
+</script>
+
+<!-- Stripe : gestion paiement + redirection -->
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+  const btn=document.getElementById("cta-btn");
+  if(!btn)return;
+  const clean=s=>(s||"").toString().trim();
+  const isToken=s=>/\{\{[^}]+\}\}/.test(s||"");
+  const withSlash=u=>u?(u.endsWith('/')?u:(u+'/')):"";
+  const pk=clean("{{1.payment.stripePublishableKey}}");
+  const priceId=clean("{{1.payment.stripePriceId}}");
+  const payLink=clean("{{1.payment.paymentLink}}");
+  const baseUrl=withSlash(clean("{{1.baseUrl}}"));
+  const nextSlug=clean("{{133.flow.nextSlug}}");
+  const rawNext=clean("{{flow.nextHref}}");
+  const nextHref=(!isToken(rawNext)&&rawNext)||(nextSlug?(nextSlug+".html"):"");
+
+  if(pk && priceId && nextHref){
+    const stripe=Stripe(pk);
+    btn.onclick=async(e)=>{
+      e.preventDefault();
+      const successUrl=baseUrl+nextHref;
+      const cancelUrl=window.location.href;
+      const {error}=await stripe.redirectToCheckout({lineItems:[{price:priceId,quantity:1}],mode:"payment",successUrl,cancelUrl});
+      if(error)console.warn("Stripe:",error.message);
+    };
+    return;
+  }
+  if(payLink&&!isToken(payLink))btn.onclick=(e)=>{e.preventDefault();window.location.href=payLink};
+  else if(nextHref)btn.onclick=(e)=>{e.preventDefault();window.location.href=nextHref};
+});
+</script>
+
+<!-- Timer dynamique -->
+<script>
+(function(){
+  const t=document.getElementById('timer');if(!t)return;
+  const clean=s=>(s||"").toString().trim();
+  const evergreen=parseInt('{{timers.evergreenMinutes}}',10)||0;
+  const deadlineISO=clean('{{timers.deadlineISO}}');
+  function render(sec){if(sec<=0){t.textContent='Offre expirée';return;}const m=Math.floor(sec/60),s=sec%60;t.textContent='Offre expire dans '+m+'m '+('0'+s).slice(-2)+'s'}
+  let total=0;
+  if(evergreen>0)total=evergreen*60;
+  else if(deadlineISO&&!isNaN(Date.parse(deadlineISO)))total=Math.max(0,Math.floor((new Date(deadlineISO)-new Date())/1000));
+  if(total>0){t.classList.remove('hide');(function tick(){render(total--);if(total>=0)setTimeout(tick,1000)})();}
+})();
+</script>
   <script>
     /* ---------- Helpers ---------- */
     const clean = (s)=> (s||"").toString().trim();
     const isToken = (s)=> /\{\{[^}]+\}\}/.test((s||"").toString());
     const isHttp = (u)=>{ try{ const x=new URL((u||'').trim()); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
-    // Plus tolérant que isHttp (accepte https, //, data:, blob:)
-const isUrl = (u)=> /^(https?:|\/\/|data:|blob:)/i.test((u||'').trim());
-
 
     // Logo visible uniquement si URL exploitable
     (function(){
@@ -160,55 +295,39 @@ const isUrl = (u)=> /^(https?:|\/\/|data:|blob:)/i.test((u||'').trim());
       if(html){ wrap.innerHTML=html; wrap.classList.remove('hide'); }
     })();
 
-  
-// ===== Mise en page média / arguments =====
+    // ===== Mise en page média / arguments =====
 (function(){
-  try{
-    const vidB = document.getElementById('vid-b');
-    const embB = document.getElementById('emb-b');
-    const gridB = document.getElementById('grid-b');
-    const args  = document.getElementById('arguments');
+  const vidB=document.getElementById('vid-b');
+  const embB=document.getElementById('emb-b');
+  const gridB=document.getElementById('grid-b');
+  const args=document.getElementById('arguments');
 
-    // Valeurs template (si remplacées par Make)
-    const mp4Tpl = (('{{media.videoMp4}}')||'').trim();
-    const embTpl = (('{{media.videoEmbed}}')||'').trim();
+  const mp4=clean('{{media.videoMp4}}');
+  const emb=clean('{{media.videoEmbed}}');
 
-    // Fallback DOM si le templating n’a pas injecté
-    const mp4Dom = (vidB?.getAttribute('src') || '').trim();
-    const embDom = (embB?.getAttribute('src') || '').trim();
+  const hasVid = !!mp4 && !isToken(mp4) && isHttp(mp4);
+  const hasEmb = !!emb && !isToken(emb) && isHttp(emb);
 
-    // Choix final + détection URL permissive
-    const mp4 = (!isToken(mp4Tpl) && mp4Tpl) ? mp4Tpl : mp4Dom;
-    const emb = (!isToken(embTpl) && embTpl) ? embTpl : embDom;
-    const hasVid = isUrl(mp4);
-    const hasEmb = isUrl(emb);
+  // Reset
+  [vidB,embB].forEach(el=>{ if(!el) return; el.classList.add('hide'); el.style.display='none'; });
 
-    // Reset d’affichage
-    [vidB, embB].forEach(el => {
-      if(!el) return;
-      el.classList.add('hide');
-      el.style.display = 'none';
-    });
-
-    if(hasVid){
-      if(vidB){ vidB.src = mp4; vidB.classList.remove('hide'); vidB.style.display = 'block'; }
-      gridB?.classList.add('video-right');   // → texte à gauche, vidéo à droite
-      return; // on sort proprement
-    }
-
-    if(hasEmb){
-      if(embB){ embB.src = emb; embB.classList.remove('hide'); embB.style.display = 'block'; }
-      gridB?.classList.add('video-right');   // → texte à gauche, vidéo à droite
-      return;
-    }
-
-    // Pas de vidéo → arguments pleine largeur
-    gridB?.classList.remove('col-2');
-    if(gridB) gridB.style.gridTemplateColumns = '1fr';
-    if(args){ args.style.maxWidth = '760px'; args.style.margin = '0 auto'; }
-  }catch(e){
-    console.warn('Bloc B error:', e);
-    // En cas d’erreur on ne bloque PAS les blocs suivants (témoignages/FAQ).
+  if(hasVid){
+    vidB.src=mp4;
+    vidB.classList.remove('hide');
+    vidB.style.display='block';
+    gridB.classList.add('video-right'); // ⬅️ AJOUT ICI
+  }
+  else if(hasEmb){
+    embB.classList.remove('hide');
+    embB.style.display='block';
+    gridB.classList.add('video-right'); // ⬅️ AJOUT ICI
+  }
+  else {
+    // Pas de vidéo → mettre les arguments en pleine largeur
+    gridB.classList.remove('col-2');
+    gridB.style.gridTemplateColumns='1fr';
+    args.style.maxWidth='760px';
+    args.style.margin='0 auto';
   }
 })();
 
