@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>optin56</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{ --bg: #61177c; --btn: #9a244f; --text:#fff }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.45}
+    main{max-width:1100px;margin:0 auto;padding:24px}
+    header{display:flex;justify-content:center;align-items:center;padding:16px 0}
+    #logo{max-height:56px;display:none}
+
+    .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px;margin-bottom:24px}
+
+    /* Hero centré */
+    .hero{text-align:center;margin-bottom:18px}
+    .hero h1{font-size:clamp(28px,3.8vw,46px);margin:6px 0}
+    .hero .sub{opacity:.9;margin-top:8px;font-size:18px}
+
+    .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer;font-size:18px}
+
+    /* Grids */
+    .grid{display:grid;gap:18px}
+    .col-2{grid-template-columns:1fr}
+    @media(min-width:880px){ .col-2{ grid-template-columns:1fr 1fr; } }
+
+    /* Media */
+    .media img,.media video{width:100%;max-height:440px;object-fit:cover;border-radius:12px;display:block}
+    .media iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:12px;display:block}
+
+    /* Timer visible, gros et coloré */
+    .timer{font-weight:900;font-size:28px;color:#ffcc00;text-align:center;margin:18px 0}
+
+    /* Si pas d'image -> texte/form centré plein largeur */
+    #block-a.center-text .grid{grid-template-columns:1fr!important}
+    #block-a.center-text #media-a{display:none!important}
+    #block-a.center-text #col-a-text{max-width:760px;margin:0 auto;text-align:center}
+
+    .muted{opacity:.85}
+    .hide{display:none!important}
+    form input,form textarea,form select{width:100%;padding:12px;border-radius:10px;border:0;margin:8px 0;background:#ffffff12;color:#fff}
+    form label{display:block;margin:6px 0 2px;font-size:14px;opacity:.9}
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <img id="logo" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Foptin56-59z9o%2Flogo-1757518735308?alt=media&token=1da31aed-e8de-4851-8424-e2e65627ed51" alt="Logo" onerror="this.style.display='none'">
+    </header>
+
+    <!-- HERO -->
+    <section class="hero card">
+      <h1 id="title">titre</h1>
+      <p class="sub" id="subtitle">sous titre</p>
+    </section>
+
+    <!-- BLOC A : Image gauche | Texte + Formulaire droite -->
+    <section class="card" id="block-a">
+      <div class="grid col-2">
+        <div class="media" id="media-a">
+          <img id="img-a" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Foptin56-59z9o%2Fpage1-hero-1757518735731?alt=media&token=ffef9db9-214d-4ff8-baec-1a647378320e" alt="" onerror="this.style.display='none'">
+        </div>
+        <div id="col-a-text">
+          <div id="desc">description</div>
+          <div id="bul">clé</div>
+
+          <!-- Timer -->
+          <div id="timer" class="timer hide"></div>
+
+          <!-- ==== FORMULAIRE (exact selon formFields) ==== -->
+          <script id="form-fields-json" type="application/json">{"name":true,"firstname":true,"email":true,"phone":false,"address":false}</script>
+          <form id="lead-form" data-role="capture" data-next=".html">
+            <div id="form-visible"></div>
+            <!-- champs cachés standard -->
+            <input type="hidden" name="userId" value="">
+            <input type="hidden" name="pageSlug" value="optin56-59z9o-p1">
+            <input type="hidden" name="slug" value="optin56-59z9o-p1">
+            <input type="hidden" name="type" value="tunnel">
+            <input type="hidden" id="nextUrl-hidden" name="nextUrl" value="">
+            <button type="submit" class="btn" id="cta-btn">je test</button>
+            <div id="gua" class="hide muted" style="margin-top:10px"><em data-alt="garantie">garantie</em></div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLOC B : Texte (gauche) | Vidéo (droite) -->
+    <section class="card" id="block-b">
+      <div class="grid col-2" id="grid-b">
+        <div id="arguments">
+          <div id="prob">probleme</div>
+          <div id="sol">solution</div>
+          <div id="ben">benefices</div>
+        </div>
+        <div class="media" id="media-b">
+          <video id="vid-b" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Foptin56-59z9o%2Fpage1-video-1757518736831?alt=media&token=6c0527d2-0e7b-4242-a6b6-28622c4a894c" controls playsinline class="hide" onerror="this.style.display='none'"></video>
+          <iframe id="emb-b" src="" class="hide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- Témoignages / FAQ (optionnels) -->
+    <section class="card hide" id="testi">
+      <h3>Témoignages</h3>
+      <div id="testi-body" data-alt="temoin">temoin</div>
+    </section>
+    <section class="card hide" id="faq">
+      <h3>FAQ</h3>
+      <div id="faq-body" data-alt="question">question</div>
+    </section>
+
+    <footer class="muted" style="text-align:center;margin-top:14px">
+      &copy; optin56
+    </footer>
+  </main>
+
+  <script>
+    // ------- Helpers -------
+    const clean=(s)=> (s||"").toString().trim();
+    const isToken=(s)=>/\{\{[^}]+\}\}/.test((s||"").toString());
+    const isHttp=(u)=>{ try{ const x=new URL((u||'').trim()); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
+
+    // Logo visible si URL ok
+    (function(){ const logo=document.getElementById('logo'); const src=clean(logo?.getAttribute('src')); if(logo && src && !isToken(src) && (/^(https?:|data:image)/i.test(src))) logo.style.display='block'; })();
+
+    // Bullets JSON -> <ul>
+    (function(){
+      const host=document.getElementById('bul'); if(!host) return;
+      const raw=clean(host.textContent);
+      if(!raw || isToken(raw)) return;
+      try{
+        const arr=JSON.parse(raw);
+        if(Array.isArray(arr)) host.innerHTML='<ul>'+arr.map(x=>'<li>'+clean(x)+'</li>').join('')+'</ul>';
+      }catch(_){}
+    })();
+
+    // Bloc A : centrer si pas d'image exploitable
+    (function(){
+      const blockA=document.getElementById('block-a');
+      const img=document.getElementById('img-a');
+      if(!blockA||!img) return;
+      const src=(img.getAttribute('src')||'').trim();
+      const isUrl=/^(https?:|\/\/|data:|blob:)/i.test(src);
+      function center(){ blockA.classList.add('center-text'); }
+      if(!src || isToken(src) || !isUrl){ center(); return; }
+      img.addEventListener('error', center);
+      setTimeout(()=>{ if(img.naturalWidth===0 || getComputedStyle(img).display==='none') center(); }, 400);
+    })();
+
+    // Bloc B : vidéo visible seulement si URL valide, sinon texte plein écran
+    (function(){
+      const vid=document.getElementById('vid-b');
+      const emb=document.getElementById('emb-b');
+      const grid=document.getElementById('grid-b');
+      const args=document.getElementById('arguments');
+      const mp4=clean('https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Foptin56-59z9o%2Fpage1-video-1757518736831?alt=media&token=6c0527d2-0e7b-4242-a6b6-28622c4a894c');
+      const emu=clean('');
+      const hasVid=!!mp4 && !isToken(mp4) && isHttp(mp4);
+      const hasEmb=!!emu && !isToken(emu) && isHttp(emu);
+      [vid,emb].forEach(el=>{ if(el){ el.classList.add('hide'); el.style.display='none'; }});
+      if(hasVid){ vid.src=mp4; vid.classList.remove('hide'); vid.style.display='block'; }
+      else if(hasEmb){ emb.classList.remove('hide'); emb.style.display='block'; }
+      else{ grid.classList.remove('col-2'); grid.style.gridTemplateColumns='1fr'; args.style.maxWidth='760px'; args.style.margin='0 auto'; }
+    })();
+
+    // Form renderer : rend EXACTEMENT ce que l'utilisateur fournit
+    (function(){
+      const mount=document.getElementById('form-visible'); if(!mount) return;
+      const raw=document.getElementById('form-fields-json')?.textContent?.trim()||'';
+      const tok=/\{\{[^}]+\}\}/.test(raw);
+      function esc(x){return (x??'').toString().replace(/"/g,'&quot;');}
+      function input(t,n,p,req,opts){
+        t=(t||'text').toLowerCase();
+        if(t==='textarea') return `<label>${esc(p||n)}</label><textarea name="${esc(n)}" ${req?'required':''}></textarea>`;
+        if(t==='select'){
+          const o=(Array.isArray(opts)?opts:[]).map(v=>{
+            const val=(v&&typeof v==='object')?(v.value??v.label??''):v;
+            const lab=(v&&typeof v==='object')?(v.label??v.value??''):v;
+            return `<option value="${esc(val)}">${esc(lab)}</option>`;
+          }).join('');
+          return `<label>${esc(p||n)}</label><select name="${esc(n)}" ${req?'required':''}>${o}</select>`;
+        }
+        // types simples
+        if(!['text','email','tel','number','url','date'].includes(t)) t='text';
+        return `<label>${esc(p||n)}</label><input type="${t}" name="${esc(n)}" ${req?'required':''} placeholder="${esc(p||n)}" />`;
+      }
+
+      // Fallback minimal si rien/JSON invalide
+      function fallback(){ mount.innerHTML = `<label>Email</label><input type="email" name="email" required placeholder="Votre email" />`; }
+
+      if(!raw || tok){ fallback(); return; }
+
+      try{
+        const data=JSON.parse(raw);
+        let html='';
+        if(Array.isArray(data)){
+          html = data.map(f=>input(f.type,f.name||'field',f.placeholder||f.label||f.name,!!f.required,f.options)).join('');
+        }else if(data && typeof data==='object'){
+          html = Object.keys(data).map(k=>{
+            const v=data[k]; // permet { email: {type:'email', placeholder:'...' } } ou { email: 'Email' }
+            if(v && typeof v==='object'){
+              return input(v.type||'text', k, v.placeholder||v.label||k, !!v.required, v.options);
+            }else{
+              return input('text', k, v||k, false);
+            }
+          }).join('');
+        }else if(typeof data==='string'){
+          const parts=(data||'').split(',').map(s=>s.trim()).filter(Boolean);
+          html = parts.map(n=>input(n==='email'?'email':'text', n, n, n==='email')).join('');
+        }else{
+          fallback(); return;
+        }
+        mount.innerHTML = html || fallback();
+      }catch(_){ fallback(); }
+    })();
+
+    // Normalisation nextHref dans les champs cachés (pour l’auto-redirect post-capture)
+    (function(){
+      const ns1=clean('.html');
+      const ns2=clean('.html');
+      const ns3=clean('');
+      const ns4=clean('');
+      let nextHref = ns1 || ns2 || '';
+      if(nextHref === '.html') nextHref = '';
+      if(!nextHref){
+        const slug = ns3 || ns4;
+        if(slug) nextHref = slug.endsWith('.html') ? slug : (slug + '.html');
+      }
+      const hidden=document.getElementById('nextUrl-hidden');
+      if(hidden) hidden.value = nextHref || '';
+      const form=document.getElementById('lead-form');
+      if(form) form.setAttribute('data-next', nextHref || '');
+    })();
+
+    // Garantie / Témoignages / FAQ / Timer
+    (function(){
+      // Garantie
+      const wrap=document.getElementById('gua');
+      if(wrap){
+        const em=wrap.querySelector('em');
+        if(em){
+          const txt=(em.textContent||'').trim();
+          const alt=(em.getAttribute('data-alt')||wrap.getAttribute('data-alt')||'').trim();
+          const final = (!txt || isToken(txt)) ? (isToken(alt)? '' : alt) : txt;
+          if(final){ em.textContent=final; wrap.classList.remove('hide'); }
+        }
+      }
+      // Témoignages
+      (function(){
+        const w=document.getElementById('testi'), b=document.getElementById('testi-body');
+        if(!w||!b) return;
+        let raw=(b.textContent||'').trim(); if(!raw||isToken(raw)) raw=(b.getAttribute('data-alt')||'').trim();
+        if(!raw||isToken(raw)) return;
+        try{ const data=JSON.parse(raw); if(Array.isArray(data)) raw=data.map(t=>`<div class="testimonial-item">“${clean(t?.text||t)}”</div>`).join(''); }catch(_){}
+        if(raw){ b.innerHTML=raw; w.classList.remove('hide'); }
+      })();
+      // FAQ
+      (function(){
+        const w=document.getElementById('faq'), b=document.getElementById('faq-body');
+        if(!w||!b) return;
+        let raw=(b.textContent||'').trim(); if(!raw||isToken(raw)) raw=(b.getAttribute('data-alt')||'').trim();
+        if(!raw||isToken(raw)) return;
+        try{ const data=JSON.parse(raw); if(Array.isArray(data)) raw=data.map(x=>`<div class="faq-item"><strong>${clean(x?.q||x?.question||'')}</strong><br/>${clean(x?.a||x?.answer||'')}</div>`).join(''); }catch(_){}
+        if(raw){ b.innerHTML=raw; w.classList.remove('hide'); }
+      })();
+      // Timer (evergreen / deadline ISO)
+      (function(){
+        const t=document.getElementById('timer'); if(!t) return;
+        const evergreen=parseInt('30',10)||0;
+        const deadline=clean('');
+        function draw(sec){ if(sec<=0){ t.textContent='Offre expirée'; return; } const m=Math.floor(sec/60), s=sec%60; t.textContent='Offre expire dans '+m+'m '+('0'+s).slice(-2)+'s'; }
+        let total=0;
+        if(evergreen>0) total=evergreen*60; else if(deadline && !isNaN(Date.parse(deadline))) total=Math.max(0,Math.floor((new Date(deadline)-new Date())/1000));
+        if(total>0){ t.classList.remove('hide'); (function tick(){ draw(total--); if(total>=0) setTimeout(tick,1000); })(); }
+      })();
+    })();
+  </script>
+
+  <!-- Capture (si tu l’utilises déjà, garde-le ; sinon tu peux le retirer) -->
+  <script type="module" src="https://alricpaon.github.io/sellyo-hosting/firebase-init.js"></script>
+  <script type="module" src="https://alricpaon.github.io/sellyo-hosting/js/save-lead-tunnel.js"></script>
+</body>
+</html>
