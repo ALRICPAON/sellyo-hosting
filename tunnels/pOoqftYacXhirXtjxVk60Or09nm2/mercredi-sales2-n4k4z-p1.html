@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>meta</title>
+  <meta name="description" content="meta" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{ --bg: #0056d6; --btn: #61177c; --text:#fff }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.45}
+    main{max-width:1100px;margin:0 auto;padding:24px}
+
+    header{display:flex;justify-content:center;align-items:center;padding:16px 0}
+    #logo{max-height:56px;display:none}
+
+    .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
+    .hero{text-align:left;margin-bottom:18px}
+    .hero h1{font-size:clamp(26px,3.4vw,40px);margin:6px 0}
+    .hero .sub{opacity:.9;margin:0}
+
+    .btn,button.cta{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
+
+    /* === Grilles === */
+    .grid{display:grid;gap:18px}
+    .col-2{grid-template-columns:1fr}
+    @media(min-width:880px){ .col-2{ grid-template-columns:1fr 1fr; } }
+
+   /* Bloc B : si vidéo détectée → texte à gauche, média à droite (CSS Grid Areas) */
+@media (min-width: 880px){
+  #grid-b.video-right{
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "arguments media";
+    align-items: start;
+  }
+  #grid-b.video-right #arguments{ grid-area: arguments; }
+  #grid-b.video-right #media-b  { grid-area: media; }
+}
+
+    .media img,.media video{width:100%;max-height:440px;object-fit:cover;border-radius:12px;display:block}
+    .media iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:12px;display:block}
+
+    .section-title{font-weight:800;margin:8px 0 10px}
+    .muted{opacity:.85}
+    .hide{display:none!important}
+
+    /* Témoignages / FAQ */
+    .testimonial-item,.faq-item{background:#ffffff0f;border:1px solid #ffffff1a;border-radius:10px;padding:12px;margin:8px 0}
+
+    /* Timer */
+    .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
+  </style>
+  <script src="https://js.stripe.com/v3"></script>
+</head>
+<body>
+  <main>
+    <header>
+      <img id="logo" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fmercredi-sales2-n4k4z%2Flogo-1757488249331?alt=media&token=34f1d4b6-c3da-42bd-afb0-a9de702f8a7b" alt="Logo" onerror="this.style.display='none'">
+    </header>
+
+    <!-- HERO -->
+    <section class="hero card">
+      <h1 id="title">titre test</h1>
+      <p class="sub" id="subtitle">soustitre</p>
+    </section>
+
+    <!-- BLOC A : Image à gauche | Texte + CTA à droite -->
+    <section class="card">
+      <div class="grid col-2">
+        <div class="media" id="media-img-wrap">
+          <img id="img-a" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fmercredi-sales2-n4k4z%2Fpage1-hero-1757488251002?alt=media&token=ca445f0a-8eb6-43e1-80ea-824e2dfd9958" alt="" onerror="this.style.display='none'">
+        </div>
+        <div>
+          <div id="desc">description</div>
+          <div id="bul">clé</div>
+          <div id="gua"><em>garantie</em></div>
+          <div id="timer" class="timer hide"></div>
+          <button class="cta" id="cta-main">je test</button>
+
+          <!-- Boutons bonus/produit (affichés seulement si renseignés) -->
+          <div id="dl-wrap" class="hide" style="margin-top:10px"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLOC B : Vidéo (gauche) | Arguments (droite). Si pas de vidéo → arguments centrés en pleine largeur -->
+    <section class="card" id="block-b">
+      <div class="grid col-2" id="grid-b">
+        <div class="media" id="media-b">
+          <video id="vid-b" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fmercredi-sales2-n4k4z%2Fpage1-video-1757488252029?alt=media&token=731adcf5-8d8e-4c20-b578-3eb33a1090e1" controls playsinline class="hide" onerror="this.style.display='none'"></video>
+          <iframe id="emb-b" src="" class="hide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+        <div id="arguments">
+          <div class="section-title">Problème</div>
+          <div id="prob">probleme</div>
+          <div class="section-title">Solution</div>
+          <div id="sol">solution</div>
+          <div class="section-title">Bénéfices</div>
+          <div id="ben">benefis</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Témoignages -->
+    <section class="card hide" id="testi">
+      <h3>Témoignages</h3>
+      <div id="testi-body" data-alt="temoin">temoin</div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="card hide" id="faq">
+      <h3>FAQ</h3>
+      <div id="faq-body" data-alt="question">question</div>
+    </section>
+
+    <footer class="muted" style="text-align:center;margin-top:14px">&copy; meta</footer>
+  </main>
+
+  <script>
+    /* ---------- Helpers ---------- */
+    const clean = (s)=> (s||"").toString().trim();
+    const isToken = (s)=> /\{\{[^}]+\}\}/.test((s||"").toString());
+    const isHttp = (u)=>{ try{ const x=new URL((u||'').trim()); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
+
+    // Logo visible uniquement si URL exploitable
+    (function(){
+      const logo=document.getElementById('logo');
+      const src=clean(logo?.getAttribute('src'));
+      if (logo && src && !isToken(src) && (/^(https?:|data:image)/i.test(src))) logo.style.display='block';
+    })();
+
+    // Bullets : si on reçoit un tableau → rendre en <ul>
+    (function(){
+      const host=document.getElementById('bul'); if(!host) return;
+      const raw=clean(host.textContent);
+      if(!raw || isToken(raw)) return; // laisser la logique côté serveur si tokens
+      try{
+        const arr=JSON.parse(raw);
+        if(Array.isArray(arr)){
+          host.innerHTML = '<ul>' + arr.map(x=>'\n<li>'+clean(x)+'</li>').join('') + '\n</ul>';
+        }
+      }catch(_){ /* texte simple → laisser tel quel */ }
+    })();
+
+    // Lien(s) de téléchargement / accès produit (facultatif)
+    (function(){
+      const wrap=document.getElementById('dl-wrap'); if(!wrap) return;
+      const file = clean('{{delivery.productFile}}');
+      const url  = clean('{{delivery.productUrl}}');
+      const pFile= clean('{{pageProductFile}}');
+      const pUrl = clean('{{pageProductUrl}}');
+      let html='';
+      if(file && !isToken(file)) html += `<a class="btn" href="${file}" download>Télécharger le produit</a>`;
+      else if(url && !isToken(url)) html += `<a class="btn" href="${url}" target="_blank">Accéder au produit</a>`;
+      if(pFile && !isToken(pFile)) html += `<a class="btn" style="margin-top:8px" href="${pFile}" download>Télécharger le bonus</a>`;
+      else if(pUrl && !isToken(pUrl)) html += `<a class="btn" style="margin-top:8px" href="${pUrl}" target="_blank">Voir le bonus</a>`;
+      if(html){ wrap.innerHTML=html; wrap.classList.remove('hide'); }
+    })();
+
+  
+// ===== Mise en page média / arguments =====
+(function(){
+  try{
+    const vidB = document.getElementById('vid-b');
+    const embB = document.getElementById('emb-b');
+    const gridB = document.getElementById('grid-b');
+    const args  = document.getElementById('arguments');
+    const blk   = document.getElementById('block-b');
+
+    // Valeurs issues du templating (si Make a remplacé)
+    const mp4Tpl = clean('https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fmercredi-sales2-n4k4z%2Fpage1-video-1757488252029?alt=media&token=731adcf5-8d8e-4c20-b578-3eb33a1090e1');
+    const embTpl = clean('');
+
+    // Fallback DOM : si le templating n'a pas remplacé, on lit l'attribut déjà dans le HTML
+    const mp4Dom = (vidB?.getAttribute('src') || '').trim();
+    const embDom = (embB?.getAttribute('src') || '').trim();
+
+    const mp4 = (!isToken(mp4Tpl) && mp4Tpl) ? mp4Tpl : mp4Dom;
+    const emb = (!isToken(embTpl) && embTpl) ? embTpl : embDom;
+
+    const hasVid = !!mp4 && isHttp(mp4);
+    const hasEmb = !!emb && isHttp(emb);
+
+    // Reset d’affichage
+    [vidB, embB].forEach(el => {
+      if(!el) return;
+      el.classList.add('hide');
+      el.style.display = 'none';
+    });
+
+    if(hasVid){
+      if(vidB){ vidB.src = mp4; vidB.classList.remove('hide'); vidB.style.display = 'block'; }
+      gridB?.classList.add('video-right');   // → Vidéo à droite, texte à gauche
+      blk?.classList.add('has-video');       // (ok si tu veux garder cette classe)
+      return;
+    }
+
+    if(hasEmb){
+      if(embB){ embB.src = emb; embB.classList.remove('hide'); embB.style.display = 'block'; }
+      gridB?.classList.add('video-right');   // → Vidéo à droite, texte à gauche
+      blk?.classList.add('has-video');
+      return;
+    }
+
+    // Pas de vidéo : arguments pleine largeur (comme avant)
+    gridB?.classList.remove('col-2');
+    if(gridB) gridB.style.gridTemplateColumns = '1fr';
+    if(args){ args.style.maxWidth = '760px'; args.style.margin = '0 auto'; }
+  }catch(e){
+    console.warn('Bloc B error:', e);
+    // En cas d’erreur, on n’arrête pas le reste du script (témoignages/FAQ).
+  }
+})();
+
+    // ===== Testimonials & FAQ (mêmes règles que l'optin) =====
+    (function(){
+      function has(v){ return !!(v && (""+v).trim() && !/\{\{[^}]+\}\}/.test(""+v)); }
+      function showFromRaw(wrapId, bodyId, mapJson){
+        const wrap=document.getElementById(wrapId), body=document.getElementById(bodyId);
+        if(!wrap||!body) return;
+        let raw=(body.textContent||'').trim();
+        if(!has(raw)) raw=(body.getAttribute('data-alt')||'').trim
