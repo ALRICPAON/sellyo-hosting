@@ -6,239 +6,387 @@
   <meta name="description" content="{{seo.metaDescription}}" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root {
-      --bg: {{ui.mainColor}};
-      --btn: {{ui.buttonColor}};
-      --text: #fff;
+    :root{ --bg: {{ui.mainColor}}; --btn: {{ui.buttonColor}}; --text:#fff }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      line-height:1.45;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-    }
-    main {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 32px 16px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-      gap: 32px;
-    }
-    header { text-align: center; margin-bottom: 32px; }
-    header img { max-height: 60px; margin-bottom: 16px; }
-    .content h1 { font-size: 2rem; margin-bottom: 16px; }
-    .content p { font-size: 1rem; margin-bottom: 12px; }
-    .bullets ul { padding-left: 20px; margin-bottom: 16px; }
-    .bullets li { margin-bottom: 8px; list-style: disc; }
+    main{max-width:1100px;margin:0 auto;padding:24px}
 
-    .media { display: flex; justify-content: center; align-items: center; }
-    .media img, .media video {
-      max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    header{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:16px 0
+    }
+    #logo{max-height:56px;display:none}
+
+    /* HERO */
+    .hero{
+      text-align:center;
+      margin-bottom:18px;
+    }
+    .hero h1{
+      font-size:clamp(28px,3.8vw,46px);
+      margin:6px 0;
+    }
+    .hero .sub{
+      opacity:.9;
+      margin:8px 0 0;
+      font-size:18px;
     }
 
-    .price { font-size: 1.6rem; font-weight: 900; margin: 12px 0; }
-
-    button.cta {
-      background: var(--btn); color: #fff; font-weight: bold;
-      padding: 14px; border: none; border-radius: 6px; width: 100%;
-      font-size: 1.1rem; cursor: pointer; transition: background 0.3s ease;
-      text-align: center; margin-top: 16px;
+    .card{
+      background:#ffffff10;
+      border:1px solid #ffffff14;
+      border-radius:16px;
+      padding:18px;
+      margin-bottom:24px;
     }
-    button.cta:hover { background: #2563eb; }
 
-    .testimonials, .faqs { margin-top: 32px; }
-    .testimonial-item, .faq-item { background: rgba(255, 255, 255, 0.05); padding: 12px; margin-bottom: 10px; border-radius: 6px; }
+    .btn,button.cta{
+      display:inline-block;
+      width:100%;
+      padding:14px 18px;
+      border-radius:12px;
+      background:var(--btn);
+      color:#fff;
+      font-weight:800;
+      text-align:center;
+      text-decoration:none;
+      border:0;
+      cursor:pointer;
+      font-size:18px;
+    }
 
-    footer { text-align: center; margin-top: 40px; opacity: 0.6; font-size: 0.9rem; }
+    /* Grilles */
+    .grid{display:grid;gap:18px}
+    .col-2{grid-template-columns:1fr}
+    @media(min-width:880px){
+      .col-2{
+        grid-template-columns:1fr 1fr;
+      }
+    }
 
-    /* Timer */
-    .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
+    .media img,.media video{
+      width:100%;
+      max-height:440px;
+      object-fit:cover;
+      border-radius:12px;
+      display:block
+    }
+    .media iframe{
+      width:100%;
+      aspect-ratio:16/9;
+      border:0;
+      border-radius:12px;
+      display:block
+    }
+
+    /* TIMER amélioré */
+    .timer{
+      font-weight:900;
+      font-size:28px;
+      color:#ffcc00;
+      text-align:center;
+      margin:20px 0;
+    }
+
+    .muted{opacity:.85}
+    .hide{display:none!important}
+
+    /* Bloc A : si pas d'image → texte centré, 1 seule colonne */
+#block-a.center-text .grid { grid-template-columns: 1fr !important; }
+#block-a.center-text #media-a,
+#block-a.center-text #media-img-wrap { display: none !important; }
+#block-a.center-text #col-a-text { max-width: 760px; margin: 0 auto; text-align: center; }
+
   </style>
   <script src="https://js.stripe.com/v3"></script>
 </head>
 <body>
-  <header>
-  <img id="logo" src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'">
-</header>
-<script>
-document.addEventListener('DOMContentLoaded', ()=>{
-  const lg=document.getElementById('logo');
-  if(lg && (lg.getAttribute('src')||'').trim().startsWith('http')) lg.style.display='block';
-});
-</script>
-
   <main>
-    <!-- Colonne gauche : contenu -->
-    <div class="content">
-      <h1>{{copy.title}}</h1>
-      <p>{{copy.subtitle}}</p>
-      <p>{{copy.productDescription}}</p>
+    <!-- HEADER -->
+    <header>
+      <img id="logo" src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'">
+    </header>
 
-      <div class="bullets">
-        {{copy.bullets}}
+    <!-- HERO -->
+    <section class="hero card">
+      <h1 id="title">{{copy.title}}</h1>
+      <p class="sub" id="subtitle">{{copy.subtitle}}</p>
+    </section>
+
+    <!-- BLOC A : Image gauche | Texte + CTA droite -->
+    <section class="card" id="block-a">
+      <div class="grid col-2">
+        <div class="media" id="media-a">
+          <img id="img-a" src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
+        </div>
+        <div id="col-a-text">
+          <div id="desc">{{copy.productDescription}}</div>
+          <div id="bul">{{copy.bullets}}</div>
+          <div id="gua"><em>{{copy.guarantee}}</em></div>
+          <div id="timer" class="timer hide"></div>
+          <button class="cta" id="cta-main">{{copy.ctaText}}</button>
+          <div id="dl-wrap" class="hide" style="margin-top:10px"></div>
+        </div>
       </div>
+    </section>
 
-      <!-- Problème / Solution / Bénéfices / Garantie (comme sales) -->
-      <div id="prob">{{copy.problem}}</div>
-      <div id="sol">{{copy.solution}}</div>
-      <div id="ben">{{copy.benefits}}</div>
-      <div id="gua"><em>{{copy.guarantee}}</em></div>
+    <!-- BLOC B : Texte (gauche) | Vidéo (droite) -->
+    <section class="card" id="block-b">
+      <div class="grid col-2" id="grid-b">
+        <!-- Texte sans titres -->
+        <div id="arguments">
+          <div id="prob">{{copy.problem}}</div>
+          <div id="sol">{{copy.solution}}</div>
+          <div id="ben">{{copy.benefits}}</div>
+        </div>
+        <!-- Vidéo -->
+        <div class="media" id="media-b">
+          <video id="vid-b" src="{{media.videoMp4}}" controls playsinline class="hide" onerror="this.style.display='none'"></video>
+          <iframe id="emb-b" src="{{media.videoEmbed}}" class="hide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
 
-      <!-- Timer -->
-      <div id="timer" class="timer" style="display:none"></div>
+    <!-- Témoignages -->
+    <section class="card hide" id="testi">
+      <h3>Témoignages</h3>
+      <div id="testi-body" data-alt="{{testimonials}}">{{testimonials}}</div>
+    </section>
 
-      <!-- Prix -->
-      <div id="price" class="price">{{1.payment.price}} {{1.currency}}</div>
+    <!-- FAQ -->
+    <section class="card hide" id="faq">
+      <h3>FAQ</h3>
+      <div id="faq-body" data-alt="{{faqs}}">{{faqs}}</div>
+    </section>
 
-      <!-- CTA Paiement -->
-      <button class="cta" id="payBtn">{{copy.ctaText}}</button>
-    </div> <!-- <-- ferme .content -->
-
-    <!-- Colonne droite : image ou vidéo -->
-<div class="media" id="media">
-  <img id="media-img" src="{{media.imageUrl}}" alt="Image" onerror="this.style.display='none'" style="display:none" />
-  <video id="media-video" controls autoplay muted loop class="hide" style="display:none">
-    <source id="media-video-src" src="{{media.videoMp4}}" type="video/mp4">
-  </video>
-</div>
+    <footer class="muted" style="text-align:center;margin-top:14px">
+      &copy; {{seo.metaTitle}}
+    </footer>
   </main>
 
-  <!-- Paiement: Stripe Checkout client-only + fallbacks -->
   <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const btn = document.getElementById('payBtn');
-    if (!btn) return;
+    const clean = (s)=> (s||"").toString().trim();
+    const isToken = (s)=> /\{\{[^}]+\}\}/.test((s||"").toString());
+    const isHttp = (u)=>{ try{ const x=new URL((u||'').trim()); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
 
-    const clean   = (s)=> (s||"").toString().trim();
-    const isToken = (s)=> /\{\{[^}]+\}\}/.test(s||"");
-    const withSlash = (u)=> u ? (u.endsWith('/') ? u : (u + '/')) : "";
-
-    // Champs (webhook 1.* / 133.*)
-    const pk        = clean("{{1.payment.stripePublishableKey}}");
-    const priceId   = clean("{{1.payment.stripePriceId}}");
-    const payLink   = clean("{{1.payment.paymentLink}}");
-    const baseUrl0  = clean("{{1.baseUrl}}"); // Absolu requis pour successUrl
-    const baseUrl   = withSlash(baseUrl0);
-
-    const rawNext   = clean("{{flow.nextHref}}");
-    const nextSlug  = clean("{{133.flow.nextSlug}}");
-    const nextHref  = (!isToken(rawNext) && rawNext) || (nextSlug ? (nextSlug + ".html") : "");
-
-    const url       = clean("{{cta.url}}");
-    const download  = clean("{{download.url}}");
-
-    // Afficher/Masquer le prix si vide ou token non remplacé
-    const priceEl = document.getElementById('price');
-    if (priceEl) {
-      const raw = (priceEl.textContent || '').trim();
-      if (!raw || /\{\{.+\}\}/.test(raw)) priceEl.style.display = 'none';
-    }
-
-    // Priorité: Stripe Checkout > Payment Link > next > url > download
-    if (pk && priceId && nextHref) {
-      const stripe = Stripe(pk);
-      btn.onclick = async (e) => {
-        e.preventDefault();
-        const successUrl = baseUrl + nextHref; // Absolu
-        const cancelUrl  = window.location.href;
-        const { error } = await stripe.redirectToCheckout({
-          lineItems: [{ price: priceId, quantity: 1 }],
-          mode: "payment",
-          successUrl,
-          cancelUrl
-        });
-        if (error) console.warn("Stripe error:", error.message);
-      };
-      return;
-    }
-
-    if (payLink && !isToken(payLink)) {
-      btn.onclick = (e) => { e.preventDefault(); window.location.href = payLink; };
-      return;
-    }
-
-    if (nextHref) {
-      btn.onclick = (e) => { e.preventDefault(); window.location.href = nextHref; };
-      return;
-    }
-
-    if (url && !isToken(url)) {
-      btn.onclick = (e) => { e.preventDefault(); window.location.href = url; };
-      return;
-    }
-
-    if (download && !isToken(download)) {
-      btn.onclick = (e) => { e.preventDefault(); window.location.href = download; };
-      return;
-    }
-
-    // Sinon, cache le bouton (aucune action valable)
-    btn.style.display = 'none';
-  });
-  </script>
-
-  <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const val = (s)=> (s||"").toString().trim();
-  const isToken = (s)=> /\{\{[^}]+\}\}/.test(s||"");
-
-  const vidSrc = val("{{media.videoMp4}}");
-  const imgSrc = val("{{media.imageUrl}}");
-
-  const wrap   = document.getElementById('media');
-  const img    = document.getElementById('media-img');
-  const video  = document.getElementById('media-video');
-  const source = document.getElementById('media-video-src');
-
-  const hasVid = vidSrc && !isToken(vidSrc);
-  const hasImg = imgSrc && !isToken(imgSrc);
-
-  if (!wrap) return;
-
-  if (hasVid) {
-    if (source) source.src = vidSrc;
-    if (video) { video.style.display = 'block'; video.classList.remove('hide'); video.load(); }
-    if (img)   img.style.display = 'none';
-    wrap.style.display = 'flex';
-  } else if (hasImg) {
-    if (img)   { img.src = imgSrc; img.style.display = 'block'; }
-    if (video) video.style.display = 'none';
-    wrap.style.display = 'flex';
-  } else {
-    wrap.style.display = 'none';
-  }
-});
-</script>
-
-  <!-- Timer (evergreen ou deadline ISO) -->
-  <script>
+    // Logo visible uniquement si src exploitable
     (function(){
-      const clean = (s)=> (s||"").toString().trim();
-      const t = document.getElementById('timer');
-      if(!t) return;
+      const logo=document.getElementById('logo');
+      const src=clean(logo?.getAttribute('src'));
+      if (logo && src && !isToken(src) && (/^(https?:|data:image)/i.test(src))) logo.style.display='block';
+    })();
 
-      const evergreen = parseInt('{{timers.evergreenMinutes}}',10) || 0;
-      const deadlineISO = clean('{{timers.deadlineISO}}');
+    // Bullets JSON → <ul>
+    (function(){
+      const host=document.getElementById('bul'); if(!host) return;
+      const raw=clean(host.textContent);
+      if(!raw || isToken(raw)) return;
+      try{
+        const arr=JSON.parse(raw);
+        if(Array.isArray(arr)){
+          host.innerHTML = '<ul>' + arr.map(x=>'<li>'+clean(x)+'</li>').join('') + '</ul>';
+        }
+      }catch(_){}
+    })();
 
-      function render(sec){
-        if(sec<=0){ t.textContent='Offre expirée'; return; }
-        const m=Math.floor(sec/60), s=sec%60;
-        t.textContent='Offre expire dans '+m+'m '+('0'+s).slice(-2)+'s';
-      }
+    // Liens téléchargement produit/bonus
+    (function(){
+      const wrap=document.getElementById('dl-wrap'); if(!wrap) return;
+      const file = clean('{{delivery.productFile}}');
+      const url  = clean('{{delivery.productUrl}}');
+      const pFile= clean('{{pageProductFile}}');
+      const pUrl = clean('{{pageProductUrl}}');
+      let html='';
+      if(file && !isToken(file)) html += `<a class="btn" href="${file}" download>Télécharger le produit</a>`;
+      else if(url && !isToken(url)) html += `<a class="btn" href="${url}" target="_blank">Accéder au produit</a>`;
+      if(pFile && !isToken(pFile)) html += `<a class="btn" style="margin-top:8px" href="${pFile}" download>Télécharger le bonus</a>`;
+      else if(pUrl && !isToken(pUrl)) html += `<a class="btn" style="margin-top:8px" href="${pUrl}" target="_blank">Voir le bonus</a>`;
+      if(html){ wrap.innerHTML=html; wrap.classList.remove('hide'); }
+    })();
 
-      let total=0;
-      if(evergreen>0) total=evergreen*60;
-      else if(deadlineISO && !isNaN(Date.parse(deadlineISO))) {
-        total=Math.max(0,Math.floor((new Date(deadlineISO)-new Date())/1000));
-      }
+    // Gestion vidéo bloc B
+    (function(){
+      const vidB=document.getElementById('vid-b');
+      const embB=document.getElementById('emb-b');
+      const gridB=document.getElementById('grid-b');
+      const args=document.getElementById('arguments');
 
-      if(total>0){
-        t.style.display='block';
-        (function tick(){ render(total--); if(total>=0) setTimeout(tick,1000); })();
+      const mp4=clean('{{media.videoMp4}}');
+      const emb=clean('{{media.videoEmbed}}');
+
+      const hasVid = !!mp4 && !isToken(mp4) && isHttp(mp4);
+      const hasEmb = !!emb && !isToken(emb) && isHttp(emb);
+
+      [vidB,embB].forEach(el=>{ if(el){ el.classList.add('hide'); el.style.display='none'; }});
+
+      if(hasVid){ vidB.src=mp4; vidB.classList.remove('hide'); vidB.style.display='block'; }
+      else if(hasEmb){ embB.classList.remove('hide'); embB.style.display='block'; }
+      else {
+        gridB.classList.remove('col-2');
+        gridB.style.gridTemplateColumns='1fr';
+        args.style.maxWidth='760px';
+        args.style.margin='0 auto';
       }
     })();
+
+    // Témoignages & FAQ
+    (function(){
+      function has(v){ return !!(v && (""+v).trim() && !/\{\{[^}]+\}\}/.test(""+v)); }
+      function showFromRaw(wrapId, bodyId, mapJson){
+        const wrap=document.getElementById(wrapId), body=document.getElementById(bodyId);
+        if(!wrap||!body) return;
+        let raw=(body.textContent||'').trim();
+        if(!has(raw)) raw=(body.getAttribute('data-alt')||'').trim();
+        if(!has(raw)) return;
+        let html='';
+        try{ const data=JSON.parse(raw); html = mapJson(data); }catch(_){ html=raw; }
+        if(has(html)){ body.innerHTML=html; wrap.classList.remove('hide'); }
+      }
+      showFromRaw('testi','testi-body', arr => Array.isArray(arr) ? arr.map(t=>`<div class="testimonial-item">“${(t&&t.text?t.text:t)||''}”</div>`).join('') : '');
+      showFromRaw('faq','faq-body', arr => Array.isArray(arr) ? arr.map(x=>`<div class="faq-item"><strong>${(x&&x.q?x.q:(x&&x.question?x.question:''))}</strong><br/>${(x&&x.a?x.a:(x&&x.answer?x.answer:''))}</div>`).join('') : '');
+    })();
   </script>
+
+ <script>
+(function(){
+  // --- Button (supports cta-main or cta-btn) ---
+  const btn = document.getElementById('cta-main') || document.getElementById('cta-btn');
+  if(!btn) return;
+
+  // --- Helpers ---
+  const clean   = (s)=> (s||"").toString().trim();
+  const isToken = (s)=> /\{\{[^}]+\}\}/.test((s||"").toString());
+  const isAbs   = (u)=> /^(https?:)?\/\//i.test(u||'');  // http(s):// or //cdn
+  const isRoot  = (u)=> /^\//.test(u||'');
+  const withSlash=(u)=> u ? (u.endsWith('/') ? u : (u+'/')) : '';
+  const toAbsolute = (url, baseUrl)=>{
+    if(!url) return '';
+    if (isAbs(url) || isRoot(url)) return url;
+    if (baseUrl && !isToken(baseUrl)) return withSlash(baseUrl) + url.replace(/^\/+/,'');
+    // fallback: resolve vs current dir
+    try{
+      const cur = window.location.href.replace(/[^/]*$/, '');
+      return new URL(url, cur).toString();
+    }catch(_){ return url; }
+  };
+
+  // --- Inputs from templating (leave as-is, your system replaces them) ---
+  const pk        = clean('{{1.payment.stripePublishableKey}}');
+  const priceId   = clean('{{1.payment.stripePriceId}}');
+  const payLink   = clean('{{1.payment.paymentLink}}');     // optional: direct payment link
+  const baseUrl   = clean('{{1.baseUrl}}');                 // e.g. https://.../tunnels/abc/
+  const nextSlug  = clean('{{133.flow.nextSlug}}');         // e.g. thankyou
+  const rawNext   = clean('{{flow.nextHref}}');             // e.g. thankyou.html
+  const explicitUrl = clean('{{cta.url}}');                 // optional: when using url mode
+  let   ctaAction = clean('{{cta.action}}').toLowerCase();  // 'payment' | 'checkout' | 'next' | 'url' | ''
+
+  // Normalize
+  if (ctaAction === 'checkout') ctaAction = 'payment';
+  const nextHref = (!isToken(rawNext) && rawNext) || (nextSlug ? (nextSlug + '.html') : '');
+
+  // --- Decide mode automatically if not explicit ---
+  let mode;
+  if (ctaAction === 'payment' || ctaAction === 'next' || ctaAction === 'url'){
+    mode = ctaAction;
+  } else {
+    // infer: if Stripe keys or paymentLink exist -> payment, else next
+    mode = ( (pk && !isToken(pk) && priceId && !isToken(priceId)) || (payLink && !isToken(payLink)) ) ? 'payment' : 'next';
+  }
+
+  btn.addEventListener('click', async (e)=>{
+    e.preventDefault();
+
+    if (mode === 'payment'){
+      // 1) Direct payment link wins if present
+      if (payLink && !isToken(payLink)) {
+        window.location.href = payLink;
+        return;
+      }
+      // 2) Stripe Checkout → success = thank-you page
+      if (pk && !isToken(pk) && priceId && !isToken(priceId)){
+        const successUrl = toAbsolute(nextHref, baseUrl);
+        const cancelUrl  = window.location.href;
+        try{
+          const stripe = Stripe(pk);
+          const { error } = await stripe.redirectToCheckout({
+            lineItems:[{ price: priceId, quantity:1 }],
+            mode:'payment',
+            successUrl,
+            cancelUrl
+          });
+          if (error) {
+            console.warn('Stripe error:', error.message);
+            if (successUrl) window.location.href = successUrl; // fallback
+          }
+        }catch(err){
+          console.warn('Stripe init error:', err);
+          const successUrl = toAbsolute(nextHref, baseUrl);
+          if (successUrl) window.location.href = successUrl;   // fallback
+        }
+        return;
+      }
+      // 3) If no Stripe config, at least go to next page
+      if (nextHref && !isToken(nextHref)){
+        window.location.href = toAbsolute(nextHref, baseUrl);
+        return;
+      }
+      return; // nothing configured
+    }
+
+    // mode === 'url' or 'next'
+    if (mode === 'url' && explicitUrl && !isToken(explicitUrl)){
+      window.location.href = toAbsolute(explicitUrl, baseUrl);
+      return;
+    }
+    if (nextHref && !isToken(nextHref)){
+      window.location.href = toAbsolute(nextHref, baseUrl);
+      return;
+    }
+    // nothing configured
+  });
+})();
+</script>
+
+  <script>
+(function(){
+  const blockA = document.getElementById('block-a');
+  const img    = document.getElementById('img-a');
+  if (!blockA || !img) return;
+
+  const isToken = (s)=> /\{\{[^}]+\}\}/.test((s||'').toString());
+  const isUrl   = (u)=> /^(https?:|\/\/|data:|blob:)/i.test((u||'').trim());
+
+  function centerTextA(){
+    blockA.classList.add('center-text');
+  }
+
+  // Cas 1 : pas d'URL, token, ou URL invalide → on centre tout de suite
+  const src = (img.getAttribute('src')||'').trim();
+  if (!src || isToken(src) || !isUrl(src)) { centerTextA(); return; }
+
+  // Cas 2 : on écoute les événements au cas où l'image échoue
+  img.addEventListener('error', centerTextA);
+  img.addEventListener('load', () => {
+    // Si l'image charge mais est vide/masquée (ex: onerror inline)
+    const hidden = (img.style.display === 'none') || (getComputedStyle(img).display === 'none');
+    if (img.naturalWidth === 0 || hidden) centerTextA();
+  });
+
+  // Filet de sécurité si l'erreur est déjà passée avant nos listeners
+  setTimeout(() => {
+    const hidden = (img.style.display === 'none') || (getComputedStyle(img).display === 'none');
+    if (img.naturalWidth === 0 || hidden) centerTextA();
+  }, 400);
+})();
+</script>
+
 </body>
 </html>
