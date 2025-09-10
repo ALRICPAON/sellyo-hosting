@@ -248,85 +248,102 @@
     })();
   </script>
 
-  <script>
+ <script>
 (function(){
-  // === Sélection du bouton ===
-  const btn = document.getElementById('cta-main');
+  // --- Button (supports cta-main or cta-btn) ---
+  const btn = document.getElementById('cta-main') || document.getElementById('cta-btn');
   if(!btn) return;
 
-  // === Helpers ===
+  // --- Helpers ---
   const clean   = (s)=> (s||"").toString().trim();
   const isToken = (s)=> /\{\{[^}]+\}\}/.test((s||"").toString());
-  const isAbs   = (u)=> /^(https?:)?\/\//i.test(u||'');        // http(s):// ou //cdn...
-  const isRoot  = (u)=> /^\//.test(u||'');                     // /chemin/absolu
+  const isAbs   = (u)=> /^(https?:)?\/\//i.test(u||'');  // http(s):// or //cdn
+  const isRoot  = (u)=> /^\//.test(u||'');
   const withSlash=(u)=> u ? (u.endsWith('/') ? u : (u+'/')) : '';
-
-  // === Données templating (laisser tel quel, Make remplacera) ===
-  const pk       = clean('{{1.payment.stripePublishableKey}}');
-  const priceId  = clean('{{1.payment.stripePriceId}}');
-  const payLink  = clean('{{1.payment.paymentLink}}');
-  const baseUrl  = withSlash(clean('{{1.baseUrl}}'));          // ex: https://domaine.com/tunnels/xyz/
-  const nextSlug = clean('{{133.flow.nextSlug}}');             // ex: page-suivante
-  const rawNext  = clean('{{flow.nextHref}}');                  // ex: page-suivante.html
-
-  // nextHref déterministe
-  const nextHref = (!isToken(rawNext) && rawNext) || (nextSlug ? (nextSlug + '.html') : '');
-
-  // Construit une URL absolue à partir de baseUrl/nextHref
-  function toAbsolute(url){
+  const toAbsolute = (url, baseUrl)=>{
     if(!url) return '';
-    if (isAbs(url)) return url;                      // déjà absolu (http(s):// ou //)
-    if (isRoot(url)) return url;                     // /chemin absolu → laisser (le browser résout)
-    if (baseUrl && !isToken(baseUrl)) return baseUrl + url; // baseUrl fourni
-    // sinon on résout depuis le répertoire courant
+    if (isAbs(url) || isRoot(url)) return url;
+    if (baseUrl && !isToken(baseUrl)) return withSlash(baseUrl) + url.replace(/^\/+/,'');
+    // fallback: resolve vs current dir
     try{
-      const cur = window.location.href.replace(/[^/]*$/, ''); // dossier courant
+      const cur = window.location.href.replace(/[^/]*$/, '');
       return new URL(url, cur).toString();
     }catch(_){ return url; }
+  };
+
+  // --- Inputs from templating (leave as-is, your system replaces them) ---
+  const pk        = clean('{{1.payment.stripePublishableKey}}');
+  const priceId   = clean('{{1.payment.stripePriceId}}');
+  const payLink   = clean('{{1.payment.paymentLink}}');     // optional: direct payment link
+  const baseUrl   = clean('{{1.baseUrl}}');                 // e.g. https://.../tunnels/abc/
+  const nextSlug  = clean('{{133.flow.nextSlug}}');         // e.g. thankyou
+  const rawNext   = clean('{{flow.nextHref}}');             // e.g. thankyou.html
+  const explicitUrl = clean('{{cta.url}}');                 // optional: when using url mode
+  let   ctaAction = clean('{{cta.action}}').toLowerCase();  // 'payment' | 'checkout' | 'next' | 'url' | ''
+
+  // Normalize
+  if (ctaAction === 'checkout') ctaAction = 'payment';
+  const nextHref = (!isToken(rawNext) && rawNext) || (nextSlug ? (nextSlug + '.html') : '');
+
+  // --- Decide mode automatically if not explicit ---
+  let mode;
+  if (ctaAction === 'payment' || ctaAction === 'next' || ctaAction === 'url'){
+    mode = ctaAction;
+  } else {
+    // infer: if Stripe keys or paymentLink exist -> payment, else next
+    mode = ( (pk && !isToken(pk) && priceId && !isToken(priceId)) || (payLink && !isToken(payLink)) ) ? 'payment' : 'next';
   }
 
   btn.addEventListener('click', async (e)=>{
     e.preventDefault();
 
-    // 1) Lien de paiement direct prioritaire (si fourni)
-    if (payLink && !isToken(payLink)) {
-      window.location.href = payLink;
-      return;
-    }
-
-    // 2) Stripe Checkout si clés + price ok et qu’on sait où aller après
-    if (pk && !isToken(pk) && priceId && !isToken(priceId) && nextHref && !isToken(nextHref)) {
-      try{
-        const stripe = Stripe(pk);
-        const successUrl = toAbsolute(nextHref);
-        const cancelUrl  = window.location.href;
-        const { error } = await stripe.redirectToCheckout({
-          lineItems:[{ price: priceId, quantity:1 }],
-          mode:'payment',
-          successUrl,
-          cancelUrl
-        });
-        if (error) {
-          console.warn('Stripe error:', error.message);
-          // Fallback navigation
-          window.location.href = successUrl;
-        }
-      }catch(err){
-        console.warn('Stripe init error:', err);
-        const successUrl = toAbsolute(nextHref);
-        if (successUrl) window.location.href = successUrl;
+    if (mode === 'payment'){
+      // 1) Direct payment link wins if present
+      if (payLink && !isToken(payLink)) {
+        window.location.href = payLink;
+        return;
       }
-      return;
+      // 2) Stripe Checkout → success = thank-you page
+      if (pk && !isToken(pk) && priceId && !isToken(priceId)){
+        const successUrl = toAbsolute(nextHref, baseUrl);
+        const cancelUrl  = window.location.href;
+        try{
+          const stripe = Stripe(pk);
+          const { error } = await stripe.redirectToCheckout({
+            lineItems:[{ price: priceId, quantity:1 }],
+            mode:'payment',
+            successUrl,
+            cancelUrl
+          });
+          if (error) {
+            console.warn('Stripe error:', error.message);
+            if (successUrl) window.location.href = successUrl; // fallback
+          }
+        }catch(err){
+          console.warn('Stripe init error:', err);
+          const successUrl = toAbsolute(nextHref, baseUrl);
+          if (successUrl) window.location.href = successUrl;   // fallback
+        }
+        return;
+      }
+      // 3) If no Stripe config, at least go to next page
+      if (nextHref && !isToken(nextHref)){
+        window.location.href = toAbsolute(nextHref, baseUrl);
+        return;
+      }
+      return; // nothing configured
     }
 
-    // 3) Fallback : si on a une page suivante, on y va quoi qu’il arrive
-    if (nextHref && !isToken(nextHref)) {
-      window.location.href = toAbsolute(nextHref);
+    // mode === 'url' or 'next'
+    if (mode === 'url' && explicitUrl && !isToken(explicitUrl)){
+      window.location.href = toAbsolute(explicitUrl, baseUrl);
       return;
     }
-
-    // 4) Rien de configuré (template pur) → optionnel: message
-    // alert('CTA non configuré (template). Renseignez paymentLink ou Stripe + nextHref.');
+    if (nextHref && !isToken(nextHref)){
+      window.location.href = toAbsolute(nextHref, baseUrl);
+      return;
+    }
+    // nothing configured
   });
 })();
 </script>
