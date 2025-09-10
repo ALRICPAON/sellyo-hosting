@@ -121,6 +121,9 @@
     const clean = (s)=> (s||"").toString().trim();
     const isToken = (s)=> /\{\{[^}]+\}\}/.test((s||"").toString());
     const isHttp = (u)=>{ try{ const x=new URL((u||'').trim()); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
+    // Plus tolérant que isHttp (accepte https, //, data:, blob:)
+const isUrl = (u)=> /^(https?:|\/\/|data:|blob:)/i.test((u||'').trim());
+
 
     // Logo visible uniquement si URL exploitable
     (function(){
@@ -165,21 +168,20 @@
     const embB = document.getElementById('emb-b');
     const gridB = document.getElementById('grid-b');
     const args  = document.getElementById('arguments');
-    const blk   = document.getElementById('block-b');
 
-    // Valeurs issues du templating (si Make a remplacé)
-    const mp4Tpl = clean('{{media.videoMp4}}');
-    const embTpl = clean('{{media.videoEmbed}}');
+    // Valeurs template (si remplacées par Make)
+    const mp4Tpl = (('{{media.videoMp4}}')||'').trim();
+    const embTpl = (('{{media.videoEmbed}}')||'').trim();
 
-    // Fallback DOM : si le templating n'a pas remplacé, on lit l'attribut déjà dans le HTML
+    // Fallback DOM si le templating n’a pas injecté
     const mp4Dom = (vidB?.getAttribute('src') || '').trim();
     const embDom = (embB?.getAttribute('src') || '').trim();
 
+    // Choix final + détection URL permissive
     const mp4 = (!isToken(mp4Tpl) && mp4Tpl) ? mp4Tpl : mp4Dom;
     const emb = (!isToken(embTpl) && embTpl) ? embTpl : embDom;
-
-    const hasVid = !!mp4 && isHttp(mp4);
-    const hasEmb = !!emb && isHttp(emb);
+    const hasVid = isUrl(mp4);
+    const hasEmb = isUrl(emb);
 
     // Reset d’affichage
     [vidB, embB].forEach(el => {
@@ -190,25 +192,23 @@
 
     if(hasVid){
       if(vidB){ vidB.src = mp4; vidB.classList.remove('hide'); vidB.style.display = 'block'; }
-      gridB?.classList.add('video-right');   // → Vidéo à droite, texte à gauche
-      blk?.classList.add('has-video');       // (ok si tu veux garder cette classe)
-      return;
+      gridB?.classList.add('video-right');   // → texte à gauche, vidéo à droite
+      return; // on sort proprement
     }
 
     if(hasEmb){
       if(embB){ embB.src = emb; embB.classList.remove('hide'); embB.style.display = 'block'; }
-      gridB?.classList.add('video-right');   // → Vidéo à droite, texte à gauche
-      blk?.classList.add('has-video');
+      gridB?.classList.add('video-right');   // → texte à gauche, vidéo à droite
       return;
     }
 
-    // Pas de vidéo : arguments pleine largeur (comme avant)
+    // Pas de vidéo → arguments pleine largeur
     gridB?.classList.remove('col-2');
     if(gridB) gridB.style.gridTemplateColumns = '1fr';
     if(args){ args.style.maxWidth = '760px'; args.style.margin = '0 auto'; }
   }catch(e){
     console.warn('Bloc B error:', e);
-    // En cas d’erreur, on n’arrête pas le reste du script (témoignages/FAQ).
+    // En cas d’erreur on ne bloque PAS les blocs suivants (témoignages/FAQ).
   }
 })();
 
