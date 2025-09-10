@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>sales1</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{ --bg: #004d65; --btn: #7b219f; --text:#fff }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      line-height:1.45;
+    }
+    main{max-width:1100px;margin:0 auto;padding:24px}
+
+    header{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:16px 0
+    }
+    #logo{max-height:56px;display:none}
+
+    /* HERO */
+    .hero{
+      text-align:center;
+      margin-bottom:18px;
+    }
+    .hero h1{
+      font-size:clamp(28px,3.8vw,46px);
+      margin:6px 0;
+    }
+    .hero .sub{
+      opacity:.9;
+      margin:8px 0 0;
+      font-size:18px;
+    }
+
+    .card{
+      background:#ffffff10;
+      border:1px solid #ffffff14;
+      border-radius:16px;
+      padding:18px;
+      margin-bottom:24px;
+    }
+
+    .btn,button.cta{
+      display:inline-block;
+      width:100%;
+      padding:14px 18px;
+      border-radius:12px;
+      background:var(--btn);
+      color:#fff;
+      font-weight:800;
+      text-align:center;
+      text-decoration:none;
+      border:0;
+      cursor:pointer;
+      font-size:18px;
+    }
+
+    /* Grilles */
+    .grid{display:grid;gap:18px}
+    .col-2{grid-template-columns:1fr}
+    @media(min-width:880px){
+      .col-2{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
+    .media img,.media video{
+      width:100%;
+      max-height:440px;
+      object-fit:cover;
+      border-radius:12px;
+      display:block
+    }
+    .media iframe{
+      width:100%;
+      aspect-ratio:16/9;
+      border:0;
+      border-radius:12px;
+      display:block
+    }
+
+    /* TIMER amélioré */
+    .timer{
+      font-weight:900;
+      font-size:28px;
+      color:#ffcc00;
+      text-align:center;
+      margin:20px 0;
+    }
+
+    .muted{opacity:.85}
+    .hide{display:none!important}
+  </style>
+  <script src="https://js.stripe.com/v3"></script>
+</head>
+<body>
+  <main>
+    <!-- HEADER -->
+    <header>
+      <img id="logo" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fsales1-r0rh7%2Flogo-1757494790683?alt=media&token=6dde0ac6-89af-4767-a780-4de0bf0daaf7" alt="Logo" onerror="this.style.display='none'">
+    </header>
+
+    <!-- HERO -->
+    <section class="hero card">
+      <h1 id="title">titre</h1>
+      <p class="sub" id="subtitle">sous titre</p>
+    </section>
+
+    <!-- BLOC A : Image gauche | Texte + CTA droite -->
+    <section class="card" id="block-a">
+      <div class="grid col-2">
+        <div class="media" id="media-a">
+          <img id="img-a" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fsales1-r0rh7%2Fpage1-hero-1757494792157?alt=media&token=fc012cb6-420b-40db-ba97-e746262441ad" alt="" onerror="this.style.display='none'">
+        </div>
+        <div id="col-a-text">
+          <div id="desc">description</div>
+          <div id="bul">clé</div>
+          <div id="gua"><em>garantie</em></div>
+          <div id="timer" class="timer hide"></div>
+          <button class="cta" id="cta-main">je test</button>
+          <div id="dl-wrap" class="hide" style="margin-top:10px"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLOC B : Texte (gauche) | Vidéo (droite) -->
+    <section class="card" id="block-b">
+      <div class="grid col-2" id="grid-b">
+        <!-- Texte sans titres -->
+        <div id="arguments">
+          <div id="prob">problem</div>
+          <div id="sol">solution</div>
+          <div id="ben">benefice</div>
+        </div>
+        <!-- Vidéo -->
+        <div class="media" id="media-b">
+          <video id="vid-b" src="" controls playsinline class="hide" onerror="this.style.display='none'"></video>
+          <iframe id="emb-b" src="" class="hide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- Témoignages -->
+    <section class="card hide" id="testi">
+      <h3>Témoignages</h3>
+      <div id="testi-body" data-alt="supers">supers</div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="card hide" id="faq">
+      <h3>FAQ</h3>
+      <div id="faq-body" data-alt="question">question</div>
+    </section>
+
+    <footer class="muted" style="text-align:center;margin-top:14px">
+      &copy; sales1
+    </footer>
+  </main>
+
+  <script>
+    const clean = (s)=> (s||"").toString().trim();
+    const isToken = (s)=> /\{\{[^}]+\}\}/.test((s||"").toString());
+    const isHttp = (u)=>{ try{ const x=new URL((u||'').trim()); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
+
+    // Logo visible uniquement si src exploitable
+    (function(){
+      const logo=document.getElementById('logo');
+      const src=clean(logo?.getAttribute('src'));
+      if (logo && src && !isToken(src) && (/^(https?:|data:image)/i.test(src))) logo.style.display='block';
+    })();
+
+    // Bullets JSON → <ul>
+    (function(){
+      const host=document.getElementById('bul'); if(!host) return;
+      const raw=clean(host.textContent);
+      if(!raw || isToken(raw)) return;
+      try{
+        const arr=JSON.parse(raw);
+        if(Array.isArray(arr)){
+          host.innerHTML = '<ul>' + arr.map(x=>'<li>'+clean(x)+'</li>').join('') + '</ul>';
+        }
+      }catch(_){}
+    })();
+
+    // Liens téléchargement produit/bonus
+    (function(){
+      const wrap=document.getElementById('dl-wrap'); if(!wrap) return;
+      const file = clean('');
+      const url  = clean('');
+      const pFile= clean('');
+      const pUrl = clean('');
+      let html='';
+      if(file && !isToken(file)) html += `<a class="btn" href="${file}" download>Télécharger le produit</a>`;
+      else if(url && !isToken(url)) html += `<a class="btn" href="${url}" target="_blank">Accéder au produit</a>`;
+      if(pFile && !isToken(pFile)) html += `<a class="btn" style="margin-top:8px" href="${pFile}" download>Télécharger le bonus</a>`;
+      else if(pUrl && !isToken(pUrl)) html += `<a class="btn" style="margin-top:8px" href="${pUrl}" target="_blank">Voir le bonus</a>`;
+      if(html){ wrap.innerHTML=html; wrap.classList.remove('hide'); }
+    })();
+
+    // Gestion vidéo bloc B
+    (function(){
+      const vidB=document.getElementById('vid-b');
+      const embB=document.getElementById('emb-b');
+      const gridB=document.getElementById('grid-b');
+      const args=document.getElementById('arguments');
+
+      const mp4=clean('');
+      const emb=clean('');
+
+      const hasVid = !!mp4 && !isToken(mp4) && isHttp(mp4);
+      const hasEmb = !!emb && !isToken(emb) && isHttp(emb);
+
+      [vidB,embB].forEach(el=>{ if(el){ el.classList.add('hide'); el.style.display='none'; }});
+
+      if(hasVid){ vidB.src=mp4; vidB.classList.remove('hide'); vidB.style.display='block'; }
+      else if(hasEmb){ embB.classList.remove('hide'); embB.style.display='block'; }
+      else {
+        gridB.classList.remove('col-2');
+        gridB.style.gridTemplateColumns='1fr';
+        args.style.maxWidth='760px';
+        args.style.margin='0 auto';
+      }
+    })();
+
+    // Témoignages & FAQ
+    (function(){
+      function has(v){ return !!(v && (""+v).trim() && !/\{\{[^}]+\}\}/.test(""+v)); }
+      function showFromRaw(wrapId, bodyId, mapJson){
+        const wrap=document.getElementById(wrapId), body=document.getElementById(bodyId);
+        if(!wrap||!body) return;
+        let raw=(body.textContent||'').trim();
+        if(!has(raw)) raw=(body.getAttribute('data-alt')||'').trim();
+        if(!has(raw)) return;
+        let html='';
+        try{ const data=JSON.parse(raw); html = mapJson(data); }catch(_){ html=raw; }
+        if(has(html)){ body.innerHTML=html; wrap.classList.remove('hide'); }
+      }
+      showFromRaw('testi','testi-body', arr => Array.isArray(arr) ? arr.map(t=>`<div class="testimonial-item">“${(t&&t.text?t.text:t)||''}”</div>`).join('') : '');
+      showFromRaw('faq','faq-body', arr => Array.isArray(arr) ? arr.map(x=>`<div class="faq-item"><strong>${(x&&x.q?x.q:(x&&x.question?x.question:''))}</strong><br/>${(x&&x.a?x.a:(x&&x.answer?x.answer:''))}</div>`).join('') : '');
+    })();
+  </script>
+</body>
+</html>
