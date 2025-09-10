@@ -36,7 +36,7 @@
     @media(min-width:880px){ #argu-grid.two-cols{ grid-template-columns:1fr 0.95fr; align-items:start } }
     #argu-grid.center video,#argu-grid.center iframe{max-width:720px;margin:0 auto;display:block}
 
-    .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
+    .timer{font-weight:900;text-align:center;margin:12px 0;font-size:24px;color:#facc15}
     .hide{display:none}
     .muted{opacity:.85}
   </style>
@@ -131,22 +131,7 @@
     const isHttp = (u)=>{ try{ const x=new URL((u||'').trim()); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
     const isToken = (s)=> /\{\{[^}]+\}\}/.test((s||"").toString());
 
-    // Couleur de fond fallback
-    (function(){
-      const v=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
-      if (!v || v==='{{ui.mainColor}}'){ document.documentElement.style.setProperty('--bg', '#111'); }
-    })();
-
-    // Nettoyage de code fences éventuels
-    (function(){
-      const kill = (s)=> (s||'').replace(/```html?/gi,'').replace(/```/g,'');
-      ['desc','prob','sol','ben','bul','testi-body','faq-body'].forEach(id=>{
-        const el=document.getElementById(id); if(!el) return;
-        el.innerHTML = kill(el.innerHTML||'');
-      });
-    })();
-
-    // Logo + hero + description visibles si non vides
+    // Logo + hero + description
     (function(){
       const logo=document.getElementById('logo');
       if (logo && cleanText(logo.getAttribute('src'))) logo.style.display='block';
@@ -159,61 +144,64 @@
       if (!cleanText(desc.textContent) || isToken(desc.textContent)) document.getElementById('desc-wrap').style.display='none';
     })();
 
-    // ===== Form fields: array | object | string. Fallback = 5 champs =====
+    // Bullets JSON → <ul>
+    (function(){
+      const host=document.getElementById('bul'); if(!host) return;
+      const raw=cleanText(host.textContent);
+      if(!raw || isToken(raw)) return;
+      try{
+        const arr=JSON.parse(raw);
+        if(Array.isArray(arr)){
+          host.innerHTML = '<ul>' + arr.map(x=>'<li>'+cleanText(x)+'</li>').join('') + '</ul>';
+        }
+      }catch(_){}
+    })();
+
+    // Form builder — version légère
     (function(){
       const host = document.getElementById('form-visible');
-      const raw  = document.getElementById('form-fields-json')?.textContent || '[]';
-      const looksLikeToken = isToken(raw);
-      function input(type, name, placeholder, required=true, options=null){
-        const req = required ? 'required' : '';
-        if (type==='textarea') return `<textarea name="${name}" placeholder="${placeholder}" ${req}></textarea>`;
-        if (type==='select' && Array.isArray(options)){
-          const opts=options.map(o=>`<option value="${(o.value??o)}">${(o.label??o)}</option>`).join('');
-          return `<select name="${name}" ${req}>${opts}</select>`;
+      const raw  = document.getElementById('form-fields-json')?.textContent || '';
+      if(!host){ return; }
+      const isTok = (s)=>/\{\{[^}]+\}\}/.test(s||'');
+
+      function input(t,n,p,r=true,opts){
+        if(t==='textarea') return `<textarea name="${n}" placeholder="${p}" ${r?'required':''}></textarea>`;
+        if(t==='select' && Array.isArray(opts)){
+          const o=opts.map(v=>`<option value="${(v.value??v)}">${(v.label??v)}</option>`).join('');
+          return `<select name="${n}" ${r?'required':''}>${o}</select>`;
         }
-        return `<input name="${name}" type="${type}" placeholder="${placeholder}" ${req}/>`;
+        return `<input type="${t}" name="${n}" placeholder="${p}" ${r?'required':''}/>`;
       }
       function defaults(){
         return [
           input('text','firstname','Votre prénom'),
           input('text','name','Votre nom'),
           input('email','email','Votre email'),
-          input('tel','phone','Votre téléphone'),
+          input('tel','phone','Votre téléphone',false),
           input('textarea','address','Votre adresse',false)
         ].join('');
       }
-      if (!raw || looksLikeToken){ host.innerHTML = defaults(); return; }
 
-      let fields; try{ fields=JSON.parse(raw); }catch(e){ fields=raw; }
+      if(!raw || isTok(raw)){ host.innerHTML = defaults(); return; }
+
+      let data; try{ data=JSON.parse(raw); }catch{ host.innerHTML = defaults(); return; }
       let html='';
-      if (Array.isArray(fields)){
-        html = fields.map(f=>{
-          const t=(f.type||'text').toLowerCase(), n=f.name||'field', ph=f.placeholder||f.label||n;
-          return input(t,n,ph,!!f.required,Array.isArray(f.options)?f.options:null);
-        }).join('');
-      } else if (fields && typeof fields==='object'){
+      if(Array.isArray(data)){
+        html = data.map(f=>input((f.type||'text'), (f.name||'field'), (f.placeholder||f.label||f.name||'Champ'), !!f.required, f.options)).join('');
+      }else if(data && typeof data==='object'){
         const order=['firstname','name','email','phone','address'];
-        const keys=order.filter(k=>fields[k]).concat(Object.keys(fields).filter(k=>!order.includes(k) && fields[k]));
+        const keys=[...new Set([...order.filter(k=>data[k]), ...Object.keys(data)])];
         html = keys.map(k=>{
           const key=k.toLowerCase();
-          if (key==='email') return input('email','email','Votre email');
-          if (key==='phone') return input('tel','phone','Votre téléphone');
-          if (key==='address') return input('textarea','address','Votre adresse',false);
-          if (key==='firstname') return input('text','firstname','Votre prénom');
-          if (key==='name'||key==='lastname') return input('text','name','Votre nom');
+          if(key==='email') return input('email','email','Votre email');
+          if(key==='phone') return input('tel','phone','Votre téléphone',false);
+          if(key==='address') return input('textarea','address','Votre adresse',false);
+          if(key==='firstname') return input('text','firstname','Votre prénom');
+          if(key==='name'||key==='lastname') return input('text','name','Votre nom');
           return input('text',key,key);
         }).join('');
-      } else if (typeof fields==='string'){
-        const parts=(fields||'').split(',').map(s=>s.trim()).filter(Boolean);
-        html = parts.length ? parts.map(p=>{
-          const key=p.toLowerCase();
-          if (key==='email') return input('email','email','Votre email');
-          if (key==='phone') return input('tel','phone','Votre téléphone');
-          if (key==='address') return input('textarea','address','Votre adresse',false);
-          if (key==='firstname') return input('text','firstname','Votre prénom');
-          if (key==='name'||key==='lastname') return input('text','name','Votre nom');
-          return input('text',key,key);
-        }).join('') : '';
+      } else {
+        html = defaults();
       }
       host.innerHTML = html || defaults();
     })();
@@ -237,7 +225,6 @@
       const hasEmbB  = isHttp(embB?.getAttribute('src')||'');
       const hasAnyVideo = hasVidA || hasEmbA || hasVidB || hasEmbB;
 
-      // reset visibilités
       [vidA, embA, vidB, embB].forEach(el=>{ if(!el) return; el.classList.add('hide'); el.style.display='none'; });
       blockB.classList.add('hide');
       argu.classList.remove('two-cols','center');
@@ -261,7 +248,6 @@
         else if (hasVidA){ vidB.setAttribute('src', vidA.getAttribute('src')); vidB.classList.remove('hide'); vidB.style.display='block'; hasMediaB=true; }
         else if (hasEmbA){ embB.setAttribute('src', embA.getAttribute('src')); embB.classList.remove('hide'); embB.style.display='block'; hasMediaB=true; }
         if (hasMediaB){
-          // texte présent ?
           const txtProb = document.getElementById('prob').textContent;
           const txtSol  = document.getElementById('sol').textContent;
           const txtBen  = document.getElementById('ben').textContent;
@@ -302,10 +288,7 @@
                      : (rawAction === 'next')    ? 'capture'
                      : rawAction;
 
-      const payLink   = cleanText('{{payment.paymentLink}}');
-      const ctaUrl    = cleanText('{{cta.paymentLink}}');
-      const payOrUrl  = ctaUrl || payLink;
-
+      const payLink   = cleanText('{{payment.paymentLink}}') || cleanText('{{cta.paymentLink}}');
       const ns1 = cleanText('{{nextHref}}');
       const ns2 = cleanText('{{flow.nextHref}}');
       const ns3 = cleanText('{{cta.nextSlug}}');
@@ -325,36 +308,34 @@
       if (ctaAction === 'paiement' || ctaAction === 'lien') {
         form.classList.add('hide');
         link.classList.remove('hide');
-        link.href = (ctaAction === 'paiement' && isHttp(payOrUrl)) ? payOrUrl : (nextHref || '#');
+        link.href = (ctaAction === 'paiement' && payLink) ? payLink : (nextHref || '#');
       } else {
         form.classList.remove('hide');
         link.classList.add('hide');
       }
     })();
 
-    // ===== Affichage Garantie / Témoignages / FAQ / Timer =====
-/* ... à la place du bloc "garantie" existant ... */
-(function(){
-  const wrap = document.getElementById('gua');
-  if (!wrap) return;
-  const em = wrap.querySelector('em');
-  if (!em) return;
-  const txt = (em.textContent||'').trim();
-  const alt = (em.getAttribute('data-alt') || wrap.getAttribute('data-alt') || '').trim();
-  const isToken = (s)=>/\{\{[^}]+\}\}/.test(s||'');
-  const final = (!txt || isToken(txt)) ? (isToken(alt)? '' : alt) : txt;
-  if (final){ em.textContent = final; wrap.classList.remove('hide'); }
-})();
-
+    // ===== Garantie / Témoignages / FAQ / Timer =====
+    (function(){
+      // Garantie
+      const wrap = document.getElementById('gua');
+      if (wrap){
+        const em = wrap.querySelector('em');
+        if (em){
+          const txt = (em.textContent||'').trim();
+          const alt = (em.getAttribute('data-alt') || wrap.getAttribute('data-alt') || '').trim();
+          const final = (!txt || isToken(txt)) ? (isToken(alt)? '' : alt) : txt;
+          if (final){ em.textContent = final; wrap.classList.remove('hide'); }
+        }
+      }
 
       // Témoignages
       (function(){
         const wrap = document.getElementById('testi');
         const body = document.getElementById('testi-body');
         if (!wrap || !body) return;
-        let raw = body.textContent.trim();
-        if (!raw || isToken(raw)) raw = body.getAttribute('data-alt')||'';
-        raw = raw.trim();
+        let raw = (body.textContent||'').trim();
+        if (!raw || isToken(raw)) raw = (body.getAttribute('data-alt')||'').trim();
         if (!raw || isToken(raw)) return;
 
         let html = '';
@@ -363,9 +344,7 @@
           if (Array.isArray(data)) {
             html = data.map(t=>`<div class="testimonial-item">“${cleanText(t?.text||t)}”</div>`).join('');
           }
-        } catch(_){
-          html = raw; // déjà HTML ou texte simple
-        }
+        } catch(_){ html = raw; }
         if (html) { body.innerHTML = html; wrap.classList.remove('hide'); }
       })();
 
@@ -374,9 +353,8 @@
         const wrap = document.getElementById('faq');
         const body = document.getElementById('faq-body');
         if (!wrap || !body) return;
-        let raw = body.textContent.trim();
-        if (!raw || isToken(raw)) raw = body.getAttribute('data-alt')||'';
-        raw = raw.trim();
+        let raw = (body.textContent||'').trim();
+        if (!raw || isToken(raw)) raw = (body.getAttribute('data-alt')||'').trim();
         if (!raw || isToken(raw)) return;
 
         let html = '';
@@ -388,17 +366,15 @@
               return `<div class="faq-item"><strong>${q}</strong><br/>${a}</div>`;
             }).join('');
           }
-        } catch(_){
-          html = raw; // déjà HTML
-        }
+        } catch(_){ html = raw; }
         if (html) { body.innerHTML = html; wrap.classList.remove('hide'); }
       })();
 
-      // Timer
+      // Timer (evergreen / deadline ISO)
       (function(){
-        const evergreen = parseInt('{{timers.evergreenMinutes}}',10)||0;
-        const deadlineISO = cleanText('{{timers.deadlineISO}}');
-        const t = document.getElementById('timer');
+        const t=document.getElementById('timer'); if(!t) return;
+        const evergreen=parseInt('{{timers.evergreenMinutes}}',10)||0;
+        const deadlineISO=cleanText('{{timers.deadlineISO}}');
         function render(sec){ if(sec<=0){ t.textContent='Offre expirée'; return; } const m=Math.floor(sec/60), s=sec%60; t.textContent='Offre expire dans '+m+'m '+('0'+s).slice(-2)+'s'; }
         let total=0;
         if(evergreen>0) total=evergreen*60;
@@ -406,167 +382,6 @@
         if(total>0){ t.classList.remove('hide'); (function tick(){ render(total--); if(total>=0) setTimeout(tick,1000); })(); }
       })();
     })();
-
-    // Pixels (facultatif)
-    (function(){
-      const fb='{{analytics.fbPixelId}}'.trim();
-      if (fb){
-        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-          n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;
-          n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';
-          s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script');
-        fbq('init', fb); fbq('track','PageView');
-      }
-      const gtm='{{analytics.gtmId}}'.trim();
-      if (gtm){
-        var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtm.js?id='+encodeURIComponent(gtm);
-        document.head.appendChild(s);
-      }
-    })();
   </script>
-  <!-- ===== FIX PACK — Optin Hardening (ajouter juste avant </body>) ===== -->
-<script>
-(function FIX_OPTIN_HARDENING(){
-  const $  = (s)=>document.querySelector(s);
-  const $$ = (s)=>Array.from(document.querySelectorAll(s));
-  const has = (v)=>!!(v && (""+v).trim() && !/\{\{[^}]+\}\}/.test(""+v));
-
-  if (window.__optinFixApplied) return; window.__optinFixApplied = true;
-
-  /* 1) FORMULAIRE — fallback si vide */
-  (function ensureForm(){
-    const host = $('#form-visible');
-    if (!host) return;
-    const empty = !host.innerHTML || host.innerHTML.trim()==='';
-    if (empty){
-      host.innerHTML = [
-        `<input name="firstname" type="text" placeholder="Votre prénom" required/>`,
-        `<input name="name"       type="text" placeholder="Votre nom" required/>`,
-        `<input name="email"      type="email" placeholder="Votre email" required/>`,
-        `<input name="phone"      type="tel" placeholder="Votre téléphone"/>`,
-        `<textarea name="address" placeholder="Votre adresse"></textarea>`
-      ].join('');
-    }
-  })();
-
-  /* 2) LAYOUT — applique les règles (image gauche + form droite ; B visible si image ET vidéo) */
-  (function layout(){
-    const pairA = $('#pair-a');
-    const blockB= $('#block-b');
-    const argu  = $('#argu-grid');
-
-    const imgA  = $('#img-a');
-    const vidA  = $('#vid-a');
-    const embA  = $('#emb-a');
-    const vidB  = $('#vid-b');
-    const embB  = $('#emb-b');
-
-    const hasImg = !!(imgA && imgA.src && imgA.src.startsWith('http'));
-    const hasVid = !!((vidA && vidA.src && vidA.src.startsWith('http')) || (vidB && vidB.src && vidB.src.startsWith('http')));
-    const hasEmb = !!((embA && has(embA.src)) || (embB && has(embB.src)));
-    const anyVideo = hasVid || hasEmb;
-
-    // reset
-    [vidA,embA,vidB,embB].forEach(el=>{ if(!el) return; el.classList.add('hide'); el.style.display='none'; });
-    blockB && blockB.classList.add('hide');
-    argu && argu.classList.remove('two-cols','center');
-
-    // Aucun média → form centré
-    if (!hasImg && !anyVideo){
-      pairA && (pairA.classList.remove('two-cols'), pairA.classList.add('center'));
-      return;
-    }
-
-    // Image seule → A=image + form ; B caché
-    if (hasImg && !anyVideo){
-      pairA && (pairA.classList.remove('center'), pairA.classList.add('two-cols'));
-      imgA && (imgA.style.display='block');
-      return;
-    }
-
-    // Vidéo seule → A=vidéo + form ; B caché
-    if (!hasImg && anyVideo){
-      pairA && (pairA.classList.remove('center'), pairA.classList.add('two-cols'));
-      if (vidA && vidA.src && vidA.src.startsWith('http')) { vidA.classList.remove('hide'); vidA.style.display='block'; }
-      else if (embA && has(embA.src)) { embA.classList.remove('hide'); embA.style.display='block'; }
-      else if (vidB && vidB.src && vidB.src.startsWith('http')) { vidA.src = vidB.src; vidA.classList.remove('hide'); vidA.style.display='block'; }
-      else if (embB && has(embB.src)) { embA.src = embB.src; embA.classList.remove('hide'); embA.style.display='block'; }
-      return;
-    }
-
-    // Image ET (vidéo|embed) → A=image + B=vidéo
-    if (hasImg && anyVideo){
-      pairA && (pairA.classList.remove('center'), pairA.classList.add('two-cols'));
-      imgA && (imgA.style.display='block');
-      blockB && blockB.classList.remove('hide');
-
-      let mediaB=false;
-      if (vidB && vidB.src && vidB.src.startsWith('http')) { vidB.classList.remove('hide'); vidB.style.display='block'; mediaB=true; }
-      else if (vidA && vidA.src && vidA.src.startsWith('http')) { vidB.src=vidA.src; vidB.classList.remove('hide'); vidB.style.display='block'; mediaB=true; }
-      else if (embB && has(embB.src)) { embB.classList.remove('hide'); embB.style.display='block'; mediaB=true; }
-      else if (embA && has(embA.src)) { embB.src=embA.src; embB.classList.remove('hide'); embB.style.display='block'; mediaB=true; }
-
-      const hasText = ['#prob','#sol','#ben','#bul'].some(sel=> has($(sel)?.textContent||''));
-      if (mediaB && argu){ argu.classList.add(hasText ? 'two-cols' : 'center'); }
-    }
-  })();
-
-  /* 3) GARANTIE / TÉMOIGNAGES / FAQ — affichage forcé si contenu présent (texte, HTML ou JSON) */
-/* ... à la place du bloc "garantie" existant ... */
-(function(){
-  const wrap = document.getElementById('gua');
-  if (!wrap) return;
-  const em = wrap.querySelector('em');
-  if (!em) return;
-  const txt = (em.textContent||'').trim();
-  const alt = (em.getAttribute('data-alt') || wrap.getAttribute('data-alt') || '').trim();
-  const isToken = (s)=>/\{\{[^}]+\}\}/.test(s||'');
-  const final = (!txt || isToken(txt)) ? (isToken(alt)? '' : alt) : txt;
-  if (final){ em.textContent = final; wrap.classList.remove('hide'); }
-})();
-
-  function showFromRaw(wrapSel, bodySel, mapJsonToHtml){
-    const wrap=$(wrapSel), body=$(bodySel); if(!wrap||!body) return;
-    let raw=(body.textContent||'').trim();
-    if (!has(raw)) raw=(body.getAttribute('data-alt')||'').trim();
-    if (!has(raw)) return;
-    let html='';
-    try{
-      const data=JSON.parse(raw);
-      html = mapJsonToHtml(data);
-    }catch(_){ html=raw; }
-    if (has(html)){ body.innerHTML = html; wrap.classList.remove('hide'); }
-  }
-
-  showFromRaw('#testi','#testi-body', arr => Array.isArray(arr)
-    ? arr.map(t=>`<div class="testimonial-item">“${(t&&t.text?t.text:t)||''}”</div>`).join('')
-    : ''
-  );
-
-  showFromRaw('#faq','#faq-body', arr => Array.isArray(arr)
-    ? arr.map(x=>`<div class="faq-item"><strong>${(x&&x.q?x.q:(x&&x.question?x.question:''))}</strong><br/>${(x&&x.a?x.a:(x&&x.answer?x.answer:''))}</div>`).join('')
-    : ''
-  );
-
-  /* 4) TIMER — evergreen / deadline */
-  (function timer(){
-    const t = document.getElementById('timer'); if(!t) return;
-    const evergreen = parseInt('{{timers.evergreenMinutes}}',10)||0;
-    const deadlineISO = '{{timers.deadlineISO}}'.trim();
-    let total=0;
-    if (evergreen>0) total=evergreen*60;
-    else if (deadlineISO && !isNaN(Date.parse(deadlineISO))) total=Math.max(0,Math.floor((new Date(deadlineISO)-new Date())/1000));
-    if (total>0){
-      t.classList.remove('hide');
-      (function tick(){ 
-        if (total<=0){ t.textContent='Offre expirée'; return; }
-        const m=Math.floor(total/60), s=total%60;
-        t.textContent = 'Offre expire dans '+m+'m '+('0'+s).slice(-2)+'s';
-        total--; setTimeout(tick,1000);
-      })();
-    }
-  })();
-})();
-</script>
 </body>
 </html>
