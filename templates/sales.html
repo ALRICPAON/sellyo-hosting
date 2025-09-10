@@ -98,6 +98,13 @@
 
     .muted{opacity:.85}
     .hide{display:none!important}
+
+    /* Bloc A : si pas d'image → texte centré, 1 seule colonne */
+#block-a.center-text .grid { grid-template-columns: 1fr !important; }
+#block-a.center-text #media-a,
+#block-a.center-text #media-img-wrap { display: none !important; }
+#block-a.center-text #col-a-text { max-width: 760px; margin: 0 auto; text-align: center; }
+
   </style>
   <script src="https://js.stripe.com/v3"></script>
 </head>
@@ -345,6 +352,39 @@
     }
     // nothing configured
   });
+})();
+</script>
+
+  <script>
+(function(){
+  const blockA = document.getElementById('block-a');
+  const img    = document.getElementById('img-a');
+  if (!blockA || !img) return;
+
+  const isToken = (s)=> /\{\{[^}]+\}\}/.test((s||'').toString());
+  const isUrl   = (u)=> /^(https?:|\/\/|data:|blob:)/i.test((u||'').trim());
+
+  function centerTextA(){
+    blockA.classList.add('center-text');
+  }
+
+  // Cas 1 : pas d'URL, token, ou URL invalide → on centre tout de suite
+  const src = (img.getAttribute('src')||'').trim();
+  if (!src || isToken(src) || !isUrl(src)) { centerTextA(); return; }
+
+  // Cas 2 : on écoute les événements au cas où l'image échoue
+  img.addEventListener('error', centerTextA);
+  img.addEventListener('load', () => {
+    // Si l'image charge mais est vide/masquée (ex: onerror inline)
+    const hidden = (img.style.display === 'none') || (getComputedStyle(img).display === 'none');
+    if (img.naturalWidth === 0 || hidden) centerTextA();
+  });
+
+  // Filet de sécurité si l'erreur est déjà passée avant nos listeners
+  setTimeout(() => {
+    const hidden = (img.style.display === 'none') || (getComputedStyle(img).display === 'none');
+    if (img.naturalWidth === 0 || hidden) centerTextA();
+  }, 400);
 })();
 </script>
 
