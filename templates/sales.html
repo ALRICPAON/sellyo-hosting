@@ -247,5 +247,89 @@
       showFromRaw('faq','faq-body', arr => Array.isArray(arr) ? arr.map(x=>`<div class="faq-item"><strong>${(x&&x.q?x.q:(x&&x.question?x.question:''))}</strong><br/>${(x&&x.a?x.a:(x&&x.answer?x.answer:''))}</div>`).join('') : '');
     })();
   </script>
+
+  <script>
+(function(){
+  // === Sélection du bouton ===
+  const btn = document.getElementById('cta-main');
+  if(!btn) return;
+
+  // === Helpers ===
+  const clean   = (s)=> (s||"").toString().trim();
+  const isToken = (s)=> /\{\{[^}]+\}\}/.test((s||"").toString());
+  const isAbs   = (u)=> /^(https?:)?\/\//i.test(u||'');        // http(s):// ou //cdn...
+  const isRoot  = (u)=> /^\//.test(u||'');                     // /chemin/absolu
+  const withSlash=(u)=> u ? (u.endsWith('/') ? u : (u+'/')) : '';
+
+  // === Données templating (laisser tel quel, Make remplacera) ===
+  const pk       = clean('{{1.payment.stripePublishableKey}}');
+  const priceId  = clean('{{1.payment.stripePriceId}}');
+  const payLink  = clean('{{1.payment.paymentLink}}');
+  const baseUrl  = withSlash(clean('{{1.baseUrl}}'));          // ex: https://domaine.com/tunnels/xyz/
+  const nextSlug = clean('{{133.flow.nextSlug}}');             // ex: page-suivante
+  const rawNext  = clean('{{flow.nextHref}}');                  // ex: page-suivante.html
+
+  // nextHref déterministe
+  const nextHref = (!isToken(rawNext) && rawNext) || (nextSlug ? (nextSlug + '.html') : '');
+
+  // Construit une URL absolue à partir de baseUrl/nextHref
+  function toAbsolute(url){
+    if(!url) return '';
+    if (isAbs(url)) return url;                      // déjà absolu (http(s):// ou //)
+    if (isRoot(url)) return url;                     // /chemin absolu → laisser (le browser résout)
+    if (baseUrl && !isToken(baseUrl)) return baseUrl + url; // baseUrl fourni
+    // sinon on résout depuis le répertoire courant
+    try{
+      const cur = window.location.href.replace(/[^/]*$/, ''); // dossier courant
+      return new URL(url, cur).toString();
+    }catch(_){ return url; }
+  }
+
+  btn.addEventListener('click', async (e)=>{
+    e.preventDefault();
+
+    // 1) Lien de paiement direct prioritaire (si fourni)
+    if (payLink && !isToken(payLink)) {
+      window.location.href = payLink;
+      return;
+    }
+
+    // 2) Stripe Checkout si clés + price ok et qu’on sait où aller après
+    if (pk && !isToken(pk) && priceId && !isToken(priceId) && nextHref && !isToken(nextHref)) {
+      try{
+        const stripe = Stripe(pk);
+        const successUrl = toAbsolute(nextHref);
+        const cancelUrl  = window.location.href;
+        const { error } = await stripe.redirectToCheckout({
+          lineItems:[{ price: priceId, quantity:1 }],
+          mode:'payment',
+          successUrl,
+          cancelUrl
+        });
+        if (error) {
+          console.warn('Stripe error:', error.message);
+          // Fallback navigation
+          window.location.href = successUrl;
+        }
+      }catch(err){
+        console.warn('Stripe init error:', err);
+        const successUrl = toAbsolute(nextHref);
+        if (successUrl) window.location.href = successUrl;
+      }
+      return;
+    }
+
+    // 3) Fallback : si on a une page suivante, on y va quoi qu’il arrive
+    if (nextHref && !isToken(nextHref)) {
+      window.location.href = toAbsolute(nextHref);
+      return;
+    }
+
+    // 4) Rien de configuré (template pur) → optionnel: message
+    // alert('CTA non configuré (template). Renseignez paymentLink ou Stripe + nextHref.');
+  });
+})();
+</script>
+
 </body>
 </html>
