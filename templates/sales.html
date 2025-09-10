@@ -50,16 +50,30 @@
     .hide{display:none!important}
 
     /* Bloc B : inverser ordre sur desktop (texte à gauche, vidéo à droite) */
-@media (min-width: 880px){
-  #grid-b.video-right{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas: "arguments media";
-    align-items: start;
-  }
-  #grid-b.video-right #arguments{ grid-area: arguments; }
-  #grid-b.video-right #media-b{ grid-area: media; }
-}
+<section class="card" id="block-b">
+  <div class="grid col-2" id="grid-b">
+    <!-- TEXTE D’ABORD -->
+    <div id="arguments">
+      <div class="section-title">Problème</div>
+      <div id="prob">{{copy.problem}}</div>
+      <div class="section-title">Solution</div>
+      <div id="sol">{{copy.solution}}</div>
+      <div class="section-title">Bénéfices</div>
+      <div id="ben">{{copy.benefits}}</div>
+      <!-- (Optionnel) supprime ces duplications si tu n’en as pas besoin dans B -->
+      <!-- <div id="gua"><em>{{copy.guarantee}}</em></div>
+      <div id="timer" class="timer hide"></div>
+      <button class="btn" id="cta-btn">{{copy.ctaText}}</button> -->
+    </div>
+
+    <!-- MÉDIA ENSUITE -->
+    <div class="media" id="media-b">
+      <video id="vid-b" src="{{media.videoMp4}}" controls playsinline class="hide" onerror="this.style.display='none'"></video>
+      <iframe id="emb-b" src="{{media.videoEmbed}}" class="hide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
+
 
 
     /* Témoignages / FAQ */
@@ -315,12 +329,10 @@ document.addEventListener("DOMContentLoaded",()=>{
     vidB.src=mp4;
     vidB.classList.remove('hide');
     vidB.style.display='block';
-    gridB.classList.add('video-right'); // ⬅️ AJOUT ICI
   }
   else if(hasEmb){
     embB.classList.remove('hide');
     embB.style.display='block';
-    gridB.classList.add('video-right'); // ⬅️ AJOUT ICI
   }
   else {
     // Pas de vidéo → mettre les arguments en pleine largeur
