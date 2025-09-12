@@ -75,6 +75,8 @@
           <!-- Champs sélectionnés par l’utilisateur -->
           <script id="form-selected-json" type="application/json">{{form.selectedJson}}</script>
           <script id="form-selected-csv" type="application/json">{{form.selected}}</script>
+          <script id="form-fields-json" type="application/json">{{formFields}}</script>
+
 
           <form id="lead-form" data-role="capture" data-next="{{flow.nextHref}}">
             <div id="form-visible"></div>
@@ -166,36 +168,71 @@
     })();
 
     // ======= Champs dynamiques depuis sélection =======
-    (function(){
-      // 1) On récupère la sélection (JSON prioritaire, sinon CSV)
-      function readScriptJson(id){
-        try{
-          const el=document.getElementById(id); if(!el) return null;
-          const raw=clean(el.textContent); if(!raw || isToken(raw)) return null;
-          return JSON.parse(raw);
-        }catch(_){ return null; }
-      }
-      let selected = readScriptJson('form-selected-json');
-      if (!Array.isArray(selected) || !selected.length){
-        const csv = readScriptJson('form-selected-csv'); // peut contenir une simple string
-        const s = typeof csv==='string' ? csv : '';
-        if (s && !isToken(s)) selected = s.split(',').map(x=>x.trim()).filter(Boolean);
-      }
-      if (!Array.isArray(selected) || !selected.length){
-        // Fallback = TOUS les champs
-        selected = ['firstName','lastName','email','phone','address'];
-      }
+(function(){
+  const host = document.getElementById('form-visible');
+  const tok  = v => /\{\{[^}]+\}\}/.test((v||'')+'');
+  if(!host) return;
 
-      const map = {
-        firstName: ()=>`<input name="firstName" id="firstName" placeholder="Votre prénom" autocomplete="given-name" required/>`,
-        lastName:  ()=>`<input name="lastName"  id="lastName"  placeholder="Votre nom" autocomplete="family-name" required/>`,
-        email:     ()=>`<input type="email" name="email" id="email" placeholder="Votre email" autocomplete="email" required/>`,
-        phone:     ()=>`<input type="tel"   name="phone" id="phone" placeholder="Votre téléphone" autocomplete="tel"/>`,
-        address:   ()=>`<textarea name="address" id="address" placeholder="Votre adresse"></textarea>`
-      };
-      const host = document.getElementById('form-visible');
-      host.innerHTML = selected.map(k => (map[k] ? map[k]() : '')).join('');
-    })();
+  // ---- 1) Lire l'objet Make: formFields { name:true, firstname:true, email:true, ... } ----
+  let cfg = {};
+  try{
+    const el  = document.getElementById('form-fields-json');
+    const raw = (el?.textContent || '').trim();
+    if (raw && !tok(raw)) cfg = JSON.parse(raw);
+  }catch(_){}
+
+  // Si Make a enveloppé: { formFields: {...} }
+  if (cfg && typeof cfg==='object' && cfg.formFields && typeof cfg.formFields==='object'){
+    cfg = cfg.formFields;
+  }
+
+  // Extraire les keys cochées (=true)
+  let selected = [];
+  if (cfg && typeof cfg==='object' && !Array.isArray(cfg)){
+    selected = Object.entries(cfg)
+      .filter(([,v]) => v===true || v==='true' || v===1 || v==='1')
+      .map(([k]) => k);
+  }
+
+  // ---- 2) Secours: form.selectedJson ou form.selected (CSV) si fournis ----
+  if (!selected.length){
+    let selJson = '{{form.selectedJson}}';
+    if (selJson && !tok(selJson) && selJson.trim()){
+      try { const arr=JSON.parse(selJson); if(Array.isArray(arr)) selected = arr; } catch(_){}
+    }
+  }
+  if (!selected.length){
+    let selCsv = '{{form.selected}}';
+    if (selCsv && !tok(selCsv) && selCsv.trim()){
+      selected = selCsv.split(',').map(s=>s.trim()).filter(Boolean);
+    }
+  }
+
+  // ---- 3) Normalisation des clés & fallback si rien choisi ----
+  const norm = (k)=>{
+    const x = (k||'').toString().toLowerCase();
+    if (x==='firstname' || x==='first_name' || x==='prenom' ) return 'firstName';
+    if (x==='lastname'  || x==='last_name'  || x==='name' || x==='nom') return 'lastName';
+    if (x==='email' || x==='e-mail') return 'email';
+    if (x==='phone' || x==='tel' || x==='telephone') return 'phone';
+    if (x==='address' || x==='adresse') return 'address';
+    return null;
+  };
+  selected = selected.map(norm).filter(Boolean);
+
+  // Si aucun champ sélectionné → on montre seulement l'email (optin minimal viable)
+  if (!selected.length) selected = ['email'];
+
+  // ---- 4) Rendu des champs ----
+  const fields = {
+    firstName: `<input name="firstName" id="firstName" placeholder="Prénom" autocomplete="given-name">`,
+    lastName:  `<input name="lastName"  id="lastName"  placeholder="Nom" autocomplete="family-name">`,
+    email:     `<input type="email" name="email" id="email" placeholder="Email" autocomplete="email" required>`,
+    phone:     `<input type="tel" name="phone" id="phone" placeholder="Téléphone" inputmode="tel" autocomplete="tel">`,
+    address:   `<textarea name="address" id="address" placeholder="Adresse"></textarea>`
+  };
+  host.innerHTML = selected.map(k => fields[k] || '').join('');
+})();
 
     // ======= Layout déterministe + fix image qui n’apparaît pas =======
     (function(){
