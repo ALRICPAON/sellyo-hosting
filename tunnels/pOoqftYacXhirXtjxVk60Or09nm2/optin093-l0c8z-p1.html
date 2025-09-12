@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>optin093</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{ --bg: #450e59; --btn: #008cb4; --text:#fff }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      line-height:1.45;
+    }
+    main{max-width:1100px;margin:0 auto;padding:24px}
+
+    header{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:16px 0
+    }
+    #logo{max-height:56px;display:none}
+
+    /* HERO */
+    .hero{
+      text-align:center;
+      margin-bottom:18px;
+    }
+    .hero h1{
+      font-size:clamp(28px,3.8vw,46px);
+      margin:6px 0;
+    }
+    .hero .sub{
+      opacity:.9;
+      margin:8px 0 0;
+      font-size:18px;
+    }
+
+    .card{
+      background:#ffffff10;
+      border:1px solid #ffffff14;
+      border-radius:16px;
+      padding:18px;
+      margin-bottom:24px;
+    }
+
+    .btn,button.cta{
+      display:inline-block;
+      width:100%;
+      padding:14px 18px;
+      border-radius:12px;
+      background:var(--btn);
+      color:#fff;
+      font-weight:800;
+      text-align:center;
+      text-decoration:none;
+      border:0;
+      cursor:pointer;
+      font-size:18px;
+    }
+
+    /* Grilles */
+    .grid{display:grid;gap:18px}
+    .col-2{grid-template-columns:1fr}
+    @media(min-width:880px){
+      .col-2{ grid-template-columns:1fr 1fr; }
+    }
+
+    .media img,.media video{ width:100%; max-height:440px; object-fit:cover; border-radius:12px; display:block }
+    .media iframe{ width:100%; aspect-ratio:16/9; border:0; border-radius:12px; display:block }
+
+    /* TIMER */
+    .timer{ font-weight:900; font-size:28px; color:#ffcc00; text-align:center; margin:20px 0; }
+
+    .muted{opacity:.85}
+    .hide{display:none!important}
+
+    /* Bloc A : Media gauche | Formulaire droite */
+    #block-a.centered .grid{ grid-template-columns: 1fr !important; }
+    #block-a.centered #media-a{ display:none !important; }
+    #block-a.centered #col-a-form{ max-width: 720px; margin: 0 auto; }
+
+    /* Form styles */
+    form .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    form .row.single{grid-template-columns:1fr}
+    label{display:block;font-size:14px;margin-bottom:6px;opacity:.95}
+    input,textarea{width:100%;padding:12px 12px;border-radius:10px;border:1px solid #ffffff22;background:#0000003a;color:#fff;font-size:15px}
+    textarea{min-height:90px;resize:vertical}
+    .cta-wrap{margin-top:12px;display:flex;gap:12px;align-items:center}
+    .disclaimer{font-size:12px;opacity:.85}
+  </style>
+</head>
+<body>
+  <main>
+    <!-- HEADER -->
+    <header>
+      <img id="logo" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Foptin093-l0c8z%2Flogo-1757666091779?alt=media&token=8d1ed8dc-9452-44d4-816e-003e4c605fb0" alt="Logo" onerror="this.style.display='none'">
+    </header>
+
+    <!-- HERO -->
+    <section class="hero card">
+      <h1 id="title">titre</h1>
+      <p class="sub" id="subtitle">soustitre</p>
+      <div id="timer" class="timer hide"></div>
+    </section>
+
+    <!-- BLOC A : Media | Formulaire d'optin -->
+    <section class="card" id="block-a">
+      <div class="grid col-2">
+        <div class="media" id="media-a">
+          <img id="img-a" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Foptin093-l0c8z%2Fpage1-hero-1757666092398?alt=media&token=120194e3-7510-45d2-8de0-9ced849d199c" alt="" onerror="this.style.display='none'">
+        </div>
+        <div id="col-a-form">
+          <div id="desc" class="muted" style="margin-bottom:10px">description</div>
+
+          <div class="card" style="margin:0">
+            <form id="lead-form" data-role="capture">
+              <div class="row">
+                <div class="form-field" data-field="firstName">
+                  <label for="firstName">Prénom</label>
+                  <input id="firstName" name="firstName" autocomplete="given-name" />
+                </div>
+                <div class="form-field" data-field="lastName">
+                  <label for="lastName">Nom</label>
+                  <input id="lastName" name="lastName" autocomplete="family-name" />
+                </div>
+              </div>
+              <div class="row single">
+                <div class="form-field" data-field="email">
+                  <label for="email">Email</label>
+                  <input id="email" name="email" type="email" inputmode="email" autocomplete="email" required />
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-field" data-field="phone">
+                  <label for="phone">Téléphone</label>
+                  <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" />
+                </div>
+                <div class="form-field" data-field="address">
+                  <label for="address">Adresse</label>
+                  <input id="address" name="address" autocomplete="street-address" />
+                </div>
+              </div>
+
+              <!-- Hidden Sellyo fields -->
+              <input type="hidden" name="userId" id="userId" value="" />
+              <input type="hidden" name="slug" id="slug" value="optin093-l0c8z-p1" />
+              <input type="hidden" name="type" value="tunnel" />
+              <input type="hidden" name="nextUrl" id="nextUrl" value="optin093-l0c8z-p2.html" />
+
+              <div class="cta-wrap">
+                <button class="btn" type="submit">je test</button>
+                <small class="disclaimer"></small>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLOC B : Arguments + Vidéo (optionnel, même logique que sales) -->
+    <section class="card" id="block-b">
+      <div class="grid col-2" id="grid-b">
+        <div id="arguments">
+          <div id="prob">probleme</div>
+          <div id="sol">soluti</div>
+          <div id="ben">benef</div>
+        </div>
+        <div class="media" id="media-b">
+          <video id="vid-b" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Foptin093-l0c8z%2Fpage1-video-1757666094484?alt=media&token=4d6871f9-3b56-48c9-8a33-3dfa367e7e5e" controls playsinline class="hide" onerror="this.style.display='none'"></video>
+          <iframe id="emb-b" src="" class="hide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- Témoignages -->
+<section class="card hide" id="testi">
+  <h3>Témoignages</h3>
+  <div id="testi-body" data-alt="temoin">temoin</div>
+</section>
+
+<!-- FAQ -->
+<section class="card hide" id="faq">
+  <h3>FAQ</h3>
+  <div id="faq-body" data-alt="FAQ">FAQ</div>
+</section>
+
+    <footer class="muted" style="text-align:center;margin-top:14px">
+      &copy; optin093
+    </footer>
+  </main>
+
+  <script>
+(function(){
+  // Remplir userId depuis l'URL: .../tunnels/<userId>/<tunnelSlug>/...
+  const uidEl = document.getElementById('userId');
+  if (uidEl && !uidEl.value) {
+    const m = location.pathname.match(/\\/tunnels\\/([^\\/]+)/);
+    if (m && m[1]) uidEl.value = m[1];
+  }
+
+  // Normaliser nextUrl en absolu si donné en relatif
+  const nextEl = document.getElementById('nextUrl');
+  if (nextEl && nextEl.value && !/^https?:\\/\\//i.test(nextEl.value)) {
+    try {
+      const cur = window.location.href.replace(/[^/]*$/, ''); // dossier courant
+      nextEl.value = new URL(nextEl.value, cur).toString();
+    } catch(e){}
+  }
+})();
+</script>
+
+  <script>
+    const clean = (s)=> (s||"").toString().trim();
+    const isToken = (s)=> /\{\{[^}]+\}\}/.test((s||"").toString());
+    const isHttp = (u)=>{ try{ const x=new URL((u||'').trim()); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
+
+    // Logo visible uniquement si src exploitable
+    (function(){
+      const logo=document.getElementById('logo');
+      const src=clean(logo?.getAttribute('src'));
+      if (logo && src && !isToken(src) && (/^(https?:|data:image)/i.test(src))) logo.style.display='block';
+    })();
+
+    // Centrage bloc A si pas d'image
+    (function(){
+      const blockA = document.getElementById('block-a');
+      const img    = document.getElementById('img-a');
+      if (!blockA || !img) return;
+
+      const isUrl   = (u)=> /^(https?:|\/\/|data:|blob:)/i.test((u||'').trim());
+      const src = (img.getAttribute('src')||'').trim();
+      function center(){ blockA.classList.add('centered'); }
+
+      if (!src || isToken(src) || !isUrl(src)) { center(); return; }
+      img.addEventListener('error', center);
+      img.addEventListener('load', () => {
+        const hidden = (img.style.display === 'none') || (getComputedStyle(img).display === 'none');
+        if (img.naturalWidth === 0 || hidden) center();
+      });
+      setTimeout(() => {
+        const hidden = (img.style.display === 'none') || (getComputedStyle(img).display === 'none');
+        if (img.naturalWidth === 0 || hidden) center();
+      }, 400);
+    })();
+
+    // Arguments JSON → UL si applicable (réutilise logique sales)
+    (function(){
+      const host=document.getElementById('ben'); if(!host) return;
+      const raw=clean(host.textContent);
+      if(!raw || isToken(raw)) return;
+      try{
+        const arr=JSON.parse(raw);
+        if(Array.isArray(arr)){
+          host.innerHTML = '<ul>' + arr.map(x=>'<li>'+clean(x)+'</li>').join('') + '</ul>';
+        }
+      }catch(_){ }
+    })();
+
+    // Vidéo bloc B (identique à sales)
+    (function(){
+      const vidB=document.getElementById('vid-b');
+      const embB=document.getElementById('emb-b');
+      const gridB=document.getElementById('grid-b');
+      const args=document.getElementById('arguments');
+
+      const mp4=clean('https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Foptin093-l0c8z%2Fpage1-video-1757666094484?alt=media&token=4d6871f9-3b56-48c9-8a33-3dfa367e7e5e');
+      const emb=clean('');
+
+      const hasVid = !!mp4 && !isToken(mp4) && isHttp(mp4);
+      const hasEmb = !!emb && !isToken(emb) && isHttp(emb);
+
+      [vidB,embB].forEach(el=>{ if(el){ el.classList.add('hide'); el.style.display='none'; }});
+
+      if(hasVid){ vidB.src=mp4; vidB.classList.remove('hide'); vidB.style.display='block'; }
+      else if(hasEmb){ embB.classList.remove('hide'); embB.style.display='block'; }
+      else {
+        gridB.classList.remove('col-2');
+        gridB.style.gridTemplateColumns='1fr';
+        args.style.maxWidth='760px';
+        args.style.margin='0 auto';
+      }
+    })();
+
+    // Timer (evergreen minutes ou deadline ISO)
+    (function(){
+      const tEl=document.getElementById('timer');
+      const evergreen = clean('30');
+      const deadline  = clean('');
+      function activate(endTs){
+        tEl.classList.remove('hide');
+        function tick(){
+          const now=Date.now();
+          const diff=Math.max(0,endTs-now);
+          const h=Math.floor(diff/3_600_000), m=Math.floor(diff%3_600_000/60_000), s=Math.floor(diff%60_000/1000);
+          tEl.textContent = `Offre se termine dans ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+          if(diff<=0) clearInterval(iv);
+        }
+        tick(); const iv=setInterval(tick,1000);
+      }
+      if(evergreen && !isToken(evergreen)) activate(Date.now() + (parseInt(evergreen,10)||10)*60*1000);
+      else if(deadline && !isToken(deadline)) { const ts=Date.parse(deadline); if(!Number.isNaN(ts)) activate(ts); }
+    })();
+
+    // Sélection dynamique des champs via {{form.selectedJson}}
+    (function(){
+      let selRaw = '';
+      let selected;
+      try{ selected = JSON.parse(selRaw); }catch(_){ selected = ['firstName','lastName','email']; }
+      if(!Array.isArray(selected) || !selected.length) selected=['email'];
+      document.querySelectorAll('#lead-form .form-field').forEach(el=>{
+        const key = el.getAttribute('data-field');
+        if(!selected.includes(key)) el.style.display='none';
+      });
+    })();
+
+    // Témoignages & FAQ (même logique que sales)
+(function(){
+  function has(v){ return !!(v && (""+v).trim() && !/\{\{[^}]+\}\}/.test(""+v)); }
+  function showFromRaw(wrapId, bodyId, mapJson){
+    const wrap=document.getElementById(wrapId), body=document.getElementById(bodyId);
+    if(!wrap||!body) return;
+    let raw=(body.textContent||'').trim();
+    if(!has(raw)) raw=(body.getAttribute('data-alt')||'').trim();
+    if(!has(raw)) return;
+    let html='';
+    try{ const data=JSON.parse(raw); html = mapJson(data); }catch(_){ html=raw; }
+    if(has(html)){ body.innerHTML=html; wrap.classList.remove('hide'); }
+  }
+  showFromRaw('testi','testi-body', arr => Array.isArray(arr)
+    ? arr.map(t=>`<div class="testimonial-item">“${(t&&t.text?t.text:t)||''}”</div>`).join('')
+    : '');
+  showFromRaw('faq','faq-body', arr => Array.isArray(arr)
+    ? arr.map(x=>`<div class="faq-item"><strong>${(x&&x.q?x.q:(x&&x.question?x.question:''))}</strong><br/>${(x&&x.a?x.a:(x&&x.answer?x.answer:''))}</div>`).join('')
+    : '');
+})();
+  </script>
+
+
+  <!-- JS-only form capture Sellyo -->
+  <script src="https://cdn.jsdelivr.net/gh/ALRICPAON/sellyo-hosting/firebase-init.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/gh/ALRICPAON/sellyo-hosting/save-lead-tunnel.js" defer></script>
+</body>
+</html>
