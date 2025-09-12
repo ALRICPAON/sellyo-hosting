@@ -8,356 +8,313 @@
   <style>
     :root{ --bg: {{ui.mainColor}}; --btn: {{ui.buttonColor}}; --text:#fff }
     *{box-sizing:border-box}
-    body{
-      margin:0; background:var(--bg); color:var(--text);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; line-height:1.45;
-    }
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
     main{max-width:1100px;margin:0 auto;padding:24px}
 
-    header{ display:flex; justify-content:center; align-items:center; padding:16px 0 }
+    header{display:flex;justify-content:center;align-items:center;padding:16px 0}
     #logo{max-height:56px;display:none}
 
-    /* HERO */
-    .hero{ text-align:center; margin-bottom:18px; }
-    .hero h1{ font-size:clamp(28px,3.8vw,46px); margin:6px 0; }
-    .hero .sub{ opacity:.9; margin:8px 0 0; font-size:18px; }
+    .card{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:18px}
+    .hero{text-align:center;margin-bottom:16px}
+    .hero h1{font-size:clamp(28px,3.5vw,42px);margin:8px 0}
+    .hero .sub{opacity:.9;margin:0}
 
-    .card{ background:#ffffff10; border:1px solid #ffffff14; border-radius:16px; padding:18px; margin-bottom:24px; }
+    .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
+    form input,form textarea,form select{width:100%;padding:12px;border-radius:10px;border:0;margin:8px 0;background:#ffffff12;color:#fff}
 
-    .btn,button.cta{
-      display:inline-block; width:100%; padding:14px 18px; border-radius:12px;
-      background:var(--btn); color:#fff; font-weight:800; text-align:center;
-      text-decoration:none; border:0; cursor:pointer; font-size:18px;
-    }
+    /* ===== Grids ===== */
+    #pair-a{display:grid;gap:18px;grid-template-columns:1fr}
+    @media(min-width:880px){ #pair-a.two-cols{ grid-template-columns:1fr 1fr; } }
+    #pair-a.center .media-a{display:none}
+    #pair-a.center #form-col{max-width:480px;margin:0 auto}
 
-    /* Grilles */
-    .grid{display:grid;gap:18px}
-    .col-2{grid-template-columns:1fr}
-    @media(min-width:880px){ .col-2{ grid-template-columns:1fr 1fr; } }
+    .media img,.media video{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block}
+    .media iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:12px;display:block}
 
-    .media img,.media video{ width:100%; max-height:440px; object-fit:cover; border-radius:12px; display:block }
-    .media iframe{ width:100%; aspect-ratio:16/9; border:0; border-radius:12px; display:block }
+    #argu-grid{display:grid;gap:18px;grid-template-columns:1fr}
+    @media(min-width:880px){ #argu-grid.two-cols{ grid-template-columns:1fr 0.95fr; align-items:start } }
+    #argu-grid.center video,#argu-grid.center iframe{max-width:720px;margin:0 auto;display:block}
 
-    /* TIMER */
-    .timer{ font-weight:900; font-size:28px; color:#ffcc00; text-align:center; margin:20px 0; }
-
+    .timer{font-weight:800;text-align:center;margin:12px 0;font-size:20px;color:#facc15}
+    .hide{display:none}
     .muted{opacity:.85}
-    .hide{display:none!important}
-
-    /* Bloc A : Media gauche | Formulaire droite */
-    #block-a.centered .grid{ grid-template-columns: 1fr !important; }
-    #block-a.centered #media-a{ display:none !important; }
-    #block-a.centered #col-a-form{ max-width: 720px; margin: 0 auto; }
-
-    /* Form styles */
-    form .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    form .row.single{grid-template-columns:1fr}
-    label{display:block;font-size:14px;margin-bottom:6px;opacity:.95}
-    input,textarea{width:100%;padding:12px 12px;border-radius:10px;border:1px solid #ffffff22;background:#0000003a;color:#fff;font-size:15px}
-    textarea{min-height:90px;resize:vertical}
-    .cta-wrap{margin-top:12px;display:flex;gap:12px;align-items:center}
-    .disclaimer{font-size:12px;opacity:.85}
   </style>
 </head>
 <body>
   <main>
-    <!-- HEADER -->
     <header>
       <img id="logo" src="{{brand.logoUrl}}" alt="Logo" onerror="this.style.display='none'">
     </header>
 
-    <!-- HERO -->
-    <section class="hero card">
+    <!-- 1) Hero -->
+    <section class="hero" id="hero">
       <h1 id="title">{{copy.title}}</h1>
       <p class="sub" id="subtitle">{{copy.subtitle}}</p>
-      <div id="timer" class="timer hide"></div>
     </section>
 
-    <!-- BLOC A : Media | Formulaire d'optin -->
+    <!-- 2) Description -->
+    <section class="card" id="desc-wrap">
+      <div id="desc">{{copy.productDescription}}</div>
+      <div id="gua" class="muted" style="margin-top:10px"><em data-alt="{{guarantee}}">{{copy.guarantee}}</em></div>
+    </section>
+
+    <!-- ===== Bloc A : Média (gauche) + Formulaire (droite) ===== -->
     <section class="card" id="block-a">
-      <div class="grid col-2">
-        <div class="media" id="media-a">
-          <img id="img-a" src="{{media.imageUrl}}" alt="" onerror="this.style.display='none'">
+      <div id="pair-a">
+        <!-- Média A -->
+        <div class="media media-a" id="media-a">
+          <img id="img-a" src="{{media.imageUrl}}" alt="" loading="eager" decoding="async" onerror="this.style.display='none'">
+          <video id="vid-a" src="{{media.videoMp4}}" controls playsinline class="hide" onerror="this.style.display='none'"></video>
+          <iframe id="emb-a" src="{{media.videoEmbed}}" class="hide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
-        <div id="col-a-form">
-          <div id="desc" class="muted" style="margin-bottom:10px">{{copy.productDescription}}</div>
-          <div id="gua"><em>{{copy.guarantee}}</em></div>
 
-          <div class="card" style="margin:10px 0 0">
-            <form id="lead-form" data-role="capture">
-              <div class="row">
-                <div class="form-field" data-field="firstName">
-                  <label for="firstName">Prénom</label>
-                  <input id="firstName" name="firstName" autocomplete="given-name" />
-                </div>
-                <div class="form-field" data-field="lastName">
-                  <label for="lastName">Nom</label>
-                  <input id="lastName" name="lastName" autocomplete="family-name" />
-                </div>
-              </div>
-              <div class="row single">
-                <div class="form-field" data-field="email">
-                  <label for="email">Email</label>
-                  <input id="email" name="email" type="email" inputmode="email" autocomplete="email" required />
-                </div>
-              </div>
-              <div class="row">
-                <div class="form-field" data-field="phone">
-                  <label for="phone">Téléphone</label>
-                  <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" />
-                </div>
-                <div class="form-field" data-field="address">
-                  <label for="address">Adresse</label>
-                  <input id="address" name="address" autocomplete="street-address" />
-                </div>
-              </div>
+        <!-- Formulaire -->
+        <div id="form-col">
+          <div id="timer" class="timer hide"></div>
 
-              <!-- Hidden Sellyo fields -->
-              <input type="hidden" name="userId" id="userId" value="{{userId}}" />
-              <input type="hidden" name="slug" id="slug" value="{{slug}}" />
-              <input type="hidden" name="type" value="tunnel" />
-              <input type="hidden" name="nextUrl" id="nextUrl" value="{{flow.nextHref}}" />
+          <!-- Champs sélectionnés par l’utilisateur -->
+          <script id="form-selected-json" type="application/json">{{form.selectedJson}}</script>
+          <script id="form-selected-csv" type="application/json">{{form.selected}}</script>
 
-              <div class="cta-wrap">
-                <button class="btn" type="submit">{{copy.ctaText}}</button>
-                <small class="disclaimer">{{copy.privacyNote}}</small>
-              </div>
-            </form>
-          </div>
+          <form id="lead-form" data-role="capture" data-next="{{flow.nextHref}}">
+            <div id="form-visible"></div>
+
+            <!-- Hiddens requis -->
+            <input type="hidden" name="userId" id="userId" value="{{userId}}" />
+            <input type="hidden" name="pageSlug" value="{{slug}}" />
+            <input type="hidden" name="slug" value="{{slug}}" />
+            <input type="hidden" name="type" value="tunnel" />
+            <input type="hidden" id="nextUrl-hidden" name="nextUrl" value="" />
+
+            <button type="submit" class="btn" id="cta-btn">{{copy.ctaText}}</button>
+            <div class="muted" style="font-size:12px">{{copy.privacyNote}}</div>
+          </form>
+
+          <!-- Remplacement si cta.action = paiement|lien -->
+          <a id="cta-link" class="btn hide" href="#" rel="nofollow noopener">{{copy.ctaText}}</a>
         </div>
       </div>
     </section>
 
-    <!-- BLOC B : Arguments + Vidéo -->
-    <section class="card" id="block-b">
-      <div class="grid col-2" id="grid-b">
-        <div id="arguments">
-          <div id="prob">{{copy.problem}}</div>
-          <div id="sol">{{copy.solution}}</div>
-          <div id="ben">{{copy.benefits}}</div>
+    <!-- ===== Bloc B : Texte (gauche) + Vidéo (droite) ===== -->
+    <section class="card hide" id="block-b">
+      <div id="argu-grid">
+        <div id="argu-left">
+          <div id="prob" data-alt="{{problem}}">{{copy.problem}}</div>
+          <div id="sol"  data-alt="{{solution}}">{{copy.solution}}</div>
+          <div id="ben"  data-alt="{{benefits}}">{{copy.benefits}}</div>
+          <div id="bul"  data-alt="{{bullets}}">{{copy.bullets}}</div>
         </div>
-        <div class="media" id="media-b">
+        <div class="media" id="argu-video">
           <video id="vid-b" src="{{media.videoMp4}}" controls playsinline class="hide" onerror="this.style.display='none'"></video>
           <iframe id="emb-b" src="{{media.videoEmbed}}" class="hide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
       </div>
     </section>
 
-    <!-- Témoignages -->
+    <!-- Témoignages + FAQ -->
     <section class="card hide" id="testi">
       <h3>Témoignages</h3>
-      <div id="testi-body" data-alt="{{testimonials}}">{{testimonials}}</div>
+      <div id="testi-body" data-alt="{{testimonials}}">{{copy.testimonials}}</div>
     </section>
-
-    <!-- FAQ -->
     <section class="card hide" id="faq">
       <h3>FAQ</h3>
-      <div id="faq-body" data-alt="{{faqs}}">{{faqs}}</div>
+      <div id="faq-body" data-alt="{{faq}}">{{copy.faq}}</div>
     </section>
-
-    <footer class="muted" style="text-align:center;margin-top:14px">
-      &copy; {{seo.metaTitle}}
-    </footer>
   </main>
 
-  <!-- Filet de sécu: userId depuis l’URL + nextUrl absolu -->
-  <script>
-  (function(){
-    // .../tunnels/<userId>/<slug>/...
-    const uidEl = document.getElementById('userId');
-    if (uidEl && !uidEl.value) {
-      const m = location.pathname.match(/\/tunnels\/([^/]+)/);
-      if (m && m[1]) uidEl.value = m[1];
-    }
-    // nextUrl → absolu si relatif
-    const nextEl = document.getElementById('nextUrl');
-    if (nextEl && nextEl.value && !/^https?:\/\//i.test(nextEl.value)) {
-      try {
-        const cur = window.location.href.replace(/[^/]*$/, '');
-        nextEl.value = new URL(nextEl.value, cur).toString();
-      } catch(e){}
-    }
-  })();
-  </script>
+  <!-- Firebase + capture (MODULES comme dans l’ancien tin qui marchait) -->
+  <script type="module" src="https://alricpaon.github.io/sellyo-hosting/firebase-init.js"></script>
+  <script type="module" src="https://alricpaon.github.io/sellyo-hosting/js/save-lead-tunnel.js"></script>
 
-  <!-- Logique d'affichage + sélection des champs -->
   <script>
-    const clean = (s)=> (s||"").toString().trim();
-    const isToken = (s)=> /\{\{[^}]+\}\}/.test((s||"").toString());
-    const isHttp = (u)=>{ try{ const x=new URL((u||'').trim()); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
+    /* ---------- Helpers ---------- */
+    const t = (s)=> (s||"").toString();
+    const clean = (s)=> t(s).trim();
+    const isToken = (s)=> /\{\{[^}]+\}\}/.test(t(s));
+    const isHttp = (u)=>{ try{ const x=new URL(clean(u)); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
 
-    // Logo visible uniquement si exploitable
+    // userId & nextUrl sécurisés
+    (function(){
+      const uid = document.getElementById('userId');
+      if (uid && !clean(uid.value)) {
+        const m = location.pathname.match(/\/tunnels\/([^/]+)/);
+        if (m && m[1]) uid.value = m[1];
+      }
+      const next = document.getElementById('nextUrl-hidden');
+      const dataNext = clean(document.getElementById('lead-form')?.getAttribute('data-next'));
+      if (next && !clean(next.value)) next.value = dataNext;
+      if (next && next.value && !/^https?:\/\//i.test(next.value)) {
+        try { next.value = new URL(next.value, location.href.replace(/[^/]*$/,'')).toString(); } catch(_){}
+      }
+    })();
+
+    // Logo visible si src ok
     (function(){
       const logo=document.getElementById('logo');
       const src=clean(logo?.getAttribute('src'));
       if (logo && src && !isToken(src) && (/^(https?:|data:image)/i.test(src))) logo.style.display='block';
     })();
 
-    // Centrage bloc A si pas d'image
+    // GARANTIE (prend texte ou data-alt)
     (function(){
-      const blockA = document.getElementById('block-a');
-      const img    = document.getElementById('img-a');
-      if (!blockA || !img) return;
-      const isUrl   = (u)=> /^(https?:|\/\/|data:|blob:)/i.test((u||'').trim());
-      const src = (img.getAttribute('src')||'').trim();
-      function center(){ blockA.classList.add('centered'); }
-      if (!src || isToken(src) || !isUrl(src)) { center(); return; }
-      img.addEventListener('error', center);
-      img.addEventListener('load', () => {
-        const hidden = (img.style.display === 'none') || (getComputedStyle(img).display === 'none');
-        if (img.naturalWidth === 0 || hidden) center();
-      });
-      setTimeout(() => {
-        const hidden = (img.style.display === 'none') || (getComputedStyle(img).display === 'none');
-        if (img.naturalWidth === 0 || hidden) center();
-      }, 400);
+      const wrap=document.getElementById('gua'); if(!wrap) return;
+      const em=wrap.querySelector('em'); if(!em) return;
+      const txt=clean(em.textContent); const alt=clean(em.getAttribute('data-alt'));
+      const final = (!txt || isToken(txt)) ? (isToken(alt)? '' : alt) : txt;
+      if (!final) wrap.style.display='none'; else em.textContent=final;
     })();
 
-    // Benefits JSON → UL
+    // ======= Champs dynamiques depuis sélection =======
     (function(){
-      const host=document.getElementById('ben'); if(!host) return;
-      const raw=clean(host.textContent);
-      if(!raw || isToken(raw)) return;
-      try{
-        const arr=JSON.parse(raw);
-        if(Array.isArray(arr)){
-          host.innerHTML = '<ul>' + arr.map(x=>'<li>'+clean(x)+'</li>').join('') + '</ul>';
+      // 1) On récupère la sélection (JSON prioritaire, sinon CSV)
+      function readScriptJson(id){
+        try{
+          const el=document.getElementById(id); if(!el) return null;
+          const raw=clean(el.textContent); if(!raw || isToken(raw)) return null;
+          return JSON.parse(raw);
+        }catch(_){ return null; }
+      }
+      let selected = readScriptJson('form-selected-json');
+      if (!Array.isArray(selected) || !selected.length){
+        const csv = readScriptJson('form-selected-csv'); // peut contenir une simple string
+        const s = typeof csv==='string' ? csv : '';
+        if (s && !isToken(s)) selected = s.split(',').map(x=>x.trim()).filter(Boolean);
+      }
+      if (!Array.isArray(selected) || !selected.length){
+        // Fallback = TOUS les champs
+        selected = ['firstName','lastName','email','phone','address'];
+      }
+
+      const map = {
+        firstName: ()=>`<input name="firstName" id="firstName" placeholder="Votre prénom" autocomplete="given-name" required/>`,
+        lastName:  ()=>`<input name="lastName"  id="lastName"  placeholder="Votre nom" autocomplete="family-name" required/>`,
+        email:     ()=>`<input type="email" name="email" id="email" placeholder="Votre email" autocomplete="email" required/>`,
+        phone:     ()=>`<input type="tel"   name="phone" id="phone" placeholder="Votre téléphone" autocomplete="tel"/>`,
+        address:   ()=>`<textarea name="address" id="address" placeholder="Votre adresse"></textarea>`
+      };
+      const host = document.getElementById('form-visible');
+      host.innerHTML = selected.map(k => (map[k] ? map[k]() : '')).join('');
+    })();
+
+    // ======= Layout déterministe + fix image qui n’apparaît pas =======
+    (function(){
+      const pairA = document.getElementById('pair-a');
+      const blockB= document.getElementById('block-b');
+      const argu  = document.getElementById('argu-grid');
+
+      const imgA  = document.getElementById('img-a');
+      const vidA  = document.getElementById('vid-a');
+      const embA  = document.getElementById('emb-a');
+      const vidB  = document.getElementById('vid-b');
+      const embB  = document.getElementById('emb-b');
+
+      function applyLayout(){
+        const hasImg = isHttp(imgA?.getAttribute('src')||'') && imgA.style.display!=='none';
+        const hasVid = isHttp(vidA?.getAttribute('src')||'') || isHttp(vidB?.getAttribute('src')||'');
+        const hasEmb = (!!clean(embA?.getAttribute('src')) && !isToken(embA?.getAttribute('src'))) ||
+                       (!!clean(embB?.getAttribute('src')) && !isToken(embB?.getAttribute('src')));
+        const anyVideo = hasVid || hasEmb;
+
+        [vidA,embA,vidB,embB].forEach(el=>{ if(!el) return; el.classList.add('hide'); el.style.display='none'; });
+        blockB.classList.add('hide');
+        argu.classList.remove('two-cols','center');
+
+        if (!hasImg && !anyVideo){
+          pairA.classList.remove('two-cols'); pairA.classList.add('center'); return;
         }
-      }catch(_){ }
+        if (hasImg && anyVideo){
+          pairA.classList.remove('center'); pairA.classList.add('two-cols');
+          imgA.style.display='block'; blockB.classList.remove('hide');
+          let mediaB=false;
+          if (isHttp(vidB?.getAttribute('src')||'')){ vidB.classList.remove('hide'); vidB.style.display='block'; mediaB=true; }
+          else if (isHttp(vidA?.getAttribute('src')||'')){ vidB.src=vidA.src; vidB.classList.remove('hide'); vidB.style.display='block'; mediaB=true; }
+          else if (clean(embB?.getAttribute('src'))){ embB.classList.remove('hide'); embB.style.display='block'; mediaB=true; }
+          else if (clean(embA?.getAttribute('src'))){ embB.src=embA.src; embB.classList.remove('hide'); embB.style.display='block'; mediaB=true; }
+          const hasText = ['prob','sol','ben','bul'].some(id=> clean(document.getElementById(id)?.textContent));
+          argu.classList.add(mediaB && hasText ? 'two-cols' : 'center');
+          return;
+        }
+        if (hasImg && !anyVideo){
+          pairA.classList.remove('center'); pairA.classList.add('two-cols');
+          imgA.style.display='block'; return;
+        }
+        if (!hasImg && anyVideo){
+          pairA.classList.remove('center'); pairA.classList.add('two-cols');
+          if (isHttp(vidA?.getAttribute('src')||'')) { vidA.classList.remove('hide'); vidA.style.display='block'; }
+          else if (clean(embA?.getAttribute('src'))) { embA.classList.remove('hide'); embA.style.display='block'; }
+        }
+      }
+
+      // Appliquer quand DOM prêt + après decode() de l’image (fix “image visible après refresh”)
+      document.addEventListener('DOMContentLoaded', applyLayout);
+      if (imgA && imgA.decode) { imgA.decode().then(()=>applyLayout()).catch(()=>applyLayout()); }
+      imgA && imgA.addEventListener('load', applyLayout);
+      imgA && imgA.addEventListener('error', applyLayout);
+      setTimeout(applyLayout, 600); // filet de sécurité
     })();
 
-    // Vidéo bloc B
+    // ===== Normalisation CTA / nextHref =====
     (function(){
-      const vidB=document.getElementById('vid-b');
-      const embB=document.getElementById('emb-b');
-      const gridB=document.getElementById('grid-b');
-      const args=document.getElementById('arguments');
-      const mp4=clean('{{media.videoMp4}}');
-      const emb=clean('{{media.videoEmbed}}');
-      const hasVid = !!mp4 && !isToken(mp4) && isHttp(mp4);
-      const hasEmb = !!emb && !isToken(emb) && isHttp(emb);
-      [vidB,embB].forEach(el=>{ if(el){ el.classList.add('hide'); el.style.display='none'; }});
-      if(hasVid){ vidB.src=mp4; vidB.classList.remove('hide'); vidB.style.display='block'; }
-      else if(hasEmb){ embB.classList.remove('hide'); embB.style.display='block'; }
-      else {
-        gridB.classList.remove('col-2');
-        gridB.style.gridTemplateColumns='1fr';
-        args.style.maxWidth='760px';
-        args.style.margin='0 auto';
+      const ns1 = clean('{{nextHref}}');
+      const ns2 = clean('{{flow.nextHref}}');
+      const ns3 = clean('{{cta.nextSlug}}');
+      const ns4 = clean('{{flow.nextSlug}}');
+      let nextHref = ns1 || ns2 || '';
+      if (!nextHref){
+        const slug = ns3 || ns4;
+        if (slug) nextHref = slug.endsWith('.html') ? slug : (slug + '.html');
+      }
+      const hidden = document.getElementById('nextUrl-hidden'); if (hidden) hidden.value = nextHref || '';
+      const form = document.getElementById('lead-form');
+      const link = document.getElementById('cta-link');
+
+      // Si cta.action = paiement|lien, on affiche le lien à la place du form
+      const action = clean('{{cta.action}}').toLowerCase();
+      const mode = (action==='checkout') ? 'payment' : (action||'');
+      const payLink = clean('{{payment.paymentLink}}') || clean('{{cta.paymentLink}}');
+      if (mode==='payment' || mode==='url'){
+        form.classList.add('hide'); link.classList.remove('hide');
+        link.href = (mode==='payment' && isHttp(payLink)) ? payLink : (nextHref||'#');
+      } else {
+        form.classList.remove('hide'); link.classList.add('hide');
       }
     })();
 
-    // Timer (evergreen minutes ou deadline ISO)
+    // ===== Témoignages / FAQ =====
+    (function(){
+      function showFromRaw(wrapId, bodyId, mapJson){
+        const wrap=document.getElementById(wrapId), body=document.getElementById(bodyId);
+        if(!wrap||!body) return;
+        let raw=clean(body.textContent);
+        if(!raw || isToken(raw)) raw = clean(body.getAttribute('data-alt'));
+        if(!raw || isToken(raw)) return;
+        let html='';
+        try{ const data=JSON.parse(raw); html = mapJson(data); }catch(_){ html = raw; }
+        if(html){ body.innerHTML=html; wrap.classList.remove('hide'); }
+      }
+      showFromRaw('testi','testi-body', arr => Array.isArray(arr)?arr.map(t=>`<div class="testimonial-item">“${clean(t?.text||t)}”</div>`).join(''):'');
+      showFromRaw('faq','faq-body',   arr => Array.isArray(arr)?arr.map(x=>`<div class="faq-item"><strong>${clean(x?.q||x?.question||'')}</strong><br/>${clean(x?.a||x?.answer||'')}</div>`).join(''):'');
+    })();
+
+    // ===== Timer =====
     (function(){
       const tEl=document.getElementById('timer');
-      const evergreen = clean('{{timers.evergreenMinutes}}');
+      const evergreen = parseInt('{{timers.evergreenMinutes}}',10)||0;
       const deadline  = clean('{{timers.deadlineISO}}');
       function activate(endTs){
         tEl.classList.remove('hide');
         function tick(){
-          const now=Date.now();
-          const diff=Math.max(0,endTs-now);
-          const h=Math.floor(diff/3_600_000), m=Math.floor(diff%3_600_000/60_000), s=Math.floor(diff%60_000/1000);
-          tEl.textContent = `Offre se termine dans ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+          const now=Date.now(), diff=Math.max(0,endTs-now);
+          const m=Math.floor(diff/60000), s=Math.floor((diff%60000)/1000);
+          tEl.textContent = `Offre expire dans ${m}m ${String(s).padStart(2,'0')}s`;
           if(diff<=0) clearInterval(iv);
         }
         tick(); const iv=setInterval(tick,1000);
       }
-      if(evergreen && !isToken(evergreen)) activate(Date.now() + (parseInt(evergreen,10)||10)*60*1000);
-      else if(deadline && !isToken(deadline)) { const ts=Date.parse(deadline); if(!Number.isNaN(ts)) activate(ts); }
+      if(evergreen>0) activate(Date.now()+evergreen*60*1000);
+      else if(deadline && !isToken(deadline)){ const ts=Date.parse(deadline); if(!Number.isNaN(ts)) activate(ts); }
     })();
-
-    // Sélection dynamique des champs (JSON ou CSV). Fallback = TOUS les champs.
-    (function(){
-      const tok = v => /\{\{[^}]+\}\}/.test((v||'')+'');
-      let selected = [];
-      let selJson = '{{form.selectedJson}}';
-      if (selJson && !tok(selJson) && selJson.trim()) {
-        try { selected = JSON.parse(selJson); } catch(e){}
-      }
-      if (!selected.length) {
-        let selCsv = '{{form.selected}}';
-        if (selCsv && !tok(selCsv) && selCsv.trim()) {
-          selected = selCsv.split(',').map(s=>s.trim()).filter(Boolean);
-        }
-      }
-      if (!selected.length) { selected = ['firstName','lastName','email','phone','address']; }
-      document.querySelectorAll('#lead-form .form-field').forEach(el=>{
-        const key = el.getAttribute('data-field');
-        if(!selected.includes(key)) el.style.display='none';
-      });
-    })();
-
-    // Témoignages & FAQ
-    (function(){
-      function has(v){ return !!(v && (""+v).trim() && !/\{\{[^}]+\}\}/.test(""+v)); }
-      function showFromRaw(wrapId, bodyId, mapJson){
-        const wrap=document.getElementById(wrapId), body=document.getElementById(bodyId);
-        if(!wrap||!body) return;
-        let raw=(body.textContent||'').trim();
-        if(!has(raw)) raw=(body.getAttribute('data-alt')||'').trim();
-        if(!has(raw)) return;
-        let html='';
-        try{ const data=JSON.parse(raw); html = mapJson(data); }catch(_){ html=raw; }
-        if(has(html)){ body.innerHTML=html; wrap.classList.remove('hide'); }
-      }
-      showFromRaw('testi','testi-body', arr => Array.isArray(arr)
-        ? arr.map(t=>`<div class="testimonial-item">“${(t&&t.text?t.text:t)||''}”</div>`).join('')
-        : '');
-      showFromRaw('faq','faq-body', arr => Array.isArray(arr)
-        ? arr.map(x=>`<div class="faq-item"><strong>${(x&&x.q?x.q:(x&&x.question?x.question:''))}</strong><br/>${(x&&x.a?x.a:(x&&x.answer?x.answer:''))}</div>`).join('')
-        : '');
-    })();
-  </script>
-
-  <!-- Charge firebase-init.js + save-lead-tunnel.js via plusieurs miroirs + fallback -->
-  <script>
-  (function(){
-    function loadOne(url){
-      return new Promise((res,rej)=>{
-        const s=document.createElement('script');
-        s.src=url; s.defer=true;
-        s.onload=()=>res(true);
-        s.onerror=()=>rej(new Error('load fail '+url));
-        document.head.appendChild(s);
-      });
-    }
-    async function loadAny(urls){
-      for(const u of urls){
-        try{ await loadOne(u); return true; }catch(e){ console.warn(e.message); }
-      }
-      return false;
-    }
-    (async function(){
-      const okInit = await loadAny([
-        "https://cdn.jsdelivr.net/gh/ALRICPAON/sellyo-hosting@main/js/firebase-init.js",
-        "https://cdn.jsdelivr.net/gh/ALRICPAON/sellyo-hosting@main/firebase-init.js",
-        "https://alricpaon.github.io/sellyo-hosting/js/firebase-init.js",
-        "https://alricpaon.github.io/sellyo-hosting/firebase-init.js"
-      ]);
-      const okLead = await loadAny([
-        "https://cdn.jsdelivr.net/gh/ALRICPAON/sellyo-hosting@main/js/save-lead-tunnel.js",
-        "https://cdn.jsdelivr.net/gh/ALRICPAON/sellyo-hosting@main/save-lead-tunnel.js",
-        "https://alricpaon.github.io/sellyo-hosting/js/save-lead-tunnel.js",
-        "https://alricpaon.github.io/sellyo-hosting/save-lead-tunnel.js"
-      ]);
-      // Si les scripts ne se chargent pas, on active un fallback de redirection seule
-      if(!okInit || !okLead){
-        console.warn("[Sellyo] Scripts d’enregistrement indisponibles → fallback: redirection sans enregistrement.");
-        window.__sellyo_fallback__ = true;
-      }
-      // Fallback submit si nécessaire
-      const form=document.getElementById('lead-form');
-      form && form.addEventListener('submit', function(e){
-        if(window.__sellyo_fallback__){
-          e.preventDefault();
-          const next = (document.getElementById('nextUrl')||{}).value || "";
-          if(next){ window.location.href = next; }
-          else { console.warn("[Sellyo] nextUrl manquant, impossible de rediriger."); }
-        }
-      }, { once:true });
-    })().catch(()=>{ /* ignore */ });
-  })();
   </script>
 </body>
 </html>
