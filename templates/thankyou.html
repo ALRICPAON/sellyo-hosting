@@ -25,6 +25,19 @@
 
     .stack { display:grid; gap:10px; justify-items:center; }
     .hide { display:none; }
+
+    .center-text { text-align: center; }
+.center-text > * { margin-left: auto; margin-right: auto; }
+
+/* si tu as des listes, ça garde les puces lisibles */
+.center-text ul,
+.center-text ol { display: inline-block; text-align: left; }
+
+/* optionnel: centrer aussi images/iframes/vidéos insérées par l'utilisateur */
+.center-text img,
+.center-text iframe,
+.center-text video { display:block; margin:12px auto; }
+
   </style>
 </head>
 <body>
@@ -38,10 +51,11 @@
     </header>
 
     <!-- Zone de texte dynamique (thankyouText + productRecap) -->
-    <section id="desc-wrap" class="card">
-      <div id="desc">{{thankyouText}}</div>
-      <div id="recap">{{productRecap}}</div>
-    </section>
+    <section id="desc-wrap" class="card center-text">
+  <div id="desc">{{thankyouText}}</div>
+  <div id="recap">{{productRecap}}</div>
+</section>
+    
 
     <!-- Téléchargements / Accès en ligne -->
     <section id="bonus" class="card hide">
