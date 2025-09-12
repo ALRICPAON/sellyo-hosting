@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>optine091</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { --bg: #61177c; --btn: #e32400; --text:#fff; --muted:#b7c3d7; }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    a{color:inherit}
+    .wrap{max-width:1100px;margin:0 auto;padding:24px}
+    header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+    header img{height:36px;object-fit:contain}
+    .hero{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center}
+    .media{width:100%;border-radius:14px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+    .media img,.media video, .media iframe{width:100%;height:100%;display:block}
+    .copy{display:flex;flex-direction:column;gap:14px}
+    h1{font-size:clamp(26px,4vw,38px);line-height:1.15;margin:0}
+    .subtitle{color:var(--muted)}
+    .benefits{display:grid;gap:8px;margin-top:8px}
+    .benefits li{margin-left:18px}
+
+    /* FORM CARD */
+    .card{background:rgba(255,255,255,.06);backdrop-filter:saturate(120%) blur(6px);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:18px;box-shadow:0 8px 24px rgba(0,0,0,.28)}
+    form .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    form .row.single{grid-template-columns:1fr}
+    label{display:block;font-size:14px;margin-bottom:6px;color:#e6eefc}
+    input,textarea{width:100%;padding:12px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(3,8,23,.55);color:#fff;font-size:15px}
+    textarea{min-height:90px;resize:vertical}
+    .cta{margin-top:12px;display:flex;gap:10px;align-items:center}
+    .btn{appearance:none;border:0;border-radius:12px;padding:12px 16px;background:var(--btn);color:#fff;font-weight:600;cursor:pointer}
+    .disclaimer{font-size:12px;color:var(--muted)}
+
+    /* TIMER (optionnel) */
+    .timer{display:none;margin-top:8px;font-variant-numeric:tabular-nums}
+    .timer.active{display:inline-flex;gap:8px;align-items:center;padding:6px 10px;border-radius:12px;background:rgba(255,255,255,.08)}
+
+    /* Responsive */
+    @media (max-width: 880px){
+      .hero{grid-template-columns:1fr;}
+      .media{order:2}
+      .copy{order:1}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <img src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Foptine091-jwzhz%2Flogo-1757664255671?alt=media&token=709a1a59-efe3-4cfc-86d5-72164b9d3406" alt="Logo" onerror="this.style.display='none'" />
+      <div class="timer" id="timer"></div>
+    </header>
+
+    <main class="hero">
+      <!-- MEDIA (même logique que sales) -->
+      <section class="media" id="media"></section>
+
+      <!-- COPY + FORM  -->
+      <section class="copy">
+        <h1>titre</h1>
+        <p class="subtitle">soustitre</p>
+        <ul class="benefits" id="benefits">
+          
+        </ul>
+
+        <div class="card">
+          <form id="lead-form" data-role="capture">
+            <!-- Champs dynamiques; on affiche seulement ceux sélectionnés par l'utilisateur -->
+            <div class="row">
+              <div class="form-field" data-field="firstName" style="display: none;">
+                <label for="firstName">Prénom</label>
+                <input id="firstName" name="firstName" autocomplete="given-name" />
+              </div>
+              <div class="form-field" data-field="lastName" style="display: none;">
+                <label for="lastName">Nom</label>
+                <input id="lastName" name="lastName" autocomplete="family-name" />
+              </div>
+            </div>
+            <div class="row single">
+              <div class="form-field" data-field="email">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" inputmode="email" autocomplete="email" required />
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-field" data-field="phone" style="display: none;">
+                <label for="phone">Téléphone</label>
+                <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" />
+              </div>
+              <div class="form-field" data-field="address" style="display: none;">
+                <label for="address">Adresse</label>
+                <input id="address" name="address" autocomplete="street-address" />
+              </div>
+            </div>
+
+            <!-- HIDDENS requis par Sellyo / scripts côté client -->
+            <input type="hidden" name="userId" id="userId" value="" />
+            <input type="hidden" name="slug" id="slug" value="optine091-jwzhz-p1" />
+            <input type="hidden" name="type" value="tunnel" />
+            <input type="hidden" name="nextUrl" id="nextUrl" value="optine091-jwzhz-p2.html" />
+
+            <div class="cta">
+              <button class="btn" type="submit">je test</button>
+              <small class="disclaimer"></small>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ===== Helpers (même logique media/timer que sales) ===== -->
+  <script>
+    (function(){
+      // --- Apply media like SALES ---
+      const cfg = {
+        image: "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Foptine091-jwzhz%2Fpage1-hero-1757664256408?alt=media&token=b8cde55a-1065-4f35-9433-6bdf78cc0d17",
+        mp4: "https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Foptine091-jwzhz%2Fpage1-video-1757664257425?alt=media&token=4fd665c3-5752-4baa-9990-c942cb9f6fc7",
+        embed: ``
+      };
+      const mediaEl = document.getElementById('media');
+      function isFilled(v){ return v && !String(v).includes('{{'); }
+      if (isFilled(cfg.mp4)) {
+        const v = document.createElement('video');
+        v.src = cfg.mp4; v.controls = true; v.playsInline = true;
+        mediaEl.appendChild(v);
+      } else if (isFilled(cfg.embed)) {
+        const f = document.createElement('iframe');
+        f.src = cfg.embed; f.allow = 'autoplay; encrypted-media; picture-in-picture';
+        f.style.minHeight = '280px'; f.loading = 'lazy';
+        mediaEl.appendChild(f);
+      } else if (isFilled(cfg.image)) {
+        const i = document.createElement('img'); i.src = cfg.image; i.alt = '';
+        mediaEl.appendChild(i);
+      } else {
+        // No media → center the form by spanning columns
+        document.querySelector('.hero').style.gridTemplateColumns = '1fr';
+      }
+
+      // --- Benefits list: hide if empty ---
+      const ul = document.getElementById('benefits');
+      if(ul && ul.innerHTML.trim().includes('{{')) ul.style.display='none';
+
+      // --- Dynamic form fields selection ---
+      // Expect a JSON array placeholder from Make/GPT, e.g. ["firstName","email","phone"]
+      let selectedRaw = `["email"]`;
+      const fallback = ["firstName","email"]; // if nothing provided
+      let selected;
+      try {
+        selected = JSON.parse(selectedRaw);
+        if(!Array.isArray(selected) || selected.some(x=>typeof x!== 'string')) throw 0;
+      } catch { selected = fallback; }
+      document.querySelectorAll('.form-field').forEach(el => {
+        const key = el.getAttribute('data-field');
+        if (!selected.includes(key)) el.style.display = 'none';
+      });
+
+      // If only the form remains (no media), ensure nice max width
+      if (!mediaEl.children.length) {
+        document.querySelector('.card').style.maxWidth = '640px';
+        document.querySelector('.copy').style.alignItems = 'center';
+      }
+
+      // --- Timer (optional): evergreen minutes OR hard deadline ISO ---
+      const evergreenMin = `30`;
+      const deadlineISO = ``;
+      const timerEl = document.getElementById('timer');
+      function activateTimer(endTs){
+        timerEl.classList.add('active');
+        function tick(){
+          const now = Date.now();
+          const diff = Math.max(0, endTs - now);
+          const h = Math.floor(diff/3_600_000), m = Math.floor(diff%3_600_000/60_000), s = Math.floor(diff%60_000/1000);
+          timerEl.textContent = `Offre se termine dans ${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+          if(diff<=0) clearInterval(iv);
+        }
+        tick(); const iv = setInterval(tick, 1000);
+      }
+      if (!String(evergreenMin).includes('{{') && evergreenMin) {
+        const mins = parseInt(evergreenMin,10)||10;
+        activateTimer(Date.now() + mins*60*1000);
+      } else if (!String(deadlineISO).includes('{{') && deadlineISO) {
+        const end = Date.parse(deadlineISO); if(!isNaN(end)) activateTimer(end);
+      } else {
+        timerEl.style.display='none';
+      }
+
+      // --- NEXT URL hidden: ensure it is absolute or sibling .html ---
+      const next = document.getElementById('nextUrl');
+      if(next && (!next.value || next.value.includes('{{'))){ next.value = 'optine091-jwzhz-p2.html'; }
+    })();
+  </script>
+
+  <!-- Obligatoire pour OPTIN Sellyo: JS-only form capture → Firestore, puis redirection -->
+  <script src="https://cdn.jsdelivr.net/gh/ALRICPAON/sellyo-hosting/firebase-init.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/gh/ALRICPAON/sellyo-hosting/save-lead-tunnel.js" defer></script>
+</body>
+</html>
