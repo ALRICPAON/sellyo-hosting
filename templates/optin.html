@@ -128,7 +128,7 @@
       </div>
     </section>
 
-    <!-- BLOC B : Arguments + Vidéo (optionnel, même logique que sales) -->
+    <!-- BLOC B : Arguments + Vidéo -->
     <section class="card" id="block-b">
       <div class="grid col-2" id="grid-b">
         <div id="arguments">
@@ -180,12 +180,13 @@
   })();
   </script>
 
+  <!-- Logique d'affichage + sélection des champs -->
   <script>
     const clean = (s)=> (s||"").toString().trim();
     const isToken = (s)=> /\{\{[^}]+\}\}/.test((s||"").toString());
     const isHttp = (u)=>{ try{ const x=new URL((u||'').trim()); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
 
-    // Logo visible uniquement si src exploitable
+    // Logo visible uniquement si exploitable
     (function(){
       const logo=document.getElementById('logo');
       const src=clean(logo?.getAttribute('src'));
@@ -197,11 +198,9 @@
       const blockA = document.getElementById('block-a');
       const img    = document.getElementById('img-a');
       if (!blockA || !img) return;
-
       const isUrl   = (u)=> /^(https?:|\/\/|data:|blob:)/i.test((u||'').trim());
       const src = (img.getAttribute('src')||'').trim();
       function center(){ blockA.classList.add('centered'); }
-
       if (!src || isToken(src) || !isUrl(src)) { center(); return; }
       img.addEventListener('error', center);
       img.addEventListener('load', () => {
@@ -227,21 +226,17 @@
       }catch(_){ }
     })();
 
-    // Vidéo bloc B (identique à sales)
+    // Vidéo bloc B
     (function(){
       const vidB=document.getElementById('vid-b');
       const embB=document.getElementById('emb-b');
       const gridB=document.getElementById('grid-b');
       const args=document.getElementById('arguments');
-
       const mp4=clean('{{media.videoMp4}}');
       const emb=clean('{{media.videoEmbed}}');
-
       const hasVid = !!mp4 && !isToken(mp4) && isHttp(mp4);
       const hasEmb = !!emb && !isToken(emb) && isHttp(emb);
-
       [vidB,embB].forEach(el=>{ if(el){ el.classList.add('hide'); el.style.display='none'; }});
-
       if(hasVid){ vidB.src=mp4; vidB.classList.remove('hide'); vidB.style.display='block'; }
       else if(hasEmb){ embB.classList.remove('hide'); embB.style.display='block'; }
       else {
@@ -272,33 +267,28 @@
       else if(deadline && !isToken(deadline)) { const ts=Date.parse(deadline); if(!Number.isNaN(ts)) activate(ts); }
     })();
 
-    // Sélection dynamique des champs (JSON ou CSV), sinon fallback: email seul
+    // Sélection dynamique des champs (JSON ou CSV). Fallback = TOUS les champs.
     (function(){
       const tok = v => /\{\{[^}]+\}\}/.test((v||'')+'');
       let selected = [];
-
-      // 1) JSON
       let selJson = '{{form.selectedJson}}';
       if (selJson && !tok(selJson) && selJson.trim()) {
         try { selected = JSON.parse(selJson); } catch(e){}
       }
-      // 2) CSV
       if (!selected.length) {
         let selCsv = '{{form.selected}}';
         if (selCsv && !tok(selCsv) && selCsv.trim()) {
           selected = selCsv.split(',').map(s=>s.trim()).filter(Boolean);
         }
       }
-      // 3) Fallback minimal
-      if (!selected.length) { selected = ['email']; }
-
+      if (!selected.length) { selected = ['firstName','lastName','email','phone','address']; }
       document.querySelectorAll('#lead-form .form-field').forEach(el=>{
         const key = el.getAttribute('data-field');
         if(!selected.includes(key)) el.style.display='none';
       });
     })();
 
-    // Témoignages & FAQ (JSON ou HTML)
+    // Témoignages & FAQ
     (function(){
       function has(v){ return !!(v && (""+v).trim() && !/\{\{[^}]+\}\}/.test(""+v)); }
       function showFromRaw(wrapId, bodyId, mapJson){
@@ -320,24 +310,53 @@
     })();
   </script>
 
-  <!-- Chargement des scripts avec fallback (évite 403 + nosniff) -->
+  <!-- Charge firebase-init.js + save-lead-tunnel.js via plusieurs miroirs + fallback -->
   <script>
-  (async()=>{
-    async function loadWithFallback(primary, fallback){
-      try{
-        await new Promise((res,rej)=>{ const s=document.createElement('script'); s.src=primary; s.onload=res; s.onerror=rej; document.head.appendChild(s); });
-      }catch{
-        await new Promise((res,rej)=>{ const s=document.createElement('script'); s.src=fallback; s.onload=res; s.onerror=rej; document.head.appendChild(s); });
-      }
+  (function(){
+    function loadOne(url){
+      return new Promise((res,rej)=>{
+        const s=document.createElement('script');
+        s.src=url; s.defer=true;
+        s.onload=()=>res(true);
+        s.onerror=()=>rej(new Error('load fail '+url));
+        document.head.appendChild(s);
+      });
     }
-    await loadWithFallback(
-      "https://cdn.jsdelivr.net/gh/ALRICPAON/sellyo-hosting@main/firebase-init.js",
-      "https://alricpaon.github.io/sellyo-hosting/firebase-init.js"
-    );
-    await loadWithFallback(
-      "https://cdn.jsdelivr.net/gh/ALRICPAON/sellyo-hosting@main/save-lead-tunnel.js",
-      "https://alricpaon.github.io/sellyo-hosting/save-lead-tunnel.js"
-    );
+    async function loadAny(urls){
+      for(const u of urls){
+        try{ await loadOne(u); return true; }catch(e){ console.warn(e.message); }
+      }
+      return false;
+    }
+    (async function(){
+      const okInit = await loadAny([
+        "https://cdn.jsdelivr.net/gh/ALRICPAON/sellyo-hosting@main/js/firebase-init.js",
+        "https://cdn.jsdelivr.net/gh/ALRICPAON/sellyo-hosting@main/firebase-init.js",
+        "https://alricpaon.github.io/sellyo-hosting/js/firebase-init.js",
+        "https://alricpaon.github.io/sellyo-hosting/firebase-init.js"
+      ]);
+      const okLead = await loadAny([
+        "https://cdn.jsdelivr.net/gh/ALRICPAON/sellyo-hosting@main/js/save-lead-tunnel.js",
+        "https://cdn.jsdelivr.net/gh/ALRICPAON/sellyo-hosting@main/save-lead-tunnel.js",
+        "https://alricpaon.github.io/sellyo-hosting/js/save-lead-tunnel.js",
+        "https://alricpaon.github.io/sellyo-hosting/save-lead-tunnel.js"
+      ]);
+      // Si les scripts ne se chargent pas, on active un fallback de redirection seule
+      if(!okInit || !okLead){
+        console.warn("[Sellyo] Scripts d’enregistrement indisponibles → fallback: redirection sans enregistrement.");
+        window.__sellyo_fallback__ = true;
+      }
+      // Fallback submit si nécessaire
+      const form=document.getElementById('lead-form');
+      form && form.addEventListener('submit', function(e){
+        if(window.__sellyo_fallback__){
+          e.preventDefault();
+          const next = (document.getElementById('nextUrl')||{}).value || "";
+          if(next){ window.location.href = next; }
+          else { console.warn("[Sellyo] nextUrl manquant, impossible de rediriger."); }
+        }
+      }, { once:true });
+    })().catch(()=>{ /* ignore */ });
   })();
   </script>
 </body>
