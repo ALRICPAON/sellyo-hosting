@@ -177,10 +177,42 @@
       </div>
     </section>
 
+    <!-- Témoignages -->
+<section class="card hide" id="testi">
+  <h3>Témoignages</h3>
+  <div id="testi-body" data-alt="{{testimonials}}">{{testimonials}}</div>
+</section>
+
+<!-- FAQ -->
+<section class="card hide" id="faq">
+  <h3>FAQ</h3>
+  <div id="faq-body" data-alt="{{faqs}}">{{faqs}}</div>
+</section>
+
     <footer class="muted" style="text-align:center;margin-top:14px">
       &copy; {{seo.metaTitle}}
     </footer>
   </main>
+
+  <script>
+(function(){
+  // Remplir userId depuis l'URL: .../tunnels/<userId>/<tunnelSlug>/...
+  const uidEl = document.getElementById('userId');
+  if (uidEl && !uidEl.value) {
+    const m = location.pathname.match(/\\/tunnels\\/([^\\/]+)/);
+    if (m && m[1]) uidEl.value = m[1];
+  }
+
+  // Normaliser nextUrl en absolu si donné en relatif
+  const nextEl = document.getElementById('nextUrl');
+  if (nextEl && nextEl.value && !/^https?:\\/\\//i.test(nextEl.value)) {
+    try {
+      const cur = window.location.href.replace(/[^/]*$/, ''); // dossier courant
+      nextEl.value = new URL(nextEl.value, cur).toString();
+    } catch(e){}
+  }
+})();
+</script>
 
   <script>
     const clean = (s)=> (s||"").toString().trim();
@@ -285,7 +317,29 @@
         if(!selected.includes(key)) el.style.display='none';
       });
     })();
+
+    // Témoignages & FAQ (même logique que sales)
+(function(){
+  function has(v){ return !!(v && (""+v).trim() && !/\{\{[^}]+\}\}/.test(""+v)); }
+  function showFromRaw(wrapId, bodyId, mapJson){
+    const wrap=document.getElementById(wrapId), body=document.getElementById(bodyId);
+    if(!wrap||!body) return;
+    let raw=(body.textContent||'').trim();
+    if(!has(raw)) raw=(body.getAttribute('data-alt')||'').trim();
+    if(!has(raw)) return;
+    let html='';
+    try{ const data=JSON.parse(raw); html = mapJson(data); }catch(_){ html=raw; }
+    if(has(html)){ body.innerHTML=html; wrap.classList.remove('hide'); }
+  }
+  showFromRaw('testi','testi-body', arr => Array.isArray(arr)
+    ? arr.map(t=>`<div class="testimonial-item">“${(t&&t.text?t.text:t)||''}”</div>`).join('')
+    : '');
+  showFromRaw('faq','faq-body', arr => Array.isArray(arr)
+    ? arr.map(x=>`<div class="faq-item"><strong>${(x&&x.q?x.q:(x&&x.question?x.question:''))}</strong><br/>${(x&&x.a?x.a:(x&&x.answer?x.answer:''))}</div>`).join('')
+    : '');
+})();
   </script>
+
 
   <!-- JS-only form capture Sellyo -->
   <script src="https://cdn.jsdelivr.net/gh/ALRICPAON/sellyo-hosting/firebase-init.js" defer></script>
