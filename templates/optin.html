@@ -22,6 +22,8 @@
     .btn{display:inline-block;width:100%;padding:14px 18px;border-radius:12px;background:var(--btn);color:#fff;font-weight:800;text-align:center;text-decoration:none;border:0;cursor:pointer}
     form input,form textarea,form select{width:100%;padding:12px;border-radius:10px;border:0;margin:8px 0;background:#ffffff12;color:#fff}
 
+    #argu-grid.center #argu-left { max-width: 760px; margin: 0 auto; }
+
     /* ===== Grids ===== */
     #pair-a{display:grid;gap:18px;grid-template-columns:1fr}
     @media(min-width:880px){ #pair-a.two-cols{ grid-template-columns:1fr 1fr; } }
@@ -353,5 +355,73 @@
       else if(deadline && !isToken(deadline)){ const ts=Date.parse(deadline); if(!Number.isNaN(ts)) activate(ts); }
     })();
   </script>
+  <script>
+(function(){
+  const clean = s => (s||'').toString().trim();
+  const isTok = s => /\{\{[^}]+\}\}/.test((s||'')+'');
+
+  const blockB = document.getElementById('block-b');
+  const grid   = document.getElementById('argu-grid');
+  const args   = document.getElementById('argu-left');
+  const vidB   = document.getElementById('vid-b');
+  const embB   = document.getElementById('emb-b');
+
+  function hasTxt(id){
+    const el = document.getElementById(id); if(!el) return false;
+    let raw = clean(el.textContent);
+    if (!raw || isTok(raw)) raw = clean(el.getAttribute('data-alt'));
+    return !!(raw && !isTok(raw));
+  }
+  function bulletsToUl(){
+    const el = document.getElementById('bul'); if(!el) return;
+    let raw = clean(el.textContent);
+    if (!raw || isTok(raw)) raw = clean(el.getAttribute('data-alt'));
+    try{
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr)){
+        el.innerHTML = '<ul>' + arr.map(x=>'<li>'+clean(x)+'</li>').join('') + '</ul>';
+      }
+    }catch(_){ /* texte/HTML simple, on garde */ }
+  }
+
+  function driveBlockB(){
+    const mp4 = clean(vidB?.getAttribute('src'));
+    const emb = clean(embB?.getAttribute('src'));
+    const hasVideo = (!!mp4 && !isTok(mp4) && /^https?:/i.test(mp4))
+                  || (!!emb && !isTok(emb) && /^https?:/i.test(emb));
+    const hasArgs  = ['prob','sol','ben','bul'].some(hasTxt);
+
+    // Rien à montrer
+    if (!hasVideo && !hasArgs){ blockB.classList.add('hide'); return; }
+
+    // On affiche le bloc B quoi qu'il arrive (texte centré si pas de vidéo)
+    blockB.classList.remove('hide');
+
+    // Reset media
+    [vidB, embB].forEach(el=>{ if(el){ el.classList.add('hide'); el.style.display='none'; }});
+
+    if (hasVideo){
+      // 2 colonnes : texte + vidéo
+      if (!!mp4 && /^https?:/i.test(mp4)){ vidB.classList.remove('hide'); vidB.style.display='block'; }
+      else if (!!emb && /^https?:/i.test(emb)){ embB.classList.remove('hide'); embB.style.display='block'; }
+      grid.classList.add('two-cols');
+      grid.classList.remove('center');
+      if (args){ args.style.maxWidth=''; args.style.margin=''; }
+    } else {
+      // Pas de vidéo : texte centré
+      grid.classList.remove('two-cols');
+      grid.classList.add('center');
+      // (centrage fait par la règle CSS ajoutée au point 1)
+    }
+
+    // Points clés JSON → UL si nécessaire
+    bulletsToUl();
+  }
+
+  document.addEventListener('DOMContentLoaded', driveBlockB);
+  window.addEventListener('load', driveBlockB);
+  setTimeout(driveBlockB, 700); // filet de sécu
+})();
+</script>
 </body>
 </html>
