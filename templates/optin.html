@@ -9,66 +9,31 @@
     :root{ --bg: {{ui.mainColor}}; --btn: {{ui.buttonColor}}; --text:#fff }
     *{box-sizing:border-box}
     body{
-      margin:0;
-      background:var(--bg);
-      color:var(--text);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      line-height:1.45;
+      margin:0; background:var(--bg); color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; line-height:1.45;
     }
     main{max-width:1100px;margin:0 auto;padding:24px}
 
-    header{
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      padding:16px 0
-    }
+    header{ display:flex; justify-content:center; align-items:center; padding:16px 0 }
     #logo{max-height:56px;display:none}
 
     /* HERO */
-    .hero{
-      text-align:center;
-      margin-bottom:18px;
-    }
-    .hero h1{
-      font-size:clamp(28px,3.8vw,46px);
-      margin:6px 0;
-    }
-    .hero .sub{
-      opacity:.9;
-      margin:8px 0 0;
-      font-size:18px;
-    }
+    .hero{ text-align:center; margin-bottom:18px; }
+    .hero h1{ font-size:clamp(28px,3.8vw,46px); margin:6px 0; }
+    .hero .sub{ opacity:.9; margin:8px 0 0; font-size:18px; }
 
-    .card{
-      background:#ffffff10;
-      border:1px solid #ffffff14;
-      border-radius:16px;
-      padding:18px;
-      margin-bottom:24px;
-    }
+    .card{ background:#ffffff10; border:1px solid #ffffff14; border-radius:16px; padding:18px; margin-bottom:24px; }
 
     .btn,button.cta{
-      display:inline-block;
-      width:100%;
-      padding:14px 18px;
-      border-radius:12px;
-      background:var(--btn);
-      color:#fff;
-      font-weight:800;
-      text-align:center;
-      text-decoration:none;
-      border:0;
-      cursor:pointer;
-      font-size:18px;
+      display:inline-block; width:100%; padding:14px 18px; border-radius:12px;
+      background:var(--btn); color:#fff; font-weight:800; text-align:center;
+      text-decoration:none; border:0; cursor:pointer; font-size:18px;
     }
 
     /* Grilles */
     .grid{display:grid;gap:18px}
     .col-2{grid-template-columns:1fr}
-    @media(min-width:880px){
-      .col-2{ grid-template-columns:1fr 1fr; }
-    }
+    @media(min-width:880px){ .col-2{ grid-template-columns:1fr 1fr; } }
 
     .media img,.media video{ width:100%; max-height:440px; object-fit:cover; border-radius:12px; display:block }
     .media iframe{ width:100%; aspect-ratio:16/9; border:0; border-radius:12px; display:block }
@@ -116,8 +81,9 @@
         </div>
         <div id="col-a-form">
           <div id="desc" class="muted" style="margin-bottom:10px">{{copy.productDescription}}</div>
+          <div id="gua"><em>{{copy.guarantee}}</em></div>
 
-          <div class="card" style="margin:0">
+          <div class="card" style="margin:10px 0 0">
             <form id="lead-form" data-role="capture">
               <div class="row">
                 <div class="form-field" data-field="firstName">
@@ -178,41 +144,41 @@
     </section>
 
     <!-- Témoignages -->
-<section class="card hide" id="testi">
-  <h3>Témoignages</h3>
-  <div id="testi-body" data-alt="{{testimonials}}">{{testimonials}}</div>
-</section>
+    <section class="card hide" id="testi">
+      <h3>Témoignages</h3>
+      <div id="testi-body" data-alt="{{testimonials}}">{{testimonials}}</div>
+    </section>
 
-<!-- FAQ -->
-<section class="card hide" id="faq">
-  <h3>FAQ</h3>
-  <div id="faq-body" data-alt="{{faqs}}">{{faqs}}</div>
-</section>
+    <!-- FAQ -->
+    <section class="card hide" id="faq">
+      <h3>FAQ</h3>
+      <div id="faq-body" data-alt="{{faqs}}">{{faqs}}</div>
+    </section>
 
     <footer class="muted" style="text-align:center;margin-top:14px">
       &copy; {{seo.metaTitle}}
     </footer>
   </main>
 
+  <!-- Filet de sécu: userId depuis l’URL + nextUrl absolu -->
   <script>
-(function(){
-  // Remplir userId depuis l'URL: .../tunnels/<userId>/<tunnelSlug>/...
-  const uidEl = document.getElementById('userId');
-  if (uidEl && !uidEl.value) {
-    const m = location.pathname.match(/\\/tunnels\\/([^\\/]+)/);
-    if (m && m[1]) uidEl.value = m[1];
-  }
-
-  // Normaliser nextUrl en absolu si donné en relatif
-  const nextEl = document.getElementById('nextUrl');
-  if (nextEl && nextEl.value && !/^https?:\\/\\//i.test(nextEl.value)) {
-    try {
-      const cur = window.location.href.replace(/[^/]*$/, ''); // dossier courant
-      nextEl.value = new URL(nextEl.value, cur).toString();
-    } catch(e){}
-  }
-})();
-</script>
+  (function(){
+    // .../tunnels/<userId>/<slug>/...
+    const uidEl = document.getElementById('userId');
+    if (uidEl && !uidEl.value) {
+      const m = location.pathname.match(/\/tunnels\/([^/]+)/);
+      if (m && m[1]) uidEl.value = m[1];
+    }
+    // nextUrl → absolu si relatif
+    const nextEl = document.getElementById('nextUrl');
+    if (nextEl && nextEl.value && !/^https?:\/\//i.test(nextEl.value)) {
+      try {
+        const cur = window.location.href.replace(/[^/]*$/, '');
+        nextEl.value = new URL(nextEl.value, cur).toString();
+      } catch(e){}
+    }
+  })();
+  </script>
 
   <script>
     const clean = (s)=> (s||"").toString().trim();
@@ -248,7 +214,7 @@
       }, 400);
     })();
 
-    // Arguments JSON → UL si applicable (réutilise logique sales)
+    // Benefits JSON → UL
     (function(){
       const host=document.getElementById('ben'); if(!host) return;
       const raw=clean(host.textContent);
@@ -306,43 +272,73 @@
       else if(deadline && !isToken(deadline)) { const ts=Date.parse(deadline); if(!Number.isNaN(ts)) activate(ts); }
     })();
 
-    // Sélection dynamique des champs via {{form.selectedJson}}
+    // Sélection dynamique des champs (JSON ou CSV), sinon fallback: email seul
     (function(){
-      let selRaw = '{{form.selectedJson}}';
-      let selected;
-      try{ selected = JSON.parse(selRaw); }catch(_){ selected = ['firstName','lastName','email']; }
-      if(!Array.isArray(selected) || !selected.length) selected=['email'];
+      const tok = v => /\{\{[^}]+\}\}/.test((v||'')+'');
+      let selected = [];
+
+      // 1) JSON
+      let selJson = '{{form.selectedJson}}';
+      if (selJson && !tok(selJson) && selJson.trim()) {
+        try { selected = JSON.parse(selJson); } catch(e){}
+      }
+      // 2) CSV
+      if (!selected.length) {
+        let selCsv = '{{form.selected}}';
+        if (selCsv && !tok(selCsv) && selCsv.trim()) {
+          selected = selCsv.split(',').map(s=>s.trim()).filter(Boolean);
+        }
+      }
+      // 3) Fallback minimal
+      if (!selected.length) { selected = ['email']; }
+
       document.querySelectorAll('#lead-form .form-field').forEach(el=>{
         const key = el.getAttribute('data-field');
         if(!selected.includes(key)) el.style.display='none';
       });
     })();
 
-    // Témoignages & FAQ (même logique que sales)
-(function(){
-  function has(v){ return !!(v && (""+v).trim() && !/\{\{[^}]+\}\}/.test(""+v)); }
-  function showFromRaw(wrapId, bodyId, mapJson){
-    const wrap=document.getElementById(wrapId), body=document.getElementById(bodyId);
-    if(!wrap||!body) return;
-    let raw=(body.textContent||'').trim();
-    if(!has(raw)) raw=(body.getAttribute('data-alt')||'').trim();
-    if(!has(raw)) return;
-    let html='';
-    try{ const data=JSON.parse(raw); html = mapJson(data); }catch(_){ html=raw; }
-    if(has(html)){ body.innerHTML=html; wrap.classList.remove('hide'); }
-  }
-  showFromRaw('testi','testi-body', arr => Array.isArray(arr)
-    ? arr.map(t=>`<div class="testimonial-item">“${(t&&t.text?t.text:t)||''}”</div>`).join('')
-    : '');
-  showFromRaw('faq','faq-body', arr => Array.isArray(arr)
-    ? arr.map(x=>`<div class="faq-item"><strong>${(x&&x.q?x.q:(x&&x.question?x.question:''))}</strong><br/>${(x&&x.a?x.a:(x&&x.answer?x.answer:''))}</div>`).join('')
-    : '');
-})();
+    // Témoignages & FAQ (JSON ou HTML)
+    (function(){
+      function has(v){ return !!(v && (""+v).trim() && !/\{\{[^}]+\}\}/.test(""+v)); }
+      function showFromRaw(wrapId, bodyId, mapJson){
+        const wrap=document.getElementById(wrapId), body=document.getElementById(bodyId);
+        if(!wrap||!body) return;
+        let raw=(body.textContent||'').trim();
+        if(!has(raw)) raw=(body.getAttribute('data-alt')||'').trim();
+        if(!has(raw)) return;
+        let html='';
+        try{ const data=JSON.parse(raw); html = mapJson(data); }catch(_){ html=raw; }
+        if(has(html)){ body.innerHTML=html; wrap.classList.remove('hide'); }
+      }
+      showFromRaw('testi','testi-body', arr => Array.isArray(arr)
+        ? arr.map(t=>`<div class="testimonial-item">“${(t&&t.text?t.text:t)||''}”</div>`).join('')
+        : '');
+      showFromRaw('faq','faq-body', arr => Array.isArray(arr)
+        ? arr.map(x=>`<div class="faq-item"><strong>${(x&&x.q?x.q:(x&&x.question?x.question:''))}</strong><br/>${(x&&x.a?x.a:(x&&x.answer?x.answer:''))}</div>`).join('')
+        : '');
+    })();
   </script>
 
-
-  <!-- JS-only form capture Sellyo -->
-  <script src="https://cdn.jsdelivr.net/gh/ALRICPAON/sellyo-hosting/firebase-init.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/gh/ALRICPAON/sellyo-hosting/save-lead-tunnel.js" defer></script>
+  <!-- Chargement des scripts avec fallback (évite 403 + nosniff) -->
+  <script>
+  (async()=>{
+    async function loadWithFallback(primary, fallback){
+      try{
+        await new Promise((res,rej)=>{ const s=document.createElement('script'); s.src=primary; s.onload=res; s.onerror=rej; document.head.appendChild(s); });
+      }catch{
+        await new Promise((res,rej)=>{ const s=document.createElement('script'); s.src=fallback; s.onload=res; s.onerror=rej; document.head.appendChild(s); });
+      }
+    }
+    await loadWithFallback(
+      "https://cdn.jsdelivr.net/gh/ALRICPAON/sellyo-hosting@main/firebase-init.js",
+      "https://alricpaon.github.io/sellyo-hosting/firebase-init.js"
+    );
+    await loadWithFallback(
+      "https://cdn.jsdelivr.net/gh/ALRICPAON/sellyo-hosting@main/save-lead-tunnel.js",
+      "https://alricpaon.github.io/sellyo-hosting/save-lead-tunnel.js"
+    );
+  })();
+  </script>
 </body>
 </html>
