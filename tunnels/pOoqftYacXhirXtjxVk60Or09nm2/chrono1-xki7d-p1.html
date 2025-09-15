@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>chrono1</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{ --bg: #e32400; --btn: #fec700; --text:#fff }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      line-height:1.45;
+    }
+    main{max-width:1100px;margin:0 auto;padding:24px}
+
+    header{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:16px 0
+    }
+    #logo{max-height:56px;display:none}
+
+    /* HERO */
+    .hero{
+      text-align:center;
+      margin-bottom:18px;
+    }
+    .hero h1{
+      font-size:clamp(28px,3.8vw,46px);
+      margin:6px 0;
+    }
+    .hero .sub{
+      opacity:.9;
+      margin:8px 0 0;
+      font-size:18px;
+    }
+
+    .card{
+      background:#ffffff10;
+      border:1px solid #ffffff14;
+      border-radius:16px;
+      padding:18px;
+      margin-bottom:24px;
+    }
+
+    .btn,button.cta{
+      display:inline-block;
+      width:100%;
+      padding:14px 18px;
+      border-radius:12px;
+      background:var(--btn);
+      color:#fff;
+      font-weight:800;
+      text-align:center;
+      text-decoration:none;
+      border:0;
+      cursor:pointer;
+      font-size:18px;
+    }
+
+    /* Grilles */
+    .grid{display:grid;gap:18px}
+    .col-2{grid-template-columns:1fr}
+    @media(min-width:880px){
+      .col-2{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
+    .media img,.media video{
+      width:100%;
+      max-height:440px;
+      object-fit:cover;
+      border-radius:12px;
+      display:block
+    }
+    .media iframe{
+      width:100%;
+      aspect-ratio:16/9;
+      border:0;
+      border-radius:12px;
+      display:block
+    }
+
+    /* TIMER amélioré */
+    .timer{
+      font-weight:900;
+      font-size:28px;
+      color:#ffcc00;
+      text-align:center;
+      margin:20px 0;
+    }
+
+    .muted{opacity:.85}
+    .hide{display:none!important}
+
+    /* Bloc A : si pas d'image → texte centré, 1 seule colonne */
+#block-a.center-text .grid { grid-template-columns: 1fr !important; }
+#block-a.center-text #media-a,
+#block-a.center-text #media-img-wrap { display: none !important; }
+#block-a.center-text #col-a-text { max-width: 760px; margin: 0 auto; text-align: center; }
+
+  </style>
+  <script src="https://js.stripe.com/v3"></script>
+</head>
+<body>
+  <main>
+    <!-- HEADER -->
+    <header>
+      <img id="logo" src="" alt="Logo" onerror="this.style.display='none'">
+    </header>
+
+    <!-- HERO -->
+    <section class="hero card">
+      <h1 id="title">titre</h1>
+      <p class="sub" id="subtitle">soustitre</p>
+    </section>
+
+    <!-- BLOC A : Image gauche | Texte + CTA droite -->
+    <section class="card" id="block-a">
+      <div class="grid col-2">
+        <div class="media" id="media-a">
+          <img id="img-a" src="https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fchrono1-xki7d%2Fpage1-hero-1757929053795?alt=media&token=afa81539-7dee-4dc4-adf0-7cd4f40d1a83" alt="" onerror="this.style.display='none'">
+        </div>
+        <div id="col-a-text">
+          <div id="desc"></div>
+          <div id="bul"></div>
+          <div id="gua"><em></em></div>
+          <div id="timer" class="timer hide"></div>
+          <button class="cta" id="cta-main">je test</button>
+          <div id="dl-wrap" class="hide" style="margin-top:10px"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLOC B : Texte (gauche) | Vidéo (droite) -->
+    <section class="card" id="block-b">
+      <div class="grid col-2" id="grid-b">
+        <!-- Texte sans titres -->
+        <div id="arguments">
+          <div id="prob"></div>
+          <div id="sol"></div>
+          <div id="ben"></div>
+        </div>
+        <!-- Vidéo -->
+        <div class="media" id="media-b">
+          <video id="vid-b" src="" controls playsinline class="hide" onerror="this.style.display='none'"></video>
+          <iframe id="emb-b" src="" class="hide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- Témoignages -->
+    <section class="card hide" id="testi">
+      <h3>Témoignages</h3>
+      <div id="testi-body" data-alt=""></div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="card hide" id="faq">
+      <h3>FAQ</h3>
+      <div id="faq-body" data-alt=""></div>
+    </section>
+
+    <footer class="muted" style="text-align:center;margin-top:14px">
+      &copy; chrono1
+    </footer>
+  </main>
+
+  <script>
+    const clean = (s)=> (s||"").toString().trim();
+    const isToken = (s)=> /\{\{[^}]+\}\}/.test((s||"").toString());
+    const isHttp = (u)=>{ try{ const x=new URL((u||'').trim()); return x.protocol==='http:'||x.protocol==='https:'; }catch(_){ return false; } };
+
+    // Logo visible uniquement si src exploitable
+    (function(){
+      const logo=document.getElementById('logo');
+      const src=clean(logo?.getAttribute('src'));
+      if (logo && src && !isToken(src) && (/^(https?:|data:image)/i.test(src))) logo.style.display='block';
+    })();
+
+    // Bullets JSON → <ul>
+    (function(){
+      const host=document.getElementById('bul'); if(!host) return;
+      const raw=clean(host.textContent);
+      if(!raw || isToken(raw)) return;
+      try{
+        const arr=JSON.parse(raw);
+        if(Array.isArray(arr)){
+          host.innerHTML = '<ul>' + arr.map(x=>'<li>'+clean(x)+'</li>').join('') + '</ul>';
+        }
+      }catch(_){}
+    })();
+
+    // Liens téléchargement produit/bonus
+    (function(){
+      const wrap=document.getElementById('dl-wrap'); if(!wrap) return;
+      const file = clean('');
+      const url  = clean('https://firebasestorage.googleapis.com/v0/b/sellyo-3bbdb.firebasestorage.app/o/tunnels%2FpOoqftYacXhirXtjxVk60Or09nm2%2Fchrono1-xki7d%2Fdelivery-product-1757929052713?alt=media&token=6f757e6f-00f8-4144-99e4-68fd55956d9f');
+      const pFile= clean('');
+      const pUrl = clean('');
+      let html='';
+      if(file && !isToken(file)) html += `<a class="btn" href="${file}" download>Télécharger le produit</a>`;
+      else if(url && !isToken(url)) html += `<a class="btn" href="${url}" target="_blank">Accéder au produit</a>`;
+      if(pFile && !isToken(pFile)) html += `<a class="btn" style="margin-top:8px" href="${pFile}" download>Télécharger le bonus</a>`;
+      else if(pUrl && !isToken(pUrl)) html += `<a class="btn" style="margin-top:8px" href="${pUrl}" target="_blank">Voir le bonus</a>`;
+      if(html){ wrap.innerHTML=html; wrap.classList.remove('hide'); }
+    })();
+
+    // Gestion vidéo bloc B
+    (function(){
+      const vidB=document.getElementById('vid-b');
+      const embB=document.getElementById('emb-b');
+      const gridB=document.getElementById('grid-b');
+      const args=document.getElementById('arguments');
+
+      const mp4=clean('');
+      const emb=clean('');
+
+      const hasVid = !!mp4 && !isToken(mp4) && isHttp(mp4);
+      const hasEmb = !!emb && !isToken(emb) && isHttp(emb);
+
+      [vidB,embB].forEach(el=>{ if(el){ el.classList.add('hide'); el.style.display='none'; }});
+
+      if(hasVid){ vidB.src=mp4; vidB.classList.remove('hide'); vidB.style.display='block'; }
+      else if(hasEmb){ embB.classList.remove('hide'); embB.style.display='block'; }
+      else {
+        gridB.classList.remove('col-2');
+        gridB.style.gridTemplateColumns='1fr';
+        args.style.maxWidth='760px';
+        args.style.margin='0 auto';
+      }
+    })();
+
+    // Témoignages & FAQ
+    (function(){
+      function has(v){ return !!(v && (""+v).trim() && !/\{\{[^}]+\}\}/.test(""+v)); }
+      function showFromRaw(wrapId, bodyId, mapJson){
+        const wrap=document.getElementById(wrapId), body=document.getElementById(bodyId);
+        if(!wrap||!body) return;
+        let raw=(body.textContent||'').trim();
+        if(!has(raw)) raw=(body.getAttribute('data-alt')||'').trim();
+        if(!has(raw)) return;
+        let html='';
+        try{ const data=JSON.parse(raw); html = mapJson(data); }catch(_){ html=raw; }
+        if(has(html)){ body.innerHTML=html; wrap.classList.remove('hide'); }
+      }
+      showFromRaw('testi','testi-body', arr => Array.isArray(arr) ? arr.map(t=>`<div class="testimonial-item">“${(t&&t.text?t.text:t)||''}”</div>`).join('') : '');
+      showFromRaw('faq','faq-body', arr => Array.isArray(arr) ? arr.map(x=>`<div class="faq-item"><strong>${(x&&x.q?x.q:(x&&x.question?x.question:''))}</strong><br/>${(x&&x.a?x.a:(x&&x.answer?x.answer:''))}</div>`).join('') : '');
+    })();
+  </script>
+
+ <script>
+(function(){
+  // --- Button (supports cta-main or cta-btn) ---
+  const btn = document.getElementById('cta-main') || document.getElementById('cta-btn');
+  if(!btn) return;
+
+  // --- Helpers ---
+  const clean   = (s)=> (s||"").toString().trim();
+  const isToken = (s)=> /\{\{[^}]+\}\}/.test((s||"").toString());
+  const isAbs   = (u)=> /^(https?:)?\/\//i.test(u||'');  // http(s):// or //cdn
+  const isRoot  = (u)=> /^\//.test(u||'');
+  const withSlash=(u)=> u ? (u.endsWith('/') ? u : (u+'/')) : '';
+  const toAbsolute = (url, baseUrl)=>{
+    if(!url) return '';
+    if (isAbs(url) || isRoot(url)) return url;
+    if (baseUrl && !isToken(baseUrl)) return withSlash(baseUrl) + url.replace(/^\/+/,'');
+    // fallback: resolve vs current dir
+    try{
+      const cur = window.location.href.replace(/[^/]*$/, '');
+      return new URL(url, cur).toString();
+    }catch(_){ return url; }
+  };
+
+  // --- Inputs from templating (leave as-is, your system replaces them) ---
+  const pk        = clean('pk_test_51RVsTD4PUVU3ejcHlK1AAkobBcOKPp3k0l9AHMmq68d7OdSDjyVKLtA9XpMGqiUIeIgtMvhSTUDrMl9rPityqi5u002UMlmdET');
+  const priceId   = clean('price_1Rx31U4PUVU3ejcHtRO3U55v');
+  const payLink   = clean('');     // optional: direct payment link
+  const baseUrl   = clean('https://alricpaon.github.io/sellyo-hosting/tunnels/pOoqftYacXhirXtjxVk60Or09nm2');                 // e.g. https://.../tunnels/abc/
+  const nextSlug  = clean('chrono1-xki7d-p2');         // e.g. thankyou
+  const rawNext   = clean('chrono1-xki7d-p2.html');             // e.g. thankyou.html
+  const explicitUrl = clean('');                 // optional: when using url mode
+  let   ctaAction = clean('checkout').toLowerCase();  // 'payment' | 'checkout' | 'next' | 'url' | ''
+
+  // Normalize
+  if (ctaAction === 'checkout') ctaAction = 'payment';
+  const nextHref = (!isToken(rawNext) && rawNext) || (nextSlug ? (nextSlug + '.html') : '');
+
+  // --- Decide mode automatically if not explicit ---
+  let mode;
+  if (ctaAction === 'payment' || ctaAction === 'next' || ctaAction === 'url'){
+    mode = ctaAction;
+  } else {
+    // infer: if Stripe keys or paymentLink exist -> payment, else next
+    mode = ( (pk && !isToken(pk) && priceId && !isToken(priceId)) || (payLink && !isToken(payLink)) ) ? 'payment' : 'next';
+  }
+
+  btn.addEventListener('click', async (e)=>{
+    e.preventDefault();
+
+    if (mode === 'payment'){
+      // 1) Direct payment link wins if present
+      if (payLink && !isToken(payLink)) {
+        window.location.href = payLink;
+        return;
+      }
+      // 2) Stripe Checkout → success = thank-you page
+      if (pk && !isToken(pk) && priceId && !isToken(priceId)){
+        const successUrl = toAbsolute(nextHref, baseUrl);
+        const cancelUrl  = window.location.href;
+        try{
+          const stripe = Stripe(pk);
+          const { error } = await stripe.redirectToCheckout({
+            lineItems:[{ price: priceId, quantity:1 }],
+            mode:'payment',
+            successUrl,
+            cancelUrl
+          });
+          if (error) {
+            console.warn('Stripe error:', error.message);
+            if (successUrl) window.location.href = successUrl; // fallback
+          }
+        }catch(err){
+          console.warn('Stripe init error:', err);
+          const successUrl = toAbsolute(nextHref, baseUrl);
+          if (successUrl) window.location.href = successUrl;   // fallback
+        }
+        return;
+      }
+      // 3) If no Stripe config, at least go to next page
+      if (nextHref && !isToken(nextHref)){
+        window.location.href = toAbsolute(nextHref, baseUrl);
+        return;
+      }
+      return; // nothing configured
+    }
+
+    // mode === 'url' or 'next'
+    if (mode === 'url' && explicitUrl && !isToken(explicitUrl)){
+      window.location.href = toAbsolute(explicitUrl, baseUrl);
+      return;
+    }
+    if (nextHref && !isToken(nextHref)){
+      window.location.href = toAbsolute(nextHref, baseUrl);
+      return;
+    }
+    // nothing configured
+  });
+})();
+</script>
+
+  <script>
+(function(){
+  const blockA = document.getElementById('block-a');
+  const img    = document.getElementById('img-a');
+  if (!blockA || !img) return;
+
+  const isToken = (s)=> /\{\{[^}]+\}\}/.test((s||'').toString());
+  const isUrl   = (u)=> /^(https?:|\/\/|data:|blob:)/i.test((u||'').trim());
+
+  function centerTextA(){
+    blockA.classList.add('center-text');
+  }
+
+  // Cas 1 : pas d'URL, token, ou URL invalide → on centre tout de suite
+  const src = (img.getAttribute('src')||'').trim();
+  if (!src || isToken(src) || !isUrl(src)) { centerTextA(); return; }
+
+  // Cas 2 : on écoute les événements au cas où l'image échoue
+  img.addEventListener('error', centerTextA);
+  img.addEventListener('load', () => {
+    // Si l'image charge mais est vide/masquée (ex: onerror inline)
+    const hidden = (img.style.display === 'none') || (getComputedStyle(img).display === 'none');
+    if (img.naturalWidth === 0 || hidden) centerTextA();
+  });
+
+  // Filet de sécurité si l'erreur est déjà passée avant nos listeners
+  setTimeout(() => {
+    const hidden = (img.style.display === 'none') || (getComputedStyle(img).display === 'none');
+    if (img.naturalWidth === 0 || hidden) centerTextA();
+  }, 400);
+})();
+</script>
+
+</body>
+</html>
