@@ -133,7 +133,6 @@
           <div id="gua"><em>{{copy.guarantee}}</em></div>
           <div id="timer" class="timer hide"></div>
           <button class="cta" id="cta-main">{{copy.ctaText}}</button>
-          <div id="dl-wrap" class="hide" style="margin-top:10px"></div>
         </div>
       </div>
     </section>
@@ -195,21 +194,6 @@
           host.innerHTML = '<ul>' + arr.map(x=>'<li>'+clean(x)+'</li>').join('') + '</ul>';
         }
       }catch(_){}
-    })();
-
-    // Liens téléchargement produit/bonus
-    (function(){
-      const wrap=document.getElementById('dl-wrap'); if(!wrap) return;
-      const file = clean('{{delivery.productFile}}');
-      const url  = clean('{{delivery.productUrl}}');
-      const pFile= clean('{{pageProductFile}}');
-      const pUrl = clean('{{pageProductUrl}}');
-      let html='';
-      if(file && !isToken(file)) html += `<a class="btn" href="${file}" download>Télécharger le produit</a>`;
-      else if(url && !isToken(url)) html += `<a class="btn" href="${url}" target="_blank">Accéder au produit</a>`;
-      if(pFile && !isToken(pFile)) html += `<a class="btn" style="margin-top:8px" href="${pFile}" download>Télécharger le bonus</a>`;
-      else if(pUrl && !isToken(pUrl)) html += `<a class="btn" style="margin-top:8px" href="${pUrl}" target="_blank">Voir le bonus</a>`;
-      if(html){ wrap.innerHTML=html; wrap.classList.remove('hide'); }
     })();
 
     // Gestion vidéo bloc B
