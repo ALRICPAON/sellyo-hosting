@@ -239,6 +239,67 @@
     })();
   </script>
 
+  <script>
+// --- Timer evergreen / deadline ---
+(function () {
+  const el = document.getElementById('timer');
+  if (!el) return;
+
+  const isToken = (s)=> /\{\{[^}]+\}\}/.test((s||'').toString());
+  const clean   = (s)=> (s||'').toString().trim();
+
+  // valeurs injectées par ton générateur
+  const enabledRaw = clean('{{components.timer}}');          // true/false
+  const minsRaw    = clean('{{timers.evergreenMinutes}}');   // ex: "20"
+  const isoRaw     = clean('{{timers.deadlineISO}}');        // ex: "2025-09-15T12:00:00Z"
+
+  // non configuré -> on sort, on laisse caché
+  if (!enabledRaw || isToken(enabledRaw)) return;
+  const enabled = /^(true|1|yes|on)$/i.test(enabledRaw);
+  if (!enabled) return;
+
+  // deadline : prioritaire si fournie
+  let deadline = null;
+  if (isoRaw && !isToken(isoRaw)) {
+    const d = new Date(isoRaw);
+    if (!isNaN(+d)) deadline = d;
+  }
+
+  // sinon evergreen minutes + persistance locale
+  if (!deadline) {
+    const mins = Math.max(1, parseInt(minsRaw, 10) || 0);
+    if (!mins) return; // rien à minuter
+    const key = 'sellyo_timer_' + location.pathname.replace(/[^\w]/g,'_');
+    const stored = localStorage.getItem(key);
+    if (stored) {
+      const d = new Date(stored);
+      if (!isNaN(+d)) deadline = d;
+    }
+    if (!deadline) {
+      deadline = new Date(Date.now() + mins * 60 * 1000);
+      localStorage.setItem(key, deadline.toISOString());
+    }
+  }
+
+  function pad(n){ return n < 10 ? '0' + n : '' + n; }
+
+  function tick(){
+    const diff = deadline - new Date();
+    if (diff <= 0) {
+      el.textContent = 'Offre expirée';
+      el.classList.remove('hide');
+      return;
+    }
+    const m = Math.floor(diff / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    el.textContent = `Se termine dans ${pad(m)}:${pad(s)}`;
+    el.classList.remove('hide');
+    setTimeout(tick, 250);
+  }
+  tick();
+})();
+</script>
+
  <script>
 (function(){
   // --- Button (supports cta-main or cta-btn) ---
